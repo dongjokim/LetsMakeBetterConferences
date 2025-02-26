@@ -1,0 +1,340 @@
+{
+  "count": 1,
+  "additionalInfo": {},
+  "ts": 1740517376,
+  "url": "https://indico.cern.ch/export/event/1139644.json",
+  "results": [
+    {
+      "_type": "Conference",
+      "id": "1139644",
+      "title": "Quark Matter 2023",
+      "description": "<p style=\"text-align: justify;\"><span style=\"color: #555555;\">Quark Matter 2023 is the XXXth International Conference on Ultra-relativistic Nucleus-Nucleus Collisions, which will be held in Houston, Texas, USA.\u00a0This conference brings together theoretical and experimental physicists from around the world to discuss new developments in high-energy heavy-ion physics. The focus of the discussions is on the fundamental understanding of strongly-interacting matter at extreme conditions, as formed in ultra-relativistic nucleus-nucleus collisions, as well as on emergent QCD phenomena in high-multiplicity proton-proton and proton-nucleus collisions.</span></p>\r\n<p><img class=\"image_resized image-style-align-right image\" style=\"width: 18.96%;\" src=\"/event/1139644/attachments/2597534/4484341/logo-astro.png\"><span style=\"color: #555555;\">The scientific program will cover the following topics:</span></p>\r\n<ul>\r\n<li><span style=\"color: #555555;\">Chirality</span></li>\r\n<li><span style=\"color: #555555;\">Collective Dynamics</span></li>\r\n<li><span style=\"color: #555555;\">Critical point searches</span></li>\r\n<li><span style=\"color: #555555;\">Electromagnetic Probes</span></li>\r\n<li><span style=\"color: #555555;\">Future facilities/detectors</span></li>\r\n<li><span style=\"color: #555555;\">Heavy flavor physics</span></li>\r\n<li><span style=\"color: #555555;\">Initial state of particle collisions</span></li>\r\n<li><span style=\"color: #555555;\">Jets</span></li>\r\n<li><span style=\"color: #555555;\">Light and strange flavor physics</span></li>\r\n<li><span style=\"color: #555555;\">New theoretical developments</span></li>\r\n<li><span style=\"color: #555555;\">Nuclear astrophysics</span></li>\r\n<li><span style=\"color: #555555;\">Physics of the Future Electron Ion Collider and the RHIC Spin program</span></li>\r\n<li><span style=\"color: #555555;\">Physics of ultra-peripheral collisions</span></li>\r\n<li><span style=\"color: #555555;\">QCD at finite density and temperature</span></li>\r\n<li><span style=\"color: #555555;\">Small systems</span></li>\r\n</ul>\r\n<p>\u00a0</p>\r\n<p>\u00a0</p>",
+      "startDate": {
+        "date": "2023-09-03",
+        "time": "15:00:00",
+        "tz": "Europe/Zurich"
+      },
+      "timezone": "US/Central",
+      "endDate": {
+        "date": "2023-09-09",
+        "time": "20:25:00",
+        "tz": "Europe/Zurich"
+      },
+      "room": "",
+      "location": "Hilton of the Americas, 1600 Lamar, Houston, Texas, 77010, USA",
+      "address": "",
+      "type": "conference",
+      "references": [],
+      "_fossil": "conferenceMetadata",
+      "categoryId": 6725,
+      "category": "Conferences",
+      "note": {},
+      "roomFullname": "",
+      "url": "https://indico.cern.ch/event/1139644/",
+      "creationDate": {
+        "date": "2022-03-14",
+        "time": "19:07:18.357643",
+        "tz": "Europe/Zurich"
+      },
+      "creator": {
+        "_type": "Avatar",
+        "_fossil": "conferenceChairMetadata",
+        "first_name": "Anthony Robert",
+        "last_name": "Timmins",
+        "fullName": "Timmins, Anthony Robert",
+        "id": "38982",
+        "affiliation": "University of Houston (US)",
+        "emailHash": "4365e944b9eed3bc370d3f379f6baf57"
+      },
+      "hasAnyProtection": false,
+      "roomMapURL": "",
+      "folders": [
+        {
+          "_type": "folder",
+          "id": 2624859,
+          "title": null,
+          "description": "",
+          "attachments": [
+            {
+              "_type": "attachment",
+              "id": 4684476,
+              "download_url": "https://indico.cern.ch/event/1139644/attachments/2624859/4684476/Booklet4_online.pdf",
+              "title": "Booklet4_online.pdf",
+              "description": "",
+              "modified_dt": "2023-08-16T19:11:14.049130+00:00",
+              "type": "file",
+              "is_protected": false,
+              "filename": "Booklet4_online.pdf",
+              "content_type": "application/pdf",
+              "size": 84550597,
+              "checksum": "50330b2fb7c5b8b240a59ff30f178e10"
+            },
+            {
+              "_type": "attachment",
+              "id": 4686694,
+              "download_url": "https://indico.cern.ch/event/1139644/attachments/2624859/4686694/Poster_Session_Map_Last5.pdf",
+              "title": "Poster_Session_Map_Last5.pdf",
+              "description": "",
+              "modified_dt": "2023-08-20T18:33:24.535547+00:00",
+              "type": "file",
+              "is_protected": false,
+              "filename": "Poster_Session_Map_Last5.pdf",
+              "content_type": "application/pdf",
+              "size": 508059,
+              "checksum": "b9e735edc9e9fb8a71b4db28dbc822de"
+            },
+            {
+              "_type": "attachment",
+              "id": 4539076,
+              "download_url": "https://indico.cern.ch/event/1139644/attachments/2624859/4539076/QM2023_Poster.pdf",
+              "title": "QM2023_Poster.pdf",
+              "description": "",
+              "modified_dt": "2023-04-06T17:30:46.034618+00:00",
+              "type": "file",
+              "is_protected": false,
+              "filename": "QM2023_Poster.pdf",
+              "content_type": "application/pdf",
+              "size": 8416054,
+              "checksum": "7d78aaac8a541f43e09c959be31da945"
+            },
+            {
+              "_type": "attachment",
+              "id": 4686605,
+              "download_url": "https://indico.cern.ch/event/1139644/attachments/2624859/4686605/QM_Logos.pdf",
+              "title": "QM_Logos.pdf",
+              "description": "",
+              "modified_dt": "2023-08-19T22:24:56.796152+00:00",
+              "type": "file",
+              "is_protected": false,
+              "filename": "QM_Logos.pdf",
+              "content_type": "application/pdf",
+              "size": 615795,
+              "checksum": "93cc2b5c2bee4dc808b18f1e71878acc"
+            }
+          ],
+          "default_folder": true,
+          "is_protected": false
+        }
+      ],
+      "chairs": [
+        {
+          "_type": "ConferenceChair",
+          "_fossil": "conferenceChairMetadata",
+          "first_name": "Rene",
+          "last_name": "Bellwied",
+          "fullName": "Bellwied, Rene",
+          "id": "1041633",
+          "affiliation": "University of Houston (US)",
+          "emailHash": "ef77ef83013538e1303b9b9ae7ad91d1",
+          "db_id": 1041633,
+          "person_id": 6570749
+        },
+        {
+          "_type": "ConferenceChair",
+          "_fossil": "conferenceChairMetadata",
+          "first_name": "Ralf",
+          "last_name": "Rapp",
+          "fullName": "Rapp, Ralf",
+          "id": "1041632",
+          "affiliation": "",
+          "emailHash": "3446e829ed9ec2e749c8cc71307143eb",
+          "db_id": 1041632,
+          "person_id": 6570748
+        },
+        {
+          "_type": "ConferenceChair",
+          "_fossil": "conferenceChairMetadata",
+          "first_name": "Frank",
+          "last_name": "Geurts",
+          "fullName": "Geurts, Frank",
+          "id": "1041631",
+          "affiliation": "Rice University (US)",
+          "emailHash": "6286830c569cf8e5817dd3c0feea28c8",
+          "db_id": 1041631,
+          "person_id": 6570747
+        },
+        {
+          "_type": "ConferenceChair",
+          "_fossil": "conferenceChairMetadata",
+          "first_name": "Claudia",
+          "last_name": "Ratti",
+          "fullName": "Ratti, Claudia",
+          "id": "1041630",
+          "affiliation": "",
+          "emailHash": "f29e3b336aeaf0371604943ac003188d",
+          "db_id": 1041630,
+          "person_id": 6570746
+        }
+      ],
+      "material": [
+        {
+          "_type": "Material",
+          "_fossil": "materialMetadata",
+          "_deprecated": true,
+          "title": "Editor uploads",
+          "id": "2597534",
+          "resources": [
+            {
+              "name": "logo-astro.png",
+              "_deprecated": true,
+              "_type": "LocalFile",
+              "_fossil": "localFileMetadata",
+              "id": "4484341",
+              "fileName": "logo-astro.png",
+              "url": "https://indico.cern.ch/event/1139644/attachments/2597534/4484341/logo-astro.png"
+            },
+            {
+              "name": "logo-astro.png",
+              "_deprecated": true,
+              "_type": "LocalFile",
+              "_fossil": "localFileMetadata",
+              "id": "4484340",
+              "fileName": "logo-astro.png",
+              "url": "https://indico.cern.ch/event/1139644/attachments/2597534/4484340/logo-astro.png"
+            },
+            {
+              "name": "QM_spnsors.png",
+              "_deprecated": true,
+              "_type": "LocalFile",
+              "_fossil": "localFileMetadata",
+              "id": "4539043",
+              "fileName": "QM_spnsors.png",
+              "url": "https://indico.cern.ch/event/1139644/attachments/2597534/4539043/QM_spnsors.png"
+            },
+            {
+              "name": "QM_Sponsors.png",
+              "_deprecated": true,
+              "_type": "LocalFile",
+              "_fossil": "localFileMetadata",
+              "id": "4527557",
+              "fileName": "QM_Sponsors.png",
+              "url": "https://indico.cern.ch/event/1139644/attachments/2597534/4527557/QM_Sponsors.png"
+            },
+            {
+              "name": "QM_Sponsors.png",
+              "_deprecated": true,
+              "_type": "LocalFile",
+              "_fossil": "localFileMetadata",
+              "id": "4519228",
+              "fileName": "QM_Sponsors.png",
+              "url": "https://indico.cern.ch/event/1139644/attachments/2597534/4519228/QM_Sponsors.png"
+            },
+            {
+              "name": "QM_Sponsors.png",
+              "_deprecated": true,
+              "_type": "LocalFile",
+              "_fossil": "localFileMetadata",
+              "id": "4519227",
+              "fileName": "QM_Sponsors.png",
+              "url": "https://indico.cern.ch/event/1139644/attachments/2597534/4519227/QM_Sponsors.png"
+            },
+            {
+              "name": "QM_Sponsors.png",
+              "_deprecated": true,
+              "_type": "LocalFile",
+              "_fossil": "localFileMetadata",
+              "id": "4527558",
+              "fileName": "QM_Sponsors.png",
+              "url": "https://indico.cern.ch/event/1139644/attachments/2597534/4527558/QM_Sponsors.png"
+            },
+            {
+              "name": "QM_Sponsors.png",
+              "_deprecated": true,
+              "_type": "LocalFile",
+              "_fossil": "localFileMetadata",
+              "id": "4537050",
+              "fileName": "QM_Sponsors.png",
+              "url": "https://indico.cern.ch/event/1139644/attachments/2597534/4537050/QM_Sponsors.png"
+            },
+            {
+              "name": "Screen Shot 2023-02-22 at 1.25.17 PM.png",
+              "_deprecated": true,
+              "_type": "LocalFile",
+              "_fossil": "localFileMetadata",
+              "id": "4486034",
+              "fileName": "Screen Shot 2023-02-22 at 1.25.17 PM.png",
+              "url": "https://indico.cern.ch/event/1139644/attachments/2597534/4486034/Screen%20Shot%202023-02-22%20at%201.25.17%20PM.png"
+            },
+            {
+              "name": "Sponsers.png",
+              "_deprecated": true,
+              "_type": "LocalFile",
+              "_fossil": "localFileMetadata",
+              "id": "4495044",
+              "fileName": "Sponsers.png",
+              "url": "https://indico.cern.ch/event/1139644/attachments/2597534/4495044/Sponsers.png"
+            },
+            {
+              "name": "Sponsers.png",
+              "_deprecated": true,
+              "_type": "LocalFile",
+              "_fossil": "localFileMetadata",
+              "id": "4495045",
+              "fileName": "Sponsers.png",
+              "url": "https://indico.cern.ch/event/1139644/attachments/2597534/4495045/Sponsers.png"
+            },
+            {
+              "name": "sponsors.jpg.001.jpeg",
+              "_deprecated": true,
+              "_type": "LocalFile",
+              "_fossil": "localFileMetadata",
+              "id": "4484362",
+              "fileName": "sponsors.jpg.001.jpeg",
+              "url": "https://indico.cern.ch/event/1139644/attachments/2597534/4484362/sponsors.jpg.001.jpeg"
+            },
+            {
+              "name": "Sponsors.png",
+              "_deprecated": true,
+              "_type": "LocalFile",
+              "_fossil": "localFileMetadata",
+              "id": "4486037",
+              "fileName": "Sponsors.png",
+              "url": "https://indico.cern.ch/event/1139644/attachments/2597534/4486037/Sponsors.png"
+            },
+            {
+              "name": "Sponsors.png",
+              "_deprecated": true,
+              "_type": "LocalFile",
+              "_fossil": "localFileMetadata",
+              "id": "4487772",
+              "fileName": "Sponsors.png",
+              "url": "https://indico.cern.ch/event/1139644/attachments/2597534/4487772/Sponsors.png"
+            },
+            {
+              "name": "Sponsors.png",
+              "_deprecated": true,
+              "_type": "LocalFile",
+              "_fossil": "localFileMetadata",
+              "id": "4487773",
+              "fileName": "Sponsors.png",
+              "url": "https://indico.cern.ch/event/1139644/attachments/2597534/4487773/Sponsors.png"
+            },
+            {
+              "name": "Sponsors.png",
+              "_deprecated": true,
+              "_type": "LocalFile",
+              "_fossil": "localFileMetadata",
+              "id": "4487771",
+              "fileName": "Sponsors.png",
+              "url": "https://indico.cern.ch/event/1139644/attachments/2597534/4487771/Sponsors.png"
+            }
+          ]
+        }
+      ],
+      "keywords": [],
+      "organizer": "",
+      "language": null,
+      "label": null,
+      "visibility": {
+        "id": "",
+        "name": "Everywhere"
+      }
+    }
+  ],
+  "_type": "HTTPAPIResult",
+  "metadata": {
+    "year": "2023",
+    "indico_id": "1139644",
+    "download_date": "2025-02-25T23:02:56.367134"
+  }
+}

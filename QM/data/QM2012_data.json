@@ -1,0 +1,215 @@
+{
+  "count": 1,
+  "additionalInfo": {},
+  "ts": 1740517379,
+  "url": "https://indico.cern.ch/export/event/181055.json",
+  "results": [
+    {
+      "_type": "Conference",
+      "id": "181055",
+      "title": "Quark Matter 2012",
+      "description": "<p>\n    The Quark Matter series of conferences aims to reunite international specialists in the field of experimental and theoretical heavy ion physics.</p>\n<p>\n    This fundamental research consists of studying excited matter at the subatomic level to understand how the constituents dynamically arrange themselves to form ordinary matter, and to understand how this organization emerged from the primordial matter created by the Big Bang at the beginning of the universe.</p>\n<p>\n    The Quark Matter 2012 conference is the twenty-third edition of this prestigious series of international conferences organized approximately every 18 months since 1982. Recent instances of the conference have taken place in Shanghai, China (2006), Jaipur, India (2008), Knoxville, USA (2009). and Annecy, France (2011).</p>\n<p style=\"margin-bottom:0\">\n    <strong>Please Note:</strong></p>\n<ul>\n    <li>\n        Student day will take place on Sunday, August 12, 2012</li>\n    <li>\n        Nuclear Physics A will be sponsoring a NPA Young Scientist Award at QM&#39;12</li>\n</ul>",
+      "startDate": {
+        "date": "2012-08-12",
+        "time": "14:00:00",
+        "tz": "Europe/Zurich"
+      },
+      "timezone": "US/Eastern",
+      "endDate": {
+        "date": "2012-08-19",
+        "time": "00:00:00",
+        "tz": "Europe/Zurich"
+      },
+      "room": "",
+      "location": "",
+      "address": "",
+      "type": "conference",
+      "references": [],
+      "_fossil": "conferenceMetadata",
+      "categoryId": 6725,
+      "category": "Conferences",
+      "note": {},
+      "roomFullname": "",
+      "url": "https://indico.cern.ch/event/181055/",
+      "creationDate": {
+        "date": "2012-03-06",
+        "time": "16:23:27.485014",
+        "tz": "Europe/Zurich"
+      },
+      "creator": {
+        "_type": "Avatar",
+        "_fossil": "conferenceChairMetadata",
+        "first_name": "Bolek",
+        "last_name": "Wyslouch",
+        "fullName": "Wyslouch, Bolek",
+        "id": "1597",
+        "affiliation": "Massachusetts Inst. of Technology (US)",
+        "emailHash": "fddd61dcdb342245e2b3b4cf6c856d3a"
+      },
+      "hasAnyProtection": false,
+      "roomMapURL": "",
+      "folders": [
+        {
+          "_type": "folder",
+          "id": 242135,
+          "title": "Slides",
+          "description": "",
+          "attachments": [
+            {
+              "_type": "attachment",
+              "id": 338995,
+              "download_url": "https://indico.cern.ch/event/181055/attachments/242135/338995/QM12_Parallel_Files.zip",
+              "title": "QM12_Parallel_Files.zip",
+              "description": "",
+              "modified_dt": "2012-10-03T19:22:31.029243+00:00",
+              "type": "file",
+              "is_protected": false,
+              "filename": "QM12_Parallel_Files.zip",
+              "content_type": "application/zip",
+              "size": 919676401,
+              "checksum": "8b30cf1e96f8425d25e28bab0332e222"
+            },
+            {
+              "_type": "attachment",
+              "id": 338996,
+              "download_url": "https://indico.cern.ch/event/181055/attachments/242135/338996/QM12_Plenary_Files.zip",
+              "title": "QM12_Plenary_Files.zip",
+              "description": "",
+              "modified_dt": "2012-10-03T19:22:31.029243+00:00",
+              "type": "file",
+              "is_protected": false,
+              "filename": "QM12_Plenary_Files.zip",
+              "content_type": "application/zip",
+              "size": 467708453,
+              "checksum": "4c205414404353b9a5c1076496088f60"
+            }
+          ],
+          "default_folder": false,
+          "is_protected": false
+        },
+        {
+          "_type": "folder",
+          "id": 242134,
+          "title": "ZIP Archive",
+          "description": "",
+          "attachments": [
+            {
+              "_type": "attachment",
+              "id": 338993,
+              "download_url": "https://indico.cern.ch/event/181055/attachments/242134/338993/QM12_Poster_Files.zip",
+              "title": "QM12_Poster_Files.zip",
+              "description": "",
+              "modified_dt": "2012-10-03T18:10:35.510620+00:00",
+              "type": "file",
+              "is_protected": false,
+              "filename": "QM12_Poster_Files.zip",
+              "content_type": "application/zip",
+              "size": 73597737,
+              "checksum": "1673f4bb590603079b061318917a71a5"
+            },
+            {
+              "_type": "attachment",
+              "id": 338994,
+              "download_url": "https://indico.cern.ch/event/181055/attachments/242134/338994/QM12_Student_Teacher_Files.zip",
+              "title": "QM12_Student_Teacher_Files.zip",
+              "description": "",
+              "modified_dt": "2012-10-03T18:10:35.510620+00:00",
+              "type": "file",
+              "is_protected": false,
+              "filename": "QM12_Student_Teacher_Files.zip",
+              "content_type": "application/zip",
+              "size": 390633733,
+              "checksum": "f112235f1c142eacddc3a7610aff3e6c"
+            }
+          ],
+          "default_folder": false,
+          "is_protected": false
+        }
+      ],
+      "chairs": [
+        {
+          "_type": "ConferenceChair",
+          "_fossil": "conferenceChairMetadata",
+          "first_name": "John William",
+          "last_name": "Harris",
+          "fullName": "Harris, John William",
+          "id": "61371",
+          "affiliation": "Yale University (US)",
+          "emailHash": "301bb0dd7a57cd5398bf618edfdbc8aa",
+          "db_id": 61371,
+          "person_id": 343105
+        }
+      ],
+      "material": [
+        {
+          "_type": "Slides",
+          "_fossil": "materialMetadata",
+          "_deprecated": true,
+          "title": "Slides",
+          "id": "242135",
+          "resources": [
+            {
+              "name": "QM12_Parallel_Files.zip",
+              "_deprecated": true,
+              "_type": "LocalFile",
+              "_fossil": "localFileMetadata",
+              "id": "338995",
+              "fileName": "QM12_Parallel_Files.zip",
+              "url": "https://indico.cern.ch/event/181055/attachments/242135/338995/QM12_Parallel_Files.zip"
+            },
+            {
+              "name": "QM12_Plenary_Files.zip",
+              "_deprecated": true,
+              "_type": "LocalFile",
+              "_fossil": "localFileMetadata",
+              "id": "338996",
+              "fileName": "QM12_Plenary_Files.zip",
+              "url": "https://indico.cern.ch/event/181055/attachments/242135/338996/QM12_Plenary_Files.zip"
+            }
+          ]
+        },
+        {
+          "_type": "Material",
+          "_fossil": "materialMetadata",
+          "_deprecated": true,
+          "title": "ZIP Archive",
+          "id": "242134",
+          "resources": [
+            {
+              "name": "QM12_Poster_Files.zip",
+              "_deprecated": true,
+              "_type": "LocalFile",
+              "_fossil": "localFileMetadata",
+              "id": "338993",
+              "fileName": "QM12_Poster_Files.zip",
+              "url": "https://indico.cern.ch/event/181055/attachments/242134/338993/QM12_Poster_Files.zip"
+            },
+            {
+              "name": "QM12_Student_Teacher_Files.zip",
+              "_deprecated": true,
+              "_type": "LocalFile",
+              "_fossil": "localFileMetadata",
+              "id": "338994",
+              "fileName": "QM12_Student_Teacher_Files.zip",
+              "url": "https://indico.cern.ch/event/181055/attachments/242134/338994/QM12_Student_Teacher_Files.zip"
+            }
+          ]
+        }
+      ],
+      "keywords": [],
+      "organizer": "",
+      "language": null,
+      "label": null,
+      "visibility": {
+        "id": "",
+        "name": "Everywhere"
+      }
+    }
+  ],
+  "_type": "HTTPAPIResult",
+  "metadata": {
+    "year": "2012",
+    "indico_id": "181055",
+    "download_date": "2025-02-25T23:03:00.036663"
+  }
+}

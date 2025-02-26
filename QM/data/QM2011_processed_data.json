@@ -1,0 +1,40 @@
+{
+  "metadata": {
+    "year": "2011",
+    "indico_id": "137579",
+    "download_date": "2025-02-25T23:08:29.672787",
+    "conference_location": "Annecy, France"
+  },
+  "all_talks": [
+    {
+      "Session": null,
+      "Title": "PIXEL detector R&D",
+      "Speaker": "Petra Riedler",
+      "Institute": "CERN",
+      "Country": "Switzerland"
+    },
+    {
+      "Session": null,
+      "Title": "ITS Upgrade overview",
+      "Speaker": "Luciano Musa",
+      "Institute": "CERN",
+      "Country": "Switzerland"
+    },
+    {
+      "Session": null,
+      "Title": "Electronics R&D",
+      "Speaker": "Angelo Rivetti",
+      "Institute": "INFN, Torino",
+      "Country": "Italy"
+    },
+    {
+      "Session": null,
+      "Title": "Strips Detector R&D",
+      "Speaker": "Giacomo Contin",
+      "Institute": "Dipartimento di Fisica-Universita degli Studi di Trieste / INFN Sezione di Trieste",
+      "Country": "Italy"
+    }
+  ],
+  "plenary_talks": [],
+  "parallel_talks": []
+}

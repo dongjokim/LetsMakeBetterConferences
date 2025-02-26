@@ -1,0 +1,4262 @@
+{
+  "metadata": {
+    "year": "2023",
+    "indico_id": "1139644",
+    "download_date": "2025-02-25T23:07:52.204869",
+    "conference_location": "Houston, USA"
+  },
+  "all_talks": [
+    {
+      "Session": "Flash Talks",
+      "Title": "Deep learning for flow observables in ultrarelativistic heavy-ion collisions",
+      "Speaker": "Henry Hirvonen",
+      "Institute": "University of Jyv\u00e4skyl\u00e4 (FI)",
+      "Country": "FI"
+    },
+    {
+      "Session": "Flash Talks",
+      "Title": "Proton-cluster femtoscopy at the HADES experiment",
+      "Speaker": "Maria Stefaniak",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Small Systems",
+      "Title": "Pinning down the origin of collectivity in small systems with ALICE (remote)",
+      "Speaker": "Mingrui Zhao",
+      "Institute": "China Institute of Atomic Energy (CN)",
+      "Country": "China"
+    },
+    {
+      "Session": "Initial State",
+      "Title": "Pursuing the Precision Study for Color Glass Condensate in Forward Hadron Productions",
+      "Speaker": "Yu Shi",
+      "Institute": "Shandong University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Jets",
+      "Title": "Jet-flow coupling in heavy-ion collisions and the jet-induced diffusion wake",
+      "Speaker": "Zhong Yang",
+      "Institute": "CCNU",
+      "Country": "China"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Quantum Computing for Relativistic Particle Collisions",
+      "Speaker": "Phiala Shanahan",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Heavy Flavor",
+      "Title": "Quarkonia as probes of initial and final states in small systems with ALICE (remote)",
+      "Speaker": "Subikash Choudhury",
+      "Institute": "Department of Atomic Energy (IN)",
+      "Country": "India"
+    },
+    {
+      "Session": "Heavy Flavor",
+      "Title": "Modification of heavy quark hadronization in high multiplicity collisions at LHCb (remote)",
+      "Speaker": "Chenxi Gu",
+      "Institute": "Centre National de la Recherche Scientifique (FR)",
+      "Country": "France"
+    },
+    {
+      "Session": "Collective Dynamics",
+      "Title": "Elliptic and triangular flow of light (anti-)nuclei in Au+Au collisions in the BES-II energies using the STAR detector (remote)",
+      "Speaker": "Rishabh  Sharma",
+      "Institute": "Indian Institute of Science Education and Research (IISER) Tirupati",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Light Flavor",
+      "Title": "Exploring the hadron gas phase of relativistic heavy-ion collisions with ALICE (remote)",
+      "Speaker": "Neelima Agrawal",
+      "Institute": "Universita e INFN, Bologna (IT)",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Light Flavor",
+      "Title": "Particle production and collective flow measurements with CMS Run 3 PbPb data (remote)",
+      "Speaker": "Jing Wang",
+      "Institute": "CERN",
+      "Country": "Switzerland"
+    },
+    {
+      "Session": "Jets",
+      "Title": "Looking for the dead-cone in heavy-ion collisions with energy correlators (remote)",
+      "Speaker": "Ian James Moult",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Jets",
+      "Title": "Revealing the medium-recoil effect with high-$p_\\mathrm{T}$ Z boson tagged underlying event distribution in PbPb collisions at CMS (remote)",
+      "Speaker": "Pin-Chun Chou",
+      "Institute": "Massachusetts Inst. of Technology (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Heavy Flavor",
+      "Title": "Probe parton propagation in heavy-ion collisions with ALICE heavy-flavour measurements (remote)",
+      "Speaker": "Ravindra Singh",
+      "Institute": "Indian Institute of Technology  Indore (IN)",
+      "Country": "India"
+    },
+    {
+      "Session": "Heavy Flavor",
+      "Title": "Recent charmonium measurements in Pb-Pb collisions with ALICE (remote)",
+      "Speaker": "Xiaozhi Bai",
+      "Institute": "University of Science and Technology of China (USTC)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Heavy Flavor",
+      "Title": "Bottom hadro-chemistry in $pp$ and PbPb collisions at the LHC (remote)",
+      "Speaker": "Min He",
+      "Institute": "Nanjing University of Science & Technology",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Collective Dynamics",
+      "Title": "Anisotropic flow of identifed particles in Au + Au collisions at $\\sqrt{s_{NN}}$ = 3.0 - 19.6 GeV (remote)",
+      "Speaker": "Zuowen Liu",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "The Physics of small systems (remote)",
+      "Speaker": "Jiayin Sun",
+      "Institute": "Universita e INFN, Cagliari",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Critical Point",
+      "Title": "Spinodal enhancement of fluctuations in nucleus-nucleus collisions (remote)",
+      "Speaker": "Roman Poberezhnyuk",
+      "Institute": "Bogolubov Institute for Theoretical Physics",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Critical Point",
+      "Title": "Baryon number fluctuations at high baryon density (remote)",
+      "Speaker": "Wei-jie Fu",
+      "Institute": "Dalian University of Technology",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Strangeness production in Au+Au collisions at \u221asNN = 14.6 GeV using AMPT and UrQMD model",
+      "Speaker": "Pratibha Bhagat",
+      "Institute": "University of Jammu",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Entanglement entropy measurements from p-p collisions at LHC energies",
+      "Speaker": "Alek Hutson",
+      "Institute": "University of Houston (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Dilepton anisotropic flow from hadronic transport",
+      "Speaker": "Renan Hirayama",
+      "Institute": "FIAS",
+      "Country": "FIAS"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Charm production in various scenarios of the QGP evolution",
+      "Speaker": "Valeriya Mykhaylova",
+      "Institute": "University of Wroc\u0142aw",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Antiproton production cross sections for dark matter search at the AMBER experiment @CERN",
+      "Speaker": "Davide Giordano",
+      "Institute": "Universit\u00e0 degli Studi di Torino / INFN Torino (IT)",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "A Longitudinally Segmented Hadronic Calorimeter for the Forward Region of the Future ePIC Detector at the Electron-Ion-Collider",
+      "Speaker": "Iris Ponce",
+      "Institute": "Yale University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Conference Summary and Outlook",
+      "Speaker": "Helen Caines",
+      "Institute": "Yale University (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Future Facilities and Instrumentation",
+      "Speaker": "Luciano Musa",
+      "Institute": "CERN",
+      "Country": "Switzerland"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "The Physics of the EIC",
+      "Speaker": "Anna Maria Stasto",
+      "Institute": "Penn State",
+      "Country": "Penn State"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Open heavy flavor and quarkonium - theoretical overview",
+      "Speaker": "Miguel Angel Escobedo Espinosa",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Quarkonium - experimental overview",
+      "Speaker": "Andre Govinda Stahl Leiton",
+      "Institute": "CERN",
+      "Country": "Switzerland"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Jet modifications and medium response - theoretical overview",
+      "Speaker": "Daniel Pablos",
+      "Institute": "INFN Torino",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Medium response to jets - experimental overview",
+      "Speaker": "Yeonju Go",
+      "Institute": "University of Colorado Boulder (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Jet modifications - experimental overview",
+      "Speaker": "Laura Brittany Havener",
+      "Institute": "Yale University (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Quantum Computing for Nuclear Physics",
+      "Speaker": "Martin J. Savage",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Chirality, Vorticity and Spin Polarization - experimental overview",
+      "Speaker": "Aihong Tang",
+      "Institute": "Brookhaven National Laboratory",
+      "Country": "USA"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Ultra-peripheral Collisions",
+      "Speaker": "Daniel Brandenburg",
+      "Institute": "Ohio State University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Electromagnetic Probes",
+      "Speaker": "Raphaelle Bailhache",
+      "Institute": "Goethe University Frankfurt (DE)",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "New theoretical developments",
+      "Speaker": "J\u00fcrgen Berges",
+      "Institute": "Heidelberg University",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Approach to Equilibrium",
+      "Speaker": "Soeren Schlichting",
+      "Institute": "Universit\u00e4t Bielefeld",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Initial State Physics",
+      "Speaker": "Heikki M\u00e4ntysaari",
+      "Institute": "University of Jyvaskyla (FI)",
+      "Country": "FI"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "QCD at finite temperature and density - Equation of State",
+      "Speaker": "Jamie Karthein",
+      "Institute": "MIT",
+      "Country": "USA"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "QCD at finite temperature and density - Criticality",
+      "Speaker": "Volodymyr Vovchenko",
+      "Institute": "University of Houston",
+      "Country": "USA"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Search for the critical endpoint",
+      "Speaker": "Ashish Pandav",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "EPJ Featured Talk: Exotic Particle and Nuclei",
+      "Speaker": "Francesca Bellini",
+      "Institute": "Universita e INFN, Bologna (IT)",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Collective Dynamics - theoretical overview",
+      "Speaker": "Yuuka Kanakubo",
+      "Institute": "University of Jyv\u00e4skyl\u00e4",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Collective Dynamics - experimental overview",
+      "Speaker": "David Dobrigkeit Chinellato",
+      "Institute": "University of Campinas UNICAMP (BR)",
+      "Country": "BR"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Diversity, Equity and Inclusion in Nuclear and Particle Physics",
+      "Speaker": "Geraldine Cochran",
+      "Institute": "Rutgers University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "New Tools for Data Analysis and Simulations",
+      "Speaker": "James Mulligan",
+      "Institute": "University of California, Berkeley (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Quark Matter and Nuclear Astrophysics",
+      "Speaker": "Tyler Gorda",
+      "Institute": "TU Darmstadt",
+      "Country": "TU Darmstadt"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Lattice QCD Overview",
+      "Speaker": "Attila Pasztor",
+      "Institute": "E\u00f6tv\u00f6s University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "NA61/SHINE Overview",
+      "Speaker": "Piotr Podlaski",
+      "Institute": "University of Warsaw (PL)",
+      "Country": "PL"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "sPHENIX Overview",
+      "Speaker": "Edward O'Brien",
+      "Institute": "Brookhaven  National Lab",
+      "Country": "USA"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "PHENIX Overview",
+      "Speaker": "Christine Nattrass",
+      "Institute": "University of Tennessee (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "STAR Overview",
+      "Speaker": "Rosi Reed",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "ALICE Overview",
+      "Speaker": "Ionut Cristian Arsene",
+      "Institute": "University of Oslo (NO)",
+      "Country": "NO"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "ATLAS Overview",
+      "Speaker": "Aaron Angerami",
+      "Institute": "Lawrence Livermore Nat. Laboratory (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "CMS Overview",
+      "Speaker": "Austin Alan Baty",
+      "Institute": "Rice University (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "LHCb Overview",
+      "Speaker": "John Matthew Durham",
+      "Institute": "Los Alamos National Laboratory",
+      "Country": "USA"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "HADES Overview",
+      "Speaker": "Simon Spies",
+      "Institute": "Johann-Wolfgang-Goethe Univ. (DE)",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Student Lectures",
+      "Title": "Bulk Physics - Finite Density QCD",
+      "Speaker": "Thomas Schaefer",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Student Lectures",
+      "Title": "Bulk Physics - Critical point searches",
+      "Speaker": "Lijuan Ruan",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Student Lectures",
+      "Title": "Detectors in Heavy Ion Physics",
+      "Speaker": "Thomas Hemmick",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Student Lectures",
+      "Title": "Jet Physics",
+      "Speaker": "Raghav Kunnawalkam Elayavalli",
+      "Institute": "Vanderbilt University",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Student Lectures",
+      "Title": "Bulk Physics - Flow and Correlations",
+      "Speaker": "Hanna Zbroszczyk",
+      "Institute": "Warsaw University of Technology (PL)",
+      "Country": "PL"
+    },
+    {
+      "Session": "Student Lectures",
+      "Title": "Heavy Flavor Physics",
+      "Speaker": "Enrico Scomparin",
+      "Institute": "INFN Torino (IT)",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Student Lectures",
+      "Title": "Ultra-peripheral Collisions and Electromagnetic Probes",
+      "Speaker": "Daniel Tapia Takaki",
+      "Institute": "University of Kansas",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Student Lectures",
+      "Title": "The Physics of the EIC",
+      "Speaker": "Elke Aschenauer",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "A modular perspective to the jet quenching from a small to large radius in very high transverse momentum jets",
+      "Speaker": "Prabhakar Palni",
+      "Institute": "IIT Mandi",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "First measurement of femtoscopic correlation function between $D^0$ mesons and charged hadrons in Au+Au collisions at ${\\sqrt{s_{NN}}}$ = 200 GeV at STAR",
+      "Speaker": "Priyanka Roy Chowdhury",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Momentum shell and rapid stiffening in Quarkyonic matter from explicit duality",
+      "Speaker": "Yuki Fujimoto",
+      "Institute": "University of Washington",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Measurement of the mass spectrum of vector mesons in nuclei at J-PARC",
+      "Speaker": "Tomoki Murakami",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Projected 3-point Energy Correlator measurements in jets in p-p at  $\\sqrt{s_{NN}}$ = 13TeV with ALICE",
+      "Speaker": "Ananya Rai",
+      "Institute": "Yale University (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Interpretable Machine Learning applications to Jet Background Subtraction",
+      "Speaker": "Tanner Mengel",
+      "Institute": "University of Tennessee",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Generation of magnetic field in relativistic heavy-ion collisions",
+      "Speaker": "Patrycja S\u0142o\u0144",
+      "Institute": "National Centre for Nuclear Research",
+      "Country": "Switzerland"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Neutral pion and \u03b7 meson production at midrapidity in Au+Au collisions at \u221asN N = 200 GeV",
+      "Speaker": "Dading Chen",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Elliptic flow measurement of $J/\\psi$ in PHENIX Run14 Au+Au at $\\sqrt{s_{NN}}=200$ GeV",
+      "Speaker": "Luis Bichon III",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Measurements of neutral pions and direct photons in 3He+Au collisions",
+      "Speaker": "Daniel Firak",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Heavy quarks dynamics in the early stage of high energy nuclear collisions",
+      "Speaker": "Marco Ruggieri",
+      "Institute": "University of Catania",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Exploring transverse momentum broadening in expanding medium-induced cascades",
+      "Speaker": "Souvik Priyam Adhya",
+      "Institute": "Institute of Nuclear Physics, Polish Academy of Sciences",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "The Silicon Vertex Tracker (SVT): a MAPS based tracker for the ePIC Detector at the Electron-Ion Collider",
+      "Speaker": "Nicole Apadula",
+      "Institute": "Lawrence Berkeley National Lab. (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Far Forward Calorimetery for the EIC",
+      "Speaker": "Yuji Goto",
+      "Institute": "Riken",
+      "Country": "Japan"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Directed Flow of Protons and Anti-Protons in RHIC Beam Energy Scan II",
+      "Speaker": "Emilie Duckworth",
+      "Institute": "Kent State University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Chiral critical point via scalar-dilaton coupling in soft-wall AdS/QCD",
+      "Speaker": "Sean Bartz",
+      "Institute": "Indiana State University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Particle Identification with the ePIC detector at the EIC",
+      "Speaker": "Oskar Hartbrich",
+      "Institute": "Oak Ridge National Lab",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Influence of the latest hadronic resonances from the particle data group on thermal models, lattice QCD comparisons, and SMASH",
+      "Speaker": "Jordi Salinas San Martin",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Bulk Viscosity of Hadronic Matter from a Microscopic Transport Model",
+      "Speaker": "Nasser Demir",
+      "Institute": "Kuwait University (KW)",
+      "Country": "KW"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Tracking the dynamics of system geometry using an hybrid-hydrodynamic simulation",
+      "Speaker": "Kevin  Pala",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Calorimeter Calibrations Methods from RHIC to EIC",
+      "Speaker": "Justin Edward Frantz",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Color-superconductivity of asymptotically conformal quark matter as a portal between astrophysics and heavy ions collisions",
+      "Speaker": "Oleksii Ivanytskyi",
+      "Institute": "University of Wroclaw",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "D and B meson Energy loss and Azimuthal Anisotropy in a Strongly Coupled Plasma in pA collisions at $\\sqrt{s_{NN}}=200$ GeV",
+      "Speaker": "Blessed Arthur Ngwenya",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "PNJL equation of state with off-shell mesonic excitations",
+      "Speaker": "Konstantin Maslov",
+      "Institute": "University of Houston",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Observation of $\\pi^+\\pi^-\\pi^+\\pi^-$ photoproduction in ultraperipheral heavy-ion collisions at $\\sqrt{s_{NN}} = 200$ GeV at the STAR detector",
+      "Speaker": "David Tlusty",
+      "Institute": "Creighton University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Self-consistent spectral properties of quarks and mesons in a chiral quark model",
+      "Speaker": "Hitansh Shah",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "The freezeout procedure with the method of moments",
+      "Speaker": "Caio Brito",
+      "Institute": "Universidade Federal Fluminense",
+      "Country": "UK"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Exploring heat conductivity at RHIC Beam Energy Scan",
+      "Speaker": "Shujun Zhao",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Testing inputs to hydro codes with factorization breaking",
+      "Speaker": "Frederique Grassi",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Topology and entanglement in the baryon structure at small x.",
+      "Speaker": "David Frenklakh",
+      "Institute": "Stony Brook University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Study of multiplicity-dependent \u03c10(770) production in pp collisions with ALICE",
+      "Speaker": "Hyunji Lim",
+      "Institute": "Pusan National University (KR)",
+      "Country": "Korea"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Understanding effect of event-by-event fluctuations on light-nuclei yield ratio",
+      "Speaker": "Koichi Murase",
+      "Institute": "Yukawa Institute for Theoretical Physics, Kyoto University",
+      "Country": "UK"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Measurements of proton-$\\Lambda$ and proton-$\\Xi^-$ Correlation Functions in Au+Au Collisions from STAR Fixed-Target Experiment",
+      "Speaker": "Jing An",
+      "Institute": "Central China Normal University",
+      "Country": "UK"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Non-perturbative Quarkonium Dissociation Rates in the QGP",
+      "Speaker": "Biaogang Wu",
+      "Institute": "Texas A&M University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Investigating charm quark production in and outside of jets using the ALICE detector at the LHC",
+      "Speaker": "Josephina Rae Wright",
+      "Institute": "University of Texas at Austin (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Effect of hydrodynamic fluctuations on mixed harmonic cumulants at the LHC",
+      "Speaker": "Koichi Murase",
+      "Institute": "Yukawa Institute for Theoretical Physics, Kyoto University",
+      "Country": "UK"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Multiplicity dependent $\\pi$, k, p production in pp collisions at 13.6 TeV using ALICE TPC and TOF detectors",
+      "Speaker": "Banajit Barman",
+      "Institute": "Gauhati University (IN)",
+      "Country": "India"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Flavor equilibration of the quark-gluon plasma",
+      "Speaker": "Andrew Gordeev",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Directed flow of charm and light flavor with initial vorticity in non-central Au+Au collisions at $\\sqrt{s_{NN}}$ = 200 GeV from a multiphase transport model",
+      "Speaker": "Xinyue Ju",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Hypernuclei studies in heavy-ion collisions with the CBM experiment at FAIR",
+      "Speaker": "Susanne Glaessel",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Entropy and Multifractality in Hadron-Hadron Collisions at SPS and LHC Energies",
+      "Speaker": "Bushra Ali",
+      "Institute": "Aligarh Muslim University (IN)",
+      "Country": "India"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "An efficient numerical solver for relativistic hydrodynamics with an implicit Runge-Kutta method",
+      "Speaker": "Masakiyo Kitazawa",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Femtoscopy with L\u00e9vy sources",
+      "Speaker": "Mate Csanad",
+      "Institute": "Eotvos University, Budapest",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Repulsive $\\Lambda$ potential at high densities examined from heavy-ion collision and hypernuclear data",
+      "Speaker": "Asanosuke Jinno",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Conserved number fluctuations under global rotation in a hadron resonance gas model",
+      "Speaker": "Gaurav Mukherjee",
+      "Institute": "Bhabha Atomic Research Centre, Homi Bhabha National Institute",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Universality of quark/gluon energy loss using Bayesian inference",
+      "Speaker": "Alexandre Falc\u00e3o",
+      "Institute": "University of Bergen",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Probing viscous effects with identified particles in pp, p\u2014Pb and Pb\u2014Pb collisions",
+      "Speaker": "Sumit Basu",
+      "Institute": "Lund University (SE)",
+      "Country": "SE"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Feasibility of Spin Interference Gluon Tomography at the EIC with EPIC",
+      "Speaker": "Sam Corey",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Physics prospects of central exclusive production in pp collisions with ALICE Run 3 data",
+      "Speaker": "Minjung Kim",
+      "Institute": "University of California Berkeley (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "On the gravitational wave emission in the magnetic field of a heavy-ion collision",
+      "Speaker": "Piotr Gasik",
+      "Institute": "GSI - Helmholtzzentrum fur Schwerionenforschung GmbH (DE)",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Hypertriton Production in Au+Au Collisions from $\\sqrt{s_{NN}}=7.7$ to $27$ GeV from STAR",
+      "Speaker": "Yue Hang Leung",
+      "Institute": "University of Heidelberg",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "An innovative approach to control volume fluctuations for studies of critical phenomena in nuclear collisions",
+      "Speaker": "Anar Rustamov",
+      "Institute": "GSI Helmholtzzentrum f\u00fcr Schwerionenforschung GmbH",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "The most vortical baryonic matter",
+      "Speaker": "Zachary Akridge",
+      "Institute": "Indiana University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Measurement of $K_{s}^{0}-K_{s}^{0}$ correlation function in Au+Au collisions at the high baryon density region",
+      "Speaker": "Li'Ang Zhang",
+      "Institute": "Central ChinaNormal University (CCNU)",
+      "Country": "UK"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Directed Flow of $\\Lambda$, $^{3}_{\\Lambda}{\\rm H}$, and $^{4}_{\\Lambda}{\\rm H}$ in Au+Au collisions at $\\sqrt{s_{NN}}$ = 3.2, 3.5, and 3.9 GeV at RHIC",
+      "Speaker": "Junyi Han",
+      "Institute": "Central China Normal University",
+      "Country": "UK"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "PHENIX measurements of identified charged hadron production in $p$+Al, $p$+Au, and Cu+Au collisions at $\\sqrt{s_{NN}}$ = 200 GeV",
+      "Speaker": "Sanghoon Lim",
+      "Institute": "Pusan National University (KR)",
+      "Country": "Korea"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Forward Physics with light vector mesons and $\\pi^0$ from the PHENIX Experiment",
+      "Speaker": "Uttam Acharya",
+      "Institute": "Georgia State University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Particle multiplicity dependent Charmonia production in $p+p$ collisions by the PHENIX experiment",
+      "Speaker": "JongHo Oh",
+      "Institute": "Pusan National University",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "The study of $v_{2}$ with a new double-differential event categorization using multiplicity and spectator neutrons in PHENIX",
+      "Speaker": "Maya Shimomura",
+      "Institute": "Nara Women's University (JP)",
+      "Country": "Japan"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Charged particle multiplicity distribution in Pb-Pb collisions at $\\sqrt{s_\\mathrm{NN}}$ = 5.36 TeV  with ALICE",
+      "Speaker": "Hyungjun Lee",
+      "Institute": "Sungkyunkwan University (KR)",
+      "Country": "Korea"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Hydrodynamic initial conditions from non-linear causality",
+      "Speaker": "Tau Hoshino",
+      "Institute": "Sophia University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Study for the high-density matter at J-PARC Heavy-Ion Project",
+      "Speaker": "Yuhei Morino",
+      "Institute": "KEK",
+      "Country": "Japan"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Measurements of $\\Omega$ and $\\bar{\\Omega}$ production in Au+Au collisions at $\\sqrt{s_{NN}}$ = 200 GeV with the STAR experiment",
+      "Speaker": "Xiongxiong Xu",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Topological separation of dielectron signals using machine learning in Pb--Pb collisions with ALICE",
+      "Speaker": "Jerome Jung",
+      "Institute": "Goethe University Frankfurt (DE)",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Measuring the Global Spin Alignment of Vector Mesons in Heavy Ion Collisions by STAR",
+      "Speaker": "C.W. Robertson",
+      "Institute": "Purdue University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Analysis of the critical fluctuations in the light-nuclei production",
+      "Speaker": "Shanjin Wu",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Flow harmonic measurements up to order 10 in PbPb collisions with CMS",
+      "Speaker": "Andi Mankolli",
+      "Institute": "Vanderbilt University (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "The elliptic flow of ${\\pi}^{\\pm}$, ${K}^{\\pm}$, $p$ , and $\\bar{p}$ in Au + Au collisions at $\\sqrt{s_{NN}}$ = 7.7 and 9.2 GeV from STAR",
+      "Speaker": "Xing Wu",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Probing the QGP to Hadron-Gas Phase Transition with Charge, Strange, and Baryon Balance Functions",
+      "Speaker": "Claude Andre Pruneau",
+      "Institute": "Wayne State University (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Photoproduction of e$^{+}$e$^{-}$  in peripheral isobar collisions",
+      "Speaker": "Shuo Lin",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Helicity polarization and vorticity contribution to the spin alignment in hydrodynamic approaches",
+      "Speaker": "Cong Yi",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Characterising collectivity with virtual photons at HADES",
+      "Speaker": "Niklas Schild",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Light Nuclei Production in Au+Au Collisions at \u221asNN = 14.6 and 19.6 GeV from RHIC BES-II",
+      "Speaker": "Yixuan Jin",
+      "Institute": "Central China Normal University",
+      "Country": "UK"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Hydrodynamic theories for a system of classical weakly self-interacting ultra-relativistic scalar particles",
+      "Speaker": "Gabriel Soares Rocha",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Systematic study of energy loss in the QGP for various collision systems at PHENIX",
+      "Speaker": "Takashi Hachiya",
+      "Institute": "Nara Women's University (JP)",
+      "Country": "Japan"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Exploring thermoelectric Figure of Merit in  QCD medium with conserved charges",
+      "Speaker": "He-Xia Zhang",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Event-by-event local multiplicity fluctuations in charged particle production at the LHC energies with ALICE",
+      "Speaker": "Ramni Gupta",
+      "Institute": "University of Jammu (IN)",
+      "Country": "India"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Exploring the origin of $[p_\\mathrm{T}]$ fluctuations in ultra-central heavy ion collisions: Higher order $[p_\\mathrm{T}]$ correlations in ATLAS",
+      "Speaker": "Somadutta Bhatta",
+      "Institute": "Stony Brook University (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Model study on bottomonia modification in small collision systems",
+      "Speaker": "Sanghoon Lim",
+      "Institute": "Pusan National University (KR)",
+      "Country": "Korea"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Determination of total charm production cross-section in pp collisions at 5.02 TeV with the HonexComb project",
+      "Speaker": "Jiayin Sun",
+      "Institute": "Universita e INFN, Cagliari",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Investigation of initial state effects in p+Pb collisions at ATLAS via measurement of centrality dependence of dijet yields",
+      "Speaker": "Riccardo Longo",
+      "Institute": "Univ. Illinois at Urbana Champaign (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Measurements of azimuthal anisotropy of charged particles in Pb+Pb collisions with the ATLAS detector",
+      "Speaker": "Xiaoning Wang",
+      "Institute": "Univ. Illinois at Urbana Champaign (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "$\\mathrm{K^{0}_S}$ and $\\Lambda$ ($\\bar{\\Lambda}$) two-particle femtoscopic correlations in PbPb collisions with the CMS experiment",
+      "Speaker": "Michael Murray",
+      "Institute": "The University of Kansas (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Two-particle azimuthal correlations in events with large rapidity gaps in pPb collisions recorded by CMS at 8.16 TeV",
+      "Speaker": "Moises David Leon Coello",
+      "Institute": "Universidad de Sonora (MX)",
+      "Country": "MX"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Systematics of Hidden and Open Strangeness Production in Few GeV Heavy Ion Collisions",
+      "Speaker": "Marvin Kohls",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Probing particle production and transport at top LHC Run 3 energy with ALICE",
+      "Speaker": "Victor Gonzalez",
+      "Institute": "Wayne State University (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "The elliptic flow of (multi-)strange hadrons in Au + Au collisions at $\\sqrt{s_{NN}}$ = 7.7 and 9.2 GeV from STAR",
+      "Speaker": "Guoping Wang",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Measurement of the multiplicity dependence of $\\Upsilon$ meson production in $p$+$p$ collisions at $\\sqrt{s}$ = 510 GeV",
+      "Speaker": "Jakub Ceska",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "A unified picture for dilute-dense dynamics in nuclear medium",
+      "Speaker": "Yu Fu",
+      "Institute": "Duke university",
+      "Country": "UK"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Measurements of \u03c6 production in Au+Au collisions at \u221asNN = 27 , 19.6 , 14.6 and 7.7 GeV with STAR",
+      "Speaker": "Weiguang Yuan",
+      "Institute": "\u6e05\u534e\u5927\u5b66",
+      "Country": "\u6e05\u534e\u5927\u5b66"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Study of $K_{1}$ meson production in $pp$ collisions with ALICE",
+      "Speaker": "Su-Jeong Ji",
+      "Institute": "Pusan National University (KR)",
+      "Country": "Korea"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Charged particle multiplicity distribution in pp collisions at $\\sqrt{s}$ = 13.6 TeV with ALICE",
+      "Speaker": "Joonsuk Bae",
+      "Institute": "Sungkyunkwan University (KR)",
+      "Country": "Korea"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Measurement of the transverse momentum($j_\\mathrm{T}$) distributions of charged-particle jet fragments in pp collisions at $\\sqrt{s}$ = 5.02 TeV with ALICE",
+      "Speaker": "Jaehyeok Ryu",
+      "Institute": "Pusan National University (KR)",
+      "Country": "Korea"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Multiplicity dependence of $\\Xi_\\mathrm{c}^{+}$ baryon production in pp collisions at $\\sqrt{s}$ = 13 TeV with ALICE",
+      "Speaker": "Jaeyoon Cho",
+      "Institute": "Inha University (KR)",
+      "Country": "Korea"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Pseudorapidity densities of charged particles with transverse momentum thresholds in pp collisions at $\\sqrt{s}$ = 5.02 and 13 TeV with ALICE",
+      "Speaker": "Jeongsu Bok",
+      "Institute": "Pusan National University (KR)",
+      "Country": "Korea"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Prospects for open heavy-flavour and quarkonium measurements with NA60+",
+      "Speaker": "Roberta Arnaldi",
+      "Institute": "Universita e INFN Torino (IT)",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Investigation of the Inner Structure of Glueball Candidate Scalar Mesons with the ALICE Detector",
+      "Speaker": "Satoshi Yano",
+      "Institute": "Hiroshima University (JP)",
+      "Country": "Japan"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Non-Identicle particle femtoscopy in Au+Au collisions at 200 GeV using UrQMD modeled with CRAB",
+      "Speaker": "MAHIMA SHARMA",
+      "Institute": "University of Jammu",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "First feasibility study for Asymmetric Cumulants of flow amplitudes in CBM at FAIR",
+      "Speaker": "Ante Bilandzic",
+      "Institute": "Technische Universitaet Muenchen (DE)",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Development of unfolding techniques for dijet measurements in sPHENIX",
+      "Speaker": "Micah Meskowitz",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Jet Calibration for Year 1 Data in sPHENIX",
+      "Speaker": "Virginia Bailey",
+      "Institute": "Georgia State University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Quantifying the underlying event for jet measurements with sPHENIX",
+      "Speaker": "MUHAMMAD Shumail Khan",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Charged-particle multiplicity measurement in Au+Au collisions at $\\sqrt{s_{\\rm{NN}}}$ = 200 GeV with sPHENIX at RHIC",
+      "Speaker": "Hao-Ren Jheng",
+      "Institute": "Massachusetts Inst. of Technology (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "sPHENIX MVTX Pixel Detector Internal Alignment with AI-ML Approach",
+      "Speaker": "Jaehyun Kim",
+      "Institute": "Yonsei University (KR)",
+      "Country": "Korea"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Drell-Yan process at sPHENIX: a golden probe to study Cold Nuclear Matter effects",
+      "Speaker": "Charles-Joseph Na\u00efm",
+      "Institute": "Universit\u00e9 Paris-Saclay (FR)",
+      "Country": "France"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Characterizing Time-Averaged Distortions in the sPHENIX TPC with the TPC Outer Tracker",
+      "Speaker": "Bade Sayk\u0131",
+      "Institute": "Los Alamos National Laboratory",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Distortions in the sPHENIX TPC using Digital Current with Machine Learning",
+      "Speaker": "Dhanush Anil Hangal",
+      "Institute": "Lawrence Livermore Nat. Laboratory (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Clustering hits of Time Projection Chamber by using machine learning and neural networks at sPHENIX",
+      "Speaker": "ZHONGLING JI",
+      "Institute": "UCLA",
+      "Country": "UCLA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Track Seeding in the sPHENIX Experiment",
+      "Speaker": "Michael Joseph Peters",
+      "Institute": "Massachusetts Inst. of Technology (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Track Reconstruction with the sPHENIX Experiment",
+      "Speaker": "Joe Osborn",
+      "Institute": "Brookhaven National Laboratory",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Vertex Determination in sPHENIX",
+      "Speaker": "Anthony Frawley",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "The effects of hydrodynamic causality conditions on Bayesian analysis",
+      "Speaker": "Thiago Siqueira Domingues",
+      "Institute": "University of S\u00e3o Paulo",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Energy-energy correlator measurements in pp and pPb collisions at 5.02 TeV with ALICE",
+      "Speaker": "Anjali Nambrath",
+      "Institute": "University of California Berkeley (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Reconstructing Jet History with Machine Learning",
+      "Speaker": "Arjun Sengupta",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Quarkonium polarization in a vortical medium",
+      "Speaker": "Paulo De Moura",
+      "Institute": "University of Campinas",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "The evolution of jets and high-pT probes in small collisions systems using a multistage framework",
+      "Speaker": "Abhijit Majumder",
+      "Institute": "Wayne State University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Effects of hadronic reinteraction on jet fragmentation from small to large systems",
+      "Speaker": "Hendrik Roch",
+      "Institute": "FIAS",
+      "Country": "FIAS"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Hybrid Hadronization of Jet Showers in Vacuum with JETSCAPE",
+      "Speaker": "Cameron Parker",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "First Deuteron Production Measurement in Proton-Proton Interactions at SPS energies by NA61/SHINE",
+      "Speaker": "Anirvan Shukla",
+      "Institute": "University of Hawai'i at Manoa (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Alignment of the sPHENIX Tracking Detectors",
+      "Speaker": "Reese Boucher",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Heavy flavor hadrons inside jets at sPHENIX",
+      "Speaker": "Antonio Carlos Oliveira Da Silva",
+      "Institute": "Iowa State University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Combined Streaming and Triggered data taking with the sPHENIX Detector",
+      "Speaker": "Martin Lothar Purschke",
+      "Institute": "Brookhaven National Laboratory (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Neutral Pion and Eta Meson Reconstruction with the sPHENIX Detector",
+      "Speaker": "Anthony Hodges",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "In-Situ Calibration of the sPHENIX Hadronic Calorimeter using Isolated Single Hadrons",
+      "Speaker": "Emma McLaughlin",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Calibrated Cosmic Muon simulations for the sPHENIX Hadronic Calorimeters",
+      "Speaker": "Shuhang Li",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "sPHENIX Hadronic Calorimeter Cosmic Muon Calibration",
+      "Speaker": "Hanpu Jiang",
+      "Institute": "Columbia University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "First Performance results of the sPHENIX Event Plane Detector",
+      "Speaker": "Jaebeom Park",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Construction of the sPHENIX Event Plane Detector",
+      "Speaker": "Valerie Wolfe",
+      "Institute": "Lehigh University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "First D$^0$-tagged jet axes difference measurement in pp collisions at $\\sqrt{s} = 5.02$ TeV with ALICE",
+      "Speaker": "Emma Yeats",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Collision event plane determination in sPHENIX at RHIC",
+      "Speaker": "Ejiro Naomi Umaka",
+      "Institute": "Brookhaven National Laboratory (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "The sPHENIX fixed latency reconstruction system",
+      "Speaker": "Christopher Pinkenburg",
+      "Institute": "BNL",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Baseline fluctuation studies for the sPHENIX TPC readout",
+      "Speaker": "Luke Legnosky",
+      "Institute": "Stony Brook University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Characterization of Static Distortions in the sPHENIX TPC with a Steerable Laser System",
+      "Speaker": "Charles Hughes",
+      "Institute": "University of Tennessee (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Characterization of Time Dependent Distortions in the sPHENIX TPC using the Central Membrane",
+      "Speaker": "Benjamin Kimelman",
+      "Institute": "Vanderbilt University",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "sPHENIX DAQ and Trigger",
+      "Speaker": "Daniel Lis",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Energy flow in jets in pp and Pb--Pb collisions with ALICE",
+      "Speaker": "Christos Pliatskas Stylianidis",
+      "Institute": "Nikhef National institute  for subatomic physics (NL)",
+      "Country": "NL"
+    },
+    {
+      "Session": "Flash Talks",
+      "Title": "The Intermediate Silicon Tracker of sPHENIX",
+      "Speaker": "Cheng-Wei Shih",
+      "Institute": "National Central University (TW)",
+      "Country": "TW"
+    },
+    {
+      "Session": "Flash Talks",
+      "Title": "PHENIX Measurements of Azimuthal Anisotropy of Light and Heavy Flavor Hadrons in Au+Au Collisions at Forward Rapidity",
+      "Speaker": "Brandon Blankenship",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Flash Talks",
+      "Title": "Current status and future prospects of measuring hadronic interactions in pp collisions at 13.6 TeV with ALICE",
+      "Speaker": "Anton Albert Riedel",
+      "Institute": "Technische Universitaet Muenchen (DE)",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Flash Talks",
+      "Title": "Strangeness enhancement at LHCb",
+      "Speaker": "Desmond Mzamo Shangase",
+      "Institute": "University of Michigan (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Flash Talks",
+      "Title": "Dynamics of causal hydrodynamic fluctuations in an expanding system",
+      "Speaker": "Shin-ei Fujii",
+      "Institute": "Sophia Univ.",
+      "Country": "Sophia Univ."
+    },
+    {
+      "Session": "Flash Talks",
+      "Title": "Measurements of Hypertriton Production in Au+Au Collisions at 3 to 7.7 GeV",
+      "Speaker": "Yuanjing Ji",
+      "Institute": "Lawrence Berkeley National Lab",
+      "Country": "USA"
+    },
+    {
+      "Session": "Flash Talks",
+      "Title": "Measurement of Two-Particle Correlations and Flow Coefficients in High Multiplicity $e^+e^-$ Collisions using Archived ALEPH Data at 91-209 GeV",
+      "Speaker": "Yu-Chen (Janice) Chen",
+      "Institute": "Massachusetts Institute of Technology",
+      "Country": "USA"
+    },
+    {
+      "Session": "Flash Talks",
+      "Title": "Dijet imbalance for jets of various radii in Pb+Pb and $pp$ collisions with the ATLAS detector",
+      "Speaker": "Anabel Romero",
+      "Institute": "Univ. Illinois at Urbana Champaign (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Flash Talks",
+      "Title": "Introduction",
+      "Speaker": "Claudia Ratti",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Small Systems",
+      "Title": "Latest ALICE results on charm and beauty hadronization mechanisms in pp collisions (remote)",
+      "Speaker": "Jianhui Zhu",
+      "Institute": "INFN-Padova",
+      "Country": "Italy"
+    },
+    {
+      "Session": "New Theory",
+      "Title": "Sound of rigidly moving fluids: on linear waves in inhomogeneous equilibrium configurations (remote)",
+      "Speaker": "Masoud Shokri",
+      "Institute": "Goethe University, ITP",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Chirality",
+      "Title": "Search for anomalous chiral effects in heavy-ion collisions with ALICE",
+      "Speaker": "Chunzheng Wang",
+      "Institute": "Fudan University (CN)",
+      "Country": "China"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Open heavy flavor - experimental overview",
+      "Speaker": "Fabrizio Grosa",
+      "Institute": "CERN",
+      "Country": "Switzerland"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Anomalous kaon correlations in Pb--Pb collisions at the LHC with ALICE",
+      "Speaker": "Anjaly Menon",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "EM Probes",
+      "Title": "Direct photon production and correlations in Pb--Pb collisions with ALICE",
+      "Speaker": "Carolina Arata",
+      "Institute": "Centre National de la Recherche Scientifique (FR)",
+      "Country": "France"
+    },
+    {
+      "Session": "Jets",
+      "Title": "Unveiling the Interplay of Multi-Partonic Structures and Strongly-Interacting Media via R-dependent Jet Modifications in Heavy-Ion Collisions (remote)",
+      "Speaker": "Yacine Mehtar-Tani",
+      "Institute": "Brookhaven National Laboratory",
+      "Country": "USA"
+    },
+    {
+      "Session": "Jets",
+      "Title": "Enhancement of baryon-to-meson ratios around jets as a signature of medium response (remote)",
+      "Speaker": "Guang-You Qin",
+      "Institute": "Central China Normal University",
+      "Country": "UK"
+    },
+    {
+      "Session": "Collective Dynamics",
+      "Title": "Light- and Hyper-Nuclei Collectivity in Au+Au Collisions at RHIC-STAR (remote)",
+      "Speaker": "Chengdong Han",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Collective Dynamics",
+      "Title": "Local and global polarization of $\\Lambda$ hyperons across RHIC-BES energies: The roles of spin hall effect, initial condition, and baryon diffusion (remote)",
+      "Speaker": "Xiang-Yu Wu",
+      "Institute": "Central China Normal University",
+      "Country": "UK"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Characterising the initial conditions and probing the nuclear structure with multiparticle correlations techniques at ALICE",
+      "Speaker": "Emil Gorm Nielsen",
+      "Institute": "University of Copenhagen (DK)",
+      "Country": "DK"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "First measurement of properties of strong interaction between deuterons and light hadrons in Pb--Pb collisions with ALICE",
+      "Speaker": "Wioleta Rzesa",
+      "Institute": "Warsaw University of Technology (PL)",
+      "Country": "PL"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Study of strangeness and baryon production through angular correlations between Xi baryons and identified hadrons in pp collisions with ALICE",
+      "Speaker": "Peter Christiansen",
+      "Institute": "Lund University (SE)",
+      "Country": "SE"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Charmonium production measurement at midrapidity using TRD-triggered data in ALICE",
+      "Speaker": "Jinjoo Seo",
+      "Institute": "Inha University (KR)",
+      "Country": "Korea"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "The Silicon Tracking System of the CBM experiment towards starting system assembly",
+      "Speaker": "Adrian Rodriguez",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "SUBA-Jet: a new coherent jet energy loss model for heavy-ion collisions",
+      "Speaker": "Iurii Karpenko",
+      "Institute": "FNSPE CTU in Prague",
+      "Country": "India"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Results on Breit-Wheeler Process in Heavy-Ion Collisions and its Application to Nuclear Charge Radius Measurements",
+      "Speaker": "Xiaofeng Wang",
+      "Institute": "Shandong University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Studying magnetic fields in heavy-ion collisions using net-proton fluctuations with ALICE",
+      "Speaker": "Ilya Fokin",
+      "Institute": "Heidelberg University (DE)",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Probing the QGP to hadron-gas phase transition with mean transverse momentum fluctuations with ALICE",
+      "Speaker": "Bushra Ali",
+      "Institute": "Aligarh Muslim University (IN)",
+      "Country": "India"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Performance study of the exclusively reconstructed\u00a0 $B^\\pm$ meson in the\u00a0 $J/\\psi$ decay channel with ALICE",
+      "Speaker": "Ida Storehaug",
+      "Institute": "University of Oslo (NO)",
+      "Country": "NO"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "The effects of magnetic field and chemical potential on holographic jet quenching in heavy ion collisions",
+      "Speaker": "Liqiang Zhu",
+      "Institute": "Central China Normal University",
+      "Country": "UK"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Anisotropic flow measurements of strange and multi-strange hadrons in isobar collisions at RHIC-STAR",
+      "Speaker": "Sonia Kabana",
+      "Institute": "Instituto De Alta Investigaci\u00f3n, Universidad de Tarapac\u00e1 (CL)",
+      "Country": "CL"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Exploring hadronic resonances through EPOS4 model: A study of particle interactions and spectra",
+      "Speaker": "Vikash Sumberia",
+      "Institute": "University of Jammu (IN)",
+      "Country": "India"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Measurement of $\\mathrm{\\Lambda_c^+/D^0}$  as a function of event multiplicity in pp and p\u2013Pb collisions  $\\sqrt{s_{\\rm NN}}=5.02\\ \\mathrm{TeV}$ with the ALICE experiment",
+      "Speaker": "Oveis Sheibani",
+      "Institute": "University of Houston (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Energy-energy correlator measurements for D$^{0}$-tagged jets in pp collisions at 13 TeV with ALICE.",
+      "Speaker": "Beatrice Liang-Gilman",
+      "Institute": "University of California Berkeley (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Measurement of directed flow of inclusive jets in heavy-ion collisions at RHIC",
+      "Speaker": "Subhash Singha",
+      "Institute": "Institute of Modern Physics CAS",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Multiplicity dependence of $\\Upsilon$ and $J/\\psi$ production in $p$+$p$ collisions at $\\sqrt{s}$ = 510 GeV",
+      "Speaker": "Anders Garritt Knospe",
+      "Institute": "Lehigh University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "New constraints on 3D initial state and transport parameters of QGP using the Beam Energy Scan phase II data of STAR",
+      "Speaker": "Niseem Magdy Abdelrahman",
+      "Institute": "Stony Brook University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "ALICE as an (anti)hypernuclei factory",
+      "Speaker": "Janik Ditzel",
+      "Institute": "Goethe University Frankfurt (DE)",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Heavy-ion perspectives and prospects for LHCb upgrades",
+      "Speaker": "Imanol Corredoira",
+      "Institute": "Universidade de Santiago de Compostela (ES)",
+      "Country": "ES"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Identifying nuclei with time-of-flight at LHCb",
+      "Speaker": "Chiara Lucarelli",
+      "Institute": "Universita e INFN, Firenze (IT)",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Spontaneous Transverse \u039b and \u039b Hyperon Polarization Measurements at LHC",
+      "Speaker": "Cynthia Nunez",
+      "Institute": "University of Michigan (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Insights on small collision systems in terms of hydrodynamics, pre-hydrodynamics, decorrelations, and non-flow",
+      "Speaker": "James Lawrence Nagle",
+      "Institute": "University of Colorado Boulder",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Production of $\\Sigma$ baryons as a function of multiplicity in pp collisions at the LHC with ALICE",
+      "Speaker": "Benedict Heybeck",
+      "Institute": "Goethe University Frankfurt (DE)",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Directed and triangular flow of identified hadrons and light nuclei from fixed-target energies at RHIC-STAR",
+      "Speaker": "SHARANG  RAV SHARMA",
+      "Institute": "IISER Tirupati",
+      "Country": "Russia"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Baryon stopping from the bremsstrahlung photon spectrum",
+      "Speaker": "Sigurd Nese",
+      "Institute": "University of Oslo (NO)",
+      "Country": "NO"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Suppression and flavor correlation modification of leading di-hadron at RHIC and the LHC",
+      "Speaker": "Yang-Ting Chien",
+      "Institute": "Georgia State University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Target jet substructure and correlation",
+      "Speaker": "Yang-Ting Chien",
+      "Institute": "Georgia State University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Precision jet substructure studies for the Relativistic Heavy Ion Collider with the sPHENIX detector",
+      "Speaker": "Oleh Fedkevych",
+      "Institute": "Georgia State University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Mean $p_{\\rm{T}}$ fluctuations in 3.0 GeV fixed-target collisions from the STAR experiment",
+      "Speaker": "Rutik Manikandhan",
+      "Institute": "University of Houston",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Investigating the $R$-Dependence of Jet Suppression",
+      "Speaker": "Zihui Zhang",
+      "Institute": "Colby College",
+      "Country": "Colby College"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Analytic and Semi-Analytic Calculations for Color Glass in the Weak Field Limit",
+      "Speaker": "Stephen Robicheaux",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Measurements of \u03c0, K, p spectra in fixed target collisions with STAR",
+      "Speaker": "Mathias Labonte",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Extending the fluid dynamic description of heavy-ions collisions to times before the collision",
+      "Speaker": "Andreas Kirchner",
+      "Institute": "ITP Heidelberg",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "$K^{+}K^{+}$  correlation functions in Au+Au collisions at 3.0 - 3.9 GeV",
+      "Speaker": "Bijun Fan",
+      "Institute": "Central China Normal University",
+      "Country": "UK"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Proton-proton femstoscopy in Au+Au collisions at $\\sqrt{s_{NN}}$ = 3.2 GeV",
+      "Speaker": "Yu Zeng",
+      "Institute": "Central China Normal University",
+      "Country": "UK"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Energy dependence of J/$\\psi$ production in Au+Au collisions at $\\sqrt{\\mathrm{s_{NN}}}$  = 14.6, 19.6 and 27 GeV at STAR",
+      "Speaker": "Wei Zhang",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Elliptic flow splittings in the Polyakov\u2013Nambu\u2013Jona-Lasinio transport model",
+      "Speaker": "Wen-Hao Zhou",
+      "Institute": "\u590d\u65e6\u5927\u5b66",
+      "Country": "\u590d\u65e6\u5927\u5b66"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Medium response made efficient: a linearized hydro approach",
+      "Speaker": "Xiaojun Yao",
+      "Institute": "University of Washington",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Search for the Chiral Magnetic Effect by Event Shape Engineering as a Function of Invariant Mass in Au+Au Collisions at $\\sqrt{s_{NN}}$ = 200 GeV from STAR",
+      "Speaker": "Han-Sheng Li",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Measurements of baryon-antibaryon and meson-antimeson pairs from QED vacuum excitation in Au+Au ultra-peripheral collisions at $\\sqrt{s_{\\rm{NN}}} = $ 200 GeV from STAR",
+      "Speaker": "Xin Wu",
+      "Institute": "University of Science and Technology of China",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Search for medium-induced jet quenching effects in high-multiplicity pp collisions with ALICE",
+      "Speaker": "Dong Jo Kim",
+      "Institute": "University of Jyvaskyla (FI)",
+      "Country": "FI"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Measurements of harmonic flow and their fluctuations in $^{16}$O+$^{16}$O collisions at $\\sqrt{s_{_{\\mathrm{NN}}}}=200$ GeV from STAR",
+      "Speaker": "Zhengxi Yan",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Imaging the shape of atomic nuclei in high-energy nuclear collisions from STAR",
+      "Speaker": "Chunjian Zhang",
+      "Institute": "Stony Brook University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Hyperon Polarization in Isobar Collisions and Correlation of Global Polarization with Directed Flow from STAR",
+      "Speaker": "Kosuke Okubo",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Correlation of flow coefficients measured in Au+Au collisions at 1.23 AGeV with HADES",
+      "Speaker": "Christoph Blume",
+      "Institute": "Goethe University Frankfurt (DE)",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "The McDIPPER: A novel saturation-based 3+1D initial state model for Heavy Ion Collisions",
+      "Speaker": "Oscar Garcia-Montero",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Multi-parton interactions in pp collisions using charged-particle flattenicity with ALICE",
+      "Speaker": "Antonio Ortiz Velasquez",
+      "Institute": "Universidad Nacional Autonoma (MX)",
+      "Country": "MX"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Production of light flavor particles as a function of the Underlying Event activity in small and large collision systems with ALICE",
+      "Speaker": "Omar Vazquez Rueda",
+      "Institute": "University of Houston (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Quarkonium production and polarization in pp collisions with ALICE",
+      "Speaker": "Deekshit Kumar",
+      "Institute": "Department of Atomic Energy (IN)",
+      "Country": "India"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Using multi-particle correlations to estimate fluctuations in jet and rare probe azimuthal anisotropies",
+      "Speaker": "Abraham Holtermann",
+      "Institute": "University of Illinois at Urbana Champaign",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Study of baryon fragmentation in charged-particle jets in pp collisions with ALICE",
+      "Speaker": "Gijs Van Weelden",
+      "Institute": "Nikhef National institute  for subatomic physics (NL)",
+      "Country": "NL"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Multi-differential Studies of Strangeness Production with the CBM at FAIR using Machine Learning Techniques",
+      "Speaker": "Axel Puntke",
+      "Institute": "WWU M\u00fcnster",
+      "Country": "WWU M\u00fcnster"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Measurements of long-range two-particle correlation over a wide pseudorapidity range in p--Pb collisions at 5.02 TeV",
+      "Speaker": "Yuko Sekiguchi",
+      "Institute": "University of Tokyo (JP)",
+      "Country": "Japan"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Strangeness production in Au+Au collisions at $\\sqrt{s_{NN}}$ = 7.7, 14.6 and 19.6 GeV with the STAR experiment",
+      "Speaker": "Yi Fang",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Applying the multiplicity-dependent Momentum Kick Model to the pp collisions at $\\sqrt{s}=13$ TeV at the LHC",
+      "Speaker": "Jeongseok Yoon",
+      "Institute": "Inha University (KR)",
+      "Country": "Korea"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Effect of Nuclear Shape Parameters On Initial State Observables In Heavy Ion Collisions",
+      "Speaker": "Aman Dimri",
+      "Institute": "Stony Brook University (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Clocking the particle production and tracking radial flow effects at top LHC Run 3 energy with ALICE",
+      "Speaker": "Brian Gerald Hanley",
+      "Institute": "Wayne State University (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Measurements of Hypernuclei Production and Their Properties in Heavy-Ion Collisions at STAR",
+      "Speaker": "Xiujun Li",
+      "Institute": "USTC",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Strangeness Production in Fixed-Target Au+Au collisions at $\\sqrt{s_{\\rm{NN}}}$ = 7.2 GeV from STAR",
+      "Speaker": "Ashish Jalotra",
+      "Institute": "University of Jammu",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Statistical Hadronization Model Calculations of Heavy Flavor Hadron Production in Relativistic Heavy-Ion Collisions at RHIC and the LHC",
+      "Speaker": "Fernando Flor",
+      "Institute": "Yale University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "New measurements of jet $v_2$ properties with ALICE",
+      "Speaker": "Takuya Kumaoka",
+      "Institute": "University of Tsukuba (JP)",
+      "Country": "Japan"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Studying the nucleus via angular correlations in UPCs with ALICE",
+      "Speaker": "Andrea Giovanni Riffero",
+      "Institute": "University and INFN Torino (IT)",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "$\\Omega_{\\rm c}^{0}$ production in pp collisions at $\\sqrt s$ = 13 TeV with ALICE",
+      "Speaker": "Tiantian Cheng",
+      "Institute": "CCNU - Central China Normal University(CN), GSI - Helmholtzzentrum fur Schwerionenforschung GmbH(DE)",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Event-by-event comparison of initial state models with momentum space information in a hybrid approach",
+      "Speaker": "Niklas G\u00f6tz",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Photon radiation by rotating systems in magnetic field.",
+      "Speaker": "Nandagopal Vijayakumar",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Quantum Regeneration of Bottomonia in Heavy Ion Collisions",
+      "Speaker": "Peter Vander Griend",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Finite volume effects on the chiral magnetic effect",
+      "Speaker": "Matteo Buzzegoli",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Jet momentum broadening during initial stages in kinetic theory",
+      "Speaker": "Florian Lindenbauer",
+      "Institute": "TU Wien",
+      "Country": "TU Wien"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Thermal dielectron measurement in Au+Au collisions at $\\sqrt{s_{\\text{NN}}}$ $=7.7$ GeV with the STAR experiment",
+      "Speaker": "Chenliang Jin",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Measurement of $\\Xi_{c}^{0}$ via semileptonic decay in collisions of pp at 13 TeV and p-Pb at 5.02 TeV with ALICE",
+      "Speaker": "Chong Kim",
+      "Institute": "Pusan National University (KR)",
+      "Country": "Korea"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Dynamics of QCD chiral transition with real-time functional renormalization group",
+      "Speaker": "Soeren Schlichting",
+      "Institute": "Universit\u00e4t Bielefeld",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Partonic Critical Opalescence and Its Impact on the Jet Quenching Parameter $\\hat{q}$}",
+      "Speaker": "Jing Wu",
+      "Institute": "lanzhou university",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Measurements of inclusive J/$\\psi$ and $\\psi$(2S) production at midrapidity in pp collisions at $\\sqrt{s}$ = 13.6 TeV with ALICE",
+      "Speaker": "Yuan Zhang",
+      "Institute": "University of Science and  Technology of China (CN)",
+      "Country": "China"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Dilepton measurements with HADES in $Ag+Ag$ and $p+p$ collisions at $1.58 \\, GeV$ beam energy",
+      "Speaker": "Karina Scharmann",
+      "Institute": "Justus-Liebig-Universitaet Gie\u00dfen",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Exploring the strangeness enhancement and collective-like effects in small collision systems with ALICE at LHC",
+      "Speaker": "Anju Bhasin",
+      "Institute": "University of Jammu (IN)",
+      "Country": "India"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "The Tsallis-Thermometer as a QGP Indicator For Large And Small Collisional Systems",
+      "Speaker": "Gergely Barnafoldi",
+      "Institute": "Wigner RCP",
+      "Country": "Wigner RCP"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Testing new proxies of B,Q and S cumulants in Au-Au collisions at BES energies with EPOS 4",
+      "Speaker": "Johann\u00e8s Jahan",
+      "Institute": "University of Houston - Department of Physics",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Alignment from spin-1 hydrodynamics",
+      "Speaker": "David Wagner",
+      "Institute": "Goethe University Frankfurt",
+      "Country": "France"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Measurment of Two-Point Energy Correlator Within Jets in $pp$ Collisions at $\\sqrt{s}$ = 200 GeV",
+      "Speaker": "Andrew Tamis",
+      "Institute": "Yale University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "New Insights to the Weak Interaction and Quark Model",
+      "Speaker": "Dr. Tianxi Zhang",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Evaluation of a baseline for the study of azimuthal correlations of charmed mesons in heavy-ion collisions at RHIC using PYTHIA and Herwig++",
+      "Speaker": "Katarzyna Gwizdziel",
+      "Institute": "Warsaw University of Technology (PL)",
+      "Country": "PL"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Investigating collective effects in small collision systems using PYTHIA8 and EPOS4 simulations",
+      "Speaker": "Andrea Danu",
+      "Institute": "Institute of Space Science (RO)",
+      "Country": "RO"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Spin alignment of vector mesons by glasma fields",
+      "Speaker": "Di-Lun Yang",
+      "Institute": "Institute of Physics, Academia Sinica",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Molecular dynamics analysis of particle number fluctuations of a first-order phase transition",
+      "Speaker": "Volodymyr Kuznietsov",
+      "Institute": "Bogolyubov Institute for Theoretical Physics of the National Academy of Sciences of Ukraine",
+      "Country": "UK"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Shear Viscosity at High Chemical Potentials",
+      "Speaker": "Isabella  Danhoni",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": null,
+      "Title": "QM 2025 Presentation",
+      "Speaker": "Dirk Rischke",
+      "Institute": "University Frankfurt",
+      "Country": "France"
+    },
+    {
+      "Session": "Heavy Flavor",
+      "Title": "Beam energy dependence of heavy flavor production in Au+Au collisions at STAR",
+      "Speaker": "Yan Wang",
+      "Institute": "University of Science and Technology of China",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Initial State",
+      "Title": "Exploring electromagnetic field effects and constraining transport parameters of QGP using STAR BES II data",
+      "Speaker": "ADITYA PRASAD DASH",
+      "Institute": "University of California Los Angeles",
+      "Country": "Italy"
+    },
+    {
+      "Session": null,
+      "Title": "Keynote talk",
+      "Speaker": "David Gross",
+      "Institute": "KITP/UCSB",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Jets",
+      "Title": "Measurements of the jet axis decorrelation and the groomed jet radius with photon-jet events in PbPb and pp collisions at the CMS experiment",
+      "Speaker": "Molly Taylor",
+      "Institute": "Massachusetts Inst. of Technology (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Chirality",
+      "Title": "Search for the Chiral Magnetic and Vortical Effects Using Event Shape Variables in Au+Au Collisions at STAR",
+      "Speaker": "ZHIWAN XU",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Small Systems",
+      "Title": "Measurement of the sensitivity of two-particle correlations in pp collisions to the presence of hard scatterings",
+      "Speaker": "Soumya Mohapatra",
+      "Institute": "Columbia University (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Observation of the $\\gamma\\gamma\\to\\tau\\tau$ production in PbPb collisions with the CMS experiment",
+      "Speaker": "Matthew Nickel",
+      "Institute": "The University of Kansas (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "b-hadron v$_2$ and R$_{AA}$ with sPHENIX",
+      "Speaker": "Zhaozhong Shi",
+      "Institute": "Los Alamos National Laboratory",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "b-jet tagging at sPHENIX",
+      "Speaker": "Jakub Kvapil",
+      "Institute": "Los Alamos National Laboratory (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Heavy Flavor Physics with MVTX Detectors in sPHENIX",
+      "Speaker": "Yasser Corrales Morales",
+      "Institute": "Los Alamos National Laboratory (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Quarkonia measurements in heavy ion collisions with the sPHENIX experiment",
+      "Speaker": "Alexandre Lebedev",
+      "Institute": "Iowa State University (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Jet Substructure from Calorimeter Towers for Early sPHENIX Measurements",
+      "Speaker": "Noah Applegate",
+      "Institute": "Iowa State University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Charged kaon and pion femtoscopy in the RHIC Beam Energy Scan at the STAR experiment",
+      "Speaker": "Eugenia Khyzhniak",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Observation of a mesoscopic fluid of 10 strongly-interacting fermions",
+      "Speaker": "Giuliano Giacalone",
+      "Institute": "Universit\u00e4t Heidelberg",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Understanding Ridge behavior via kinematics between jets and medium",
+      "Speaker": "Soyeon Cho",
+      "Institute": "Inha University (KR)",
+      "Country": "Korea"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Study of the three-body dynamics at short range via deuteron-hadron correlations by ALICE",
+      "Speaker": "Oton Vazquez Doce",
+      "Institute": "INFN e Laboratori Nazionali di  Frascati (IT)",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "First results on spectra of identified hadrons in central Xe+La collisions from NA61/SHINE at CERN SPS",
+      "Speaker": "Piotr Podlaski",
+      "Institute": "University of Warsaw (PL)",
+      "Country": "PL"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Exploring the equilibration time of the QGP with jet quenching",
+      "Speaker": "Souvik Priyam Adhya",
+      "Institute": "Institute of Nuclear Physics, Polish Academy of Sciences",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Coalescence production of charmonium states in heavy ion collisions",
+      "Speaker": "Sungtae Cho",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Production of pion, kaon, proton in high multiplicity pp collisions at 13 TeV at ALICE experiment",
+      "Speaker": "Rajendra Nath Patra",
+      "Institute": "University of Jammu (IN)",
+      "Country": "India"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Measurements of $\\pi$, K, and p in jets in Pb--Pb collisions at $\\sqrt{s_{\\rm{NN}}} = 5.02$ TeV with ALICE",
+      "Speaker": "Sierra Lisa Weyhmiller",
+      "Institute": "Yale University (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Non-prompt ${\\rm J/\\psi}$ production as a function of multiplicity in pp collisions at \u221as = 13 TeV with ALICE",
+      "Speaker": "Wenda Guo",
+      "Institute": "Central China Normal University  CCNU (CN)",
+      "Country": "China"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "$K_{1}/K^{*}$ enhancement as a signature of chiral symmetry restoration in heavy ion collisions",
+      "Speaker": "Haesom Sung",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Measurement of $\\omega$ meson production in pp and p--Pb collisions at $\\sqrt{s_{\\mathrm{NN}}}=5.02~$TeV with ALICE",
+      "Speaker": "Nicolas Strangmann",
+      "Institute": "Goethe University Frankfurt (DE)",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Measurement of light neutral meson production inside jets in pp collisions at $\\sqrt{s}$ = 13 TeV with ALICE",
+      "Speaker": "Joshua Leon Konig",
+      "Institute": "Goethe University Frankfurt (DE)",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Dielectron Continuum in p+p Collisions",
+      "Speaker": "Roli Esha",
+      "Institute": "Center for Frontiers in Nuclear Science, Stony Brook University",
+      "Country": "France"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Correlations of net-charge, net-kaon and net-proton in Pb-Pb at $\\sqrt{s_\\mathrm{NN}}$ = 5.02 TeV with ALICE",
+      "Speaker": "Swati Saha",
+      "Institute": "National Institute of Science  Education and Research (NISER) (IN)",
+      "Country": "India"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Measurement of $J/\\psi$ polarization in Ru+Ru and Zr+Zr collisions at $\\sqrt{s_{NN}} = 200$ GeV at STAR",
+      "Speaker": "Dandan Shen",
+      "Institute": "Shandong  University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "The universality of energy-momentum response from kinetic theories & applicability of hydrodynamics",
+      "Speaker": "Stephan Ochsenfeld",
+      "Institute": "Bielefeld University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "The shear viscosity of parton matter under two-body scatterings",
+      "Speaker": "Zi-Wei Lin",
+      "Institute": "East Carolina University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Momentum transport coefficients with chiral dependent quark masses in thermal QCD medium",
+      "Speaker": "Pushpa Panday",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Status of the Analyses for the Proton Higher-Order Fluctuations in the  STAR Fixed-Target Program from $\\sqrt{s_{NN}}=$ 3.2 to 7.7 GeV",
+      "Speaker": "Zachary Sweger",
+      "Institute": "University of California, Davis",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Exploring the Feasibility of Imaging Atomic Nuclei at the Electron-Ion Collider with the ePIC Experiment",
+      "Speaker": "Roy Lacey",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "The direct photon puzzle and the weak magnetic photon emission",
+      "Speaker": "Jing-an Sun",
+      "Institute": "Fudan University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "The direct photon puzzle and the weak magnetic photon emission",
+      "Speaker": "Li Yan",
+      "Institute": "Fudan University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "3D structure of jet-induced Mach cone in an expanding QGP",
+      "Speaker": "Zhong Yang",
+      "Institute": "CCNU",
+      "Country": "China"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Revisiting Initial Condition Modeling of Heavy Ion Collisions with Bayesian Parameter Estimation Using the latest RHIC and LHC data",
+      "Speaker": "Maxim Virta",
+      "Institute": "University of Jyv\u00e4skyl\u00e4",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Measurements of two-pion femtoscopy in Au+Au Collisions at $\\sqrt{s_{\\mathrm{NN}}}$ = 3.0, 3.2, 3.5, and 3.9 GeV from RHIC-STAR",
+      "Speaker": "Youquan Qi",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Correlations of conserved charges at finite density",
+      "Speaker": "Oleh Savchuk",
+      "Institute": "Bogolyubov Institute for Theoretical Physics and Facility for Rare Isotope Beams",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Differential studies of multi-harmonic $v_n$ correlations in heavy-ion collisions with ALICE",
+      "Speaker": "Ante Bilandzic",
+      "Institute": "Technische Universitaet Muenchen (DE)",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Helical vortical effect and matter/anti-matter polarization asymmetry",
+      "Speaker": "Victor Ambrus",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Hyperon reconstruction method with machine learning in Pb-Pb collisions at ALICE",
+      "Speaker": "Ryoka Tokumoto",
+      "Institute": "Hiroshima University (JP)",
+      "Country": "Japan"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Event-shape engineering of charged hadron spectra in heavy-ion collisions at $\\sqrt{s_{\\mathrm{NN}}}=200$ GeV at STAR",
+      "Speaker": "Isaac Mooney",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Measurement of $\\mathrm{D^0-{\\bar{D}} ^{0}}$ azimuthal correlations and femtoscopic correlations of D mesons with identified hadrons in Au+Au collisions at $\\sqrt{s_{NN}} = 200$ GeV at STAR",
+      "Speaker": "Katarzyna Gwizdziel",
+      "Institute": "Warsaw University of Technology (PL)",
+      "Country": "PL"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Measurements of (anti)nuclei in pp collision at \u221as = 13.6 TeV",
+      "Speaker": "Giovanni Malfattore",
+      "Institute": "University of Bologna and INFN, Bologna (IT)",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Feasibility study of chiral symmetry restoration with ALICE",
+      "Speaker": "Keisuke Tomohiro",
+      "Institute": "Hiroshima University (JP)",
+      "Country": "Japan"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Simulation studies of the pair spectrometer luminosity detector for the ePIC experiment at the EIC",
+      "Speaker": "Aranya Giri",
+      "Institute": "University of Houston",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Measurements of jet $v_{2}$ in medium-sized systems at STAR",
+      "Speaker": "Tristan Protzman",
+      "Institute": "Lehigh University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Identifying quenched jets in heavy ion collisions with machine learning",
+      "Speaker": "Yilun Wu",
+      "Institute": "Vanderbilt University",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Adiabatic hydrodynamization in the bottom-up thermalization scenario",
+      "Speaker": "Bruno Sebastian Scheihing Hitschfeld",
+      "Institute": "Massachusetts Institute of Technology",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Baryon-Strangeness Correlations in $\\sqrt{s_{NN}}$ = 3 GeV Au+Au Collisions from RHIC-STAR Fixed-Target Experiment",
+      "Speaker": "Yu Zhang",
+      "Institute": "Central China Normal University",
+      "Country": "UK"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Transport coe\ufb03cients of heavy quarkonia comparing with heavy quark coe\ufb03cients",
+      "Speaker": "Juhee Hong",
+      "Institute": "Yonsei University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Dense matter in a constituent quark model",
+      "Speaker": "Aaron Park",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Empirical Characteristics of Light and Heavy Flavor Parton Energy Loss Dynamics at the LHC and RHIC",
+      "Speaker": "THOMAS MARSHALL",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Heavy flavor phenomenology in Pb+Pb collision with IP-Glasma initial state and Bayesian calibrated hydrodynamics",
+      "Speaker": "Manu Kurian",
+      "Institute": "McGill University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Non-interdependent Collective Motions in Heavy-ion Collisions",
+      "Speaker": "Gang Wang",
+      "Institute": "UCLA",
+      "Country": "UCLA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Energy loss and chiral magnetic effect",
+      "Speaker": "Jeremy Hansen",
+      "Institute": "Iowa State University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Exploring neutron stars with three conserved charges in a newly optimized C++ Chiral Mean Field code",
+      "Speaker": "Nikol\u00e1s Cruz Camacho",
+      "Institute": "University of Illinois at Urbana-Champaign",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Study of Baryon Number Transport via $\\Omega$-hadron Correlations",
+      "Speaker": "XIATONG WU",
+      "Institute": "Department of Physics and Astronomy, University of California, Los Angeles, CA 90095, USA",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Proton-Endcap Electromagnetic Calorimeter of the ePIC Experiment at Electron-Ion Collider",
+      "Speaker": "ZHONGLING JI",
+      "Institute": "UCLA",
+      "Country": "UCLA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Structure in the speed of sound: from neutron stars to heavy-ion collisions",
+      "Speaker": "Nanxi Yao",
+      "Institute": "University of Illinois, Urbana-Champaign",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Measurement of $\\rm D^{0}$ Meson Tagged Jets in Au+Au Collisions at $\\sqrt{s_{\\rm NN}} = 200$ GeV at STAR",
+      "Speaker": "Diptanil Roy",
+      "Institute": "Rutgers University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "An Augmented QCD Phase Portrait: Mapping Quark-Hadron Deconfinement for Hot, Dense, Rotating Matter under Magnetic Field",
+      "Speaker": "Gaurav Mukherjee",
+      "Institute": "Bhabha Atomic Research Centre, Homi Bhabha National Institute",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Measurement of non-prompt D-mesons production in pp collisions at  \u221as = 13 TeV using Machine Learning (ML) techniques with  ALICE",
+      "Speaker": "Renu Bala",
+      "Institute": "University of Jammu (IN)",
+      "Country": "India"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Strange hadron production in d+Au collisions at \u221asNN = 200 GeV using the STAR detector",
+      "Speaker": "Ishu Aggarwal",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Probing the effect of the nonextensivity on the transport properties of hot QCD medium at finite magnetic field and chemical potential",
+      "Speaker": "Shubhalaxmi Rath",
+      "Institute": "Indian Institute of Technology Bombay",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Prospects for light (anti)nuclei measurements in jets in Run 3 with ALICE",
+      "Speaker": "Marika Rasa",
+      "Institute": "University and INFN Catania",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "MC-EKRT event generator for initializing 3+1 D hydrodynamics",
+      "Speaker": "Mikko Kuha",
+      "Institute": "University of Jyv\u00e4skyl\u00e4",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Probing parton shower and hadronization with novel jet substructure measurements at STAR",
+      "Speaker": "Youqi Song",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Azimuthal correlations of heavy-flavor decay electrons and charged particles with the ALICE detector",
+      "Speaker": "Amanda Nicole Flores",
+      "Institute": "University of Texas at Austin (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Measurement of the $\\Upsilon$ production in heavy-ion collisions at $\\sqrt{s_{\\rm NN}}$ = 200 GeV with the STAR detector",
+      "Speaker": "Shuai Yang",
+      "Institute": "South China Normal University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Strange hadron production in pp collisions with Run 3 data",
+      "Speaker": "Chiara De Martin",
+      "Institute": "Universita e INFN Trieste (IT)",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Measurement of heavy-flavor electron production in Au+Au collisions at $\\sqrt{s_{NN}}$ = 54.4 GeV at STAR",
+      "Speaker": "Veronika Prozorova",
+      "Institute": "Czech Technical University in Prague",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "QCD mesonic screening masses using Gribov quantization",
+      "Speaker": "SUMIT N/A",
+      "Institute": "IIT Roorkee",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "A New Horizon - Dielectron measurements with ALICE 3",
+      "Speaker": "Horst Sebastian Scheid",
+      "Institute": "Goethe University Frankfurt (DE)",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Measurement of  $\\Xi_{\\rm c}^0$ production as a function of multiplicity via hadron decay in pp collisions at $\\mathbf{\\sqrt{\\textit s}}$ = 13 TeV with ALICE",
+      "Speaker": "Tao Fang",
+      "Institute": "Central China Normal University  CCNU (CN)",
+      "Country": "China"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Exploring light hadrons in UPCs with ALICE",
+      "Speaker": "Alexander Bylinkin",
+      "Institute": "ITEP",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Small Systems",
+      "Title": "Insights on strange quark hadronization measuring (multi)strange hadron production in small collision systems with ALICE",
+      "Speaker": "Sara Pucillo",
+      "Institute": "Universita e INFN Torino (IT)",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Small Systems",
+      "Title": "ATLAS measurement of mean momentum fluctuations and correlations with the flow in pp, Xe-Xe, and Pb-Pb",
+      "Speaker": "Tomasz Bold",
+      "Institute": "AGH Univ. of Science and Technology, Krakow (PL)",
+      "Country": "PL"
+    },
+    {
+      "Session": "Small Systems",
+      "Title": "Multiplicity Dependence of Strange Hadron Production in Small Systems using the STAR detector",
+      "Speaker": "Ishu Aggarwal",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "QCD at finite T and density",
+      "Title": "Temperature and Strong Magnetic Field Effects in Dense Matter",
+      "Speaker": "Veronica Dexheimer",
+      "Institute": "Kent State Universtity",
+      "Country": "Italy"
+    },
+    {
+      "Session": "QCD at finite T and density",
+      "Title": "Equilibrium and Dynamical Properties of Hot and Dense Quark-Gluon matter from Holographic Black Holes",
+      "Speaker": "Joaquin Grefa",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "QCD at finite T and density",
+      "Title": "Microscopic encoding of macroscopic universality: How do the universal behaviors near the QCD transition arise from quarks and gluons?",
+      "Speaker": "Peter Petreczky",
+      "Institute": "BNL",
+      "Country": "USA"
+    },
+    {
+      "Session": "QCD at finite T and density",
+      "Title": "Measurements of $\\it p$-$\\Lambda$ and $\\it d$-$\\Lambda$ correlations in Au+Au collisions from the fixed-target program at the STAR experiment",
+      "Speaker": "Yu Hu",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "QCD at finite T and density",
+      "Title": "Two-particle femtoscopy at the HADES experiment",
+      "Speaker": "Mateusz Grunwald",
+      "Institute": "Warsaw Universty of Technology",
+      "Country": "Switzerland"
+    },
+    {
+      "Session": "New Theory",
+      "Title": "The Black Hole CGC double copy: Computing gravitational radiation in close hyperbolic encounters of primordial Black Holes",
+      "Speaker": "Raju Venugopalan",
+      "Institute": "Brookhaven National Laboratory",
+      "Country": "USA"
+    },
+    {
+      "Session": "New Theory",
+      "Title": "Isotropization of a longitudinally expanding plasma with the 2PI effective action",
+      "Speaker": "Sigtryggur Hauksson",
+      "Institute": "IPhT - CEA",
+      "Country": "France"
+    },
+    {
+      "Session": "New Theory",
+      "Title": "Charge-dependent anisotropic flow in relativistic resistive magneto-hydrodynamic expansion",
+      "Speaker": "Chiho Nonaka",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "New Theory",
+      "Title": "Far-off-equilibrium early-stage dynamics in high-energy nuclear collisions",
+      "Speaker": "Chandrodoy Chattopadhyay",
+      "Institute": "North Carolina State University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "New Theory",
+      "Title": "Studying exotic hadrons in high energy nuclear collisions",
+      "Speaker": "Jinfeng Liao",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Initial State",
+      "Title": "Probing initial state effects in nuclear collisions via jet and top quark measurements with the ATLAS detector",
+      "Speaker": "Patrycja Anna Potepa",
+      "Institute": "AGH University of Krakow (PL)",
+      "Country": "PL"
+    },
+    {
+      "Session": "Initial State",
+      "Title": "Assessing the deformed nuclear structure at various energy scales",
+      "Speaker": "Pragya Singh",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Initial State",
+      "Title": "Event-by-event pre-equilibrium dynamics with conserved charges",
+      "Speaker": "Travis Dore",
+      "Institute": "Universit\u00e4t Bielefeld",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Heavy Flavor",
+      "Title": "Quarkonium transport in weakly and strongly coupled plasmas",
+      "Speaker": "Bruno Sebastian Scheihing Hitschfeld",
+      "Institute": "Massachusetts Institute of Technology",
+      "Country": "USA"
+    },
+    {
+      "Session": "Heavy Flavor",
+      "Title": "T-matrix Analysis of Static Wilson Line Correlators from Lattice QCD at Finite Temperature",
+      "Speaker": "Zhanduo Tang",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Heavy Flavor",
+      "Title": "Studies of the relative suppression of excited quarkonium states in pPb collisions with CMS",
+      "Speaker": "Ota Kukral",
+      "Institute": "University of California Davis (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Heavy Flavor",
+      "Title": "Heavy-flavor jet substructure for probing the flavour dependences of QCD parton showers with ALICE",
+      "Speaker": "Nima Zardoshti",
+      "Institute": "CERN",
+      "Country": "Switzerland"
+    },
+    {
+      "Session": "Heavy Flavor",
+      "Title": "Measurements of prompt and nonprompt $\\mathrm{D}^{0}$ mesons production and collective flow with CMS at 5.02 TeV",
+      "Speaker": "Milan Stojanovic",
+      "Institute": "Purdue University (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "QCD at finite T and density",
+      "Title": "Interferometry in a Moat Regime",
+      "Speaker": "Fabian Rennecke",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "QCD at finite T and density",
+      "Title": "Influence of baryon number, strangeness, and electric charge fluctuations on spectra and collective flow at the LHC",
+      "Speaker": "Dekrayat Almaalol",
+      "Institute": "University of Illinois Urbana-Champaign",
+      "Country": "Italy"
+    },
+    {
+      "Session": "QCD at finite T and density",
+      "Title": "QCD material parameters at zero and non-zero chemical potential from the lattice",
+      "Speaker": "David Clarke",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "QCD at finite T and density",
+      "Title": "Finite volume effects near the chiral crossover",
+      "Speaker": "Ruben Kara",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Initial State",
+      "Title": "Multi-scale Imaging of Nuclear and Proton Geometries",
+      "Speaker": "Wenbin Zhao",
+      "Institute": "Wayne State University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Initial State",
+      "Title": "Thermalization and quark production in spatially homogeneous system of gluons",
+      "Speaker": "Sergio Barrera Cabodevila",
+      "Institute": "Instituto Galego de F\u00edsica de Altas Enerx\u00edas (IGFAE)",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Initial State",
+      "Title": "Measurement of dijet production in UPC with the ATLAS detector",
+      "Speaker": "Benjamin Jacob Gilbert",
+      "Institute": "Columbia University (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Initial State",
+      "Title": "Search for evidence of the baryon junction in photonuclear processes and heavy-ion collisions at STAR",
+      "Speaker": "Chun Yuen Tsang",
+      "Institute": "Kent State University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Initial State",
+      "Title": "Determination of the neutron skin of Pb-208 from ultrarelativistic nuclear collisions",
+      "Speaker": "Govert Nijs",
+      "Institute": "Massachusetts Institute of Technology",
+      "Country": "USA"
+    },
+    {
+      "Session": "EM Probes",
+      "Title": "Understanding the properties of the fireball with the polarization signature of thermal dileptons",
+      "Speaker": "Florian Seck",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "EM Probes",
+      "Title": "Inverse slope of the photon $p_T$ spectrum and the QGP temperature profile",
+      "Speaker": "Jean-Francois Paquet",
+      "Institute": "Vanderbilt University",
+      "Country": "Germany"
+    },
+    {
+      "Session": "EM Probes",
+      "Title": "Electromagnetic probes for critical fluctuations of phase transitions in dense QCD",
+      "Speaker": "Toru Nishimura",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "EM Probes",
+      "Title": "Pre-equilibrium Photon and Dilepton Production",
+      "Speaker": "Philip Plaschke",
+      "Institute": "Bielefeld University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "EM Probes",
+      "Title": "Fate of the $\\rho$ - $a_1$ mixing in dilepton production",
+      "Speaker": "Azumi Sakai",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Critical Point",
+      "Title": "Extracting the speed of sound in the strongly-interacting matter created in relativistic nuclear collisions with the CMS experiment",
+      "Speaker": "Cesar Bernardes",
+      "Institute": "UNESP - Universidade Estadual  Paulista (BR)",
+      "Country": "BR"
+    },
+    {
+      "Session": "Critical Point",
+      "Title": "Exploring the Critical Points in QCD with Multi-Point Pade and Machine Learning Techniques in (2+1)-flavor QCD",
+      "Speaker": "Jishnu Goswami",
+      "Institute": "Bielefeld University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Critical Point",
+      "Title": "Effects of first-order chiral phase transition in relativistic heavy-ion collisions",
+      "Speaker": "KaiJia Sun",
+      "Institute": "Institute of Modern Physics, Fudan University, Shanghai, China",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Critical Point",
+      "Title": "Fluctuations near the liquid-gas and chiral phase transitions in hadronic matter",
+      "Speaker": "Micha\u0142 Marczenko",
+      "Institute": "University of Wroc\u0142aw",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Critical Point",
+      "Title": "Universal cumulants from fluctuating width of rapidity distributions",
+      "Speaker": "Adam Bzdak",
+      "Institute": "AGH University of Science and Technology",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Spin/EIC Physics",
+      "Title": "STAR Forward Detector Upgrade Status and Performance",
+      "Speaker": "Zhen Wang",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Spin/EIC Physics",
+      "Title": "Exploration of hadronization through heavy flavor production at the future Electron-Ion Collider",
+      "Speaker": "Xuan Li",
+      "Institute": "Los Alamos National Laboratory",
+      "Country": "USA"
+    },
+    {
+      "Session": "Spin/EIC Physics",
+      "Title": "Calculation of the Polarized Bethe-Heitler Cross Section for the Electron Ion Collider",
+      "Speaker": "Dhevan Raja Gangadharan",
+      "Institute": "University of Houston (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Spin/EIC Physics",
+      "Title": "Probing gluon saturation through two-particle correlations at STAR and the EIC",
+      "Speaker": "Xiaoxuan Chu",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Spin/EIC Physics",
+      "Title": "Harmonics of Parton Saturation in Lepton-Jet Correlations at the EIC",
+      "Speaker": "Yuan-Yuan Zhang",
+      "Institute": "CUHK-SZ",
+      "Country": "CUHK-SZ"
+    },
+    {
+      "Session": "Spin/EIC Physics",
+      "Title": "Exploring the Spin Structure of the Nucleon at STAR",
+      "Speaker": "Ting Lin",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Small Systems",
+      "Title": "AMY Lorentz invariant parton cascade",
+      "Speaker": "Korinna Zapp",
+      "Institute": "Lund University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Small Systems",
+      "Title": "Initial-state  and final-state effects on hadron production in small collision systems",
+      "Speaker": "Ivan Vitev",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Small Systems",
+      "Title": "Search for longe-range QCD collective phenomena inside high-multiplicity jets in pp collisions with the CMS experiment",
+      "Speaker": "Parker Gardner",
+      "Institute": "Rice University (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Small Systems",
+      "Title": "Hot spots in a proton",
+      "Speaker": "Tuomas Lappi",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Small Systems",
+      "Title": "Measurement of charged and full jet production and nuclear modification factor in pp and p\u2212Pb collisions with ALICE",
+      "Speaker": "Austin Schmier",
+      "Institute": "University of Tennessee (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Small Systems",
+      "Title": "Particle production and entropy measurement in ALICE",
+      "Speaker": "Alek Hutson",
+      "Institute": "University of Houston (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Jets",
+      "Title": "Exploring perturbative QCD splittings in heavy-ion collisions",
+      "Speaker": "Adam Takacs",
+      "Institute": "University of Bergen",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Jets",
+      "Title": "Measurements of jet momentum profile and generalized angularities in Au+Au collisions at $\\sqrt{s_{NN}} = 200$ GeV at STAR",
+      "Speaker": "Tanmay Pani",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Jets",
+      "Title": "Resolving medium properties using high-$p_\\mathrm{T}$ jets with jet and in-jet correlations in PbPb collisions at 5.02 TeV with the CMS detector",
+      "Speaker": "Jussi Viinikainen",
+      "Institute": "Vanderbilt University (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Jets",
+      "Title": "Thermalization of mini-jets in QCD kinetic theory",
+      "Speaker": "Aleksas Mazeliauskas",
+      "Institute": "Heidelberg University (DE)",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Future Experiments",
+      "Title": "Overview of the NA60+ experiment at the CERN SPS",
+      "Speaker": "Giacomo Alocco",
+      "Institute": "Universita e INFN, Cagliari (IT)",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Future Experiments",
+      "Title": "Commissioning and first collisions with the LHCb SMOG2 system",
+      "Speaker": "Saverio Mariani",
+      "Institute": "CERN",
+      "Country": "Switzerland"
+    },
+    {
+      "Session": "Future Experiments",
+      "Title": "The status of the CBM experiment at FAIR",
+      "Speaker": "Claudia Hoehne",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Future Experiments",
+      "Title": "ALICE Forward Calorimeter (FoCal): Physics program and performance",
+      "Speaker": "Florian Jonas",
+      "Institute": "Westfaelische Wilhelms-Universitaet Muenster (DE)",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Future Experiments",
+      "Title": "Novel silicon detectors in ALICE at the LHC: the ITS3 and ALICE 3 upgrades",
+      "Speaker": "Isabella Sanna",
+      "Institute": "Technische Universitat Munchen (DE)",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Future Experiments",
+      "Title": "New opportunities for understanding high-density QCD matter with CMS Phase II detector at the High-Luminosity LHC era",
+      "Speaker": "Zhenyu Ye",
+      "Institute": "University of Illinois at Chicago (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Astrophysics",
+      "Title": "Constraining (anti)nuclei measurements relevant for astrophysics with ALICE",
+      "Speaker": "Chiara Pinto",
+      "Institute": "Technische Universitaet Muenchen (DE)",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Astrophysics",
+      "Title": "Causal and Stable Magnetohydrodynamics",
+      "Speaker": "Khwahish Kushwah",
+      "Institute": "Universidade Federal Fluminense (UFF), Rio de Janeiro, Brazil",
+      "Country": "UK"
+    },
+    {
+      "Session": "Astrophysics",
+      "Title": "Equations of state for neutron stars with phase transitions of different orders",
+      "Speaker": "Alexander Clevinger",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Astrophysics",
+      "Title": "Reaching percolation and conformal limits in neutron stars",
+      "Speaker": "Chihiro Sasaki",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Astrophysics",
+      "Title": "Far-from-equilibrium relativistic hydrodynamics in neutron-star mergers",
+      "Speaker": "Yumu Yang",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Astrophysics",
+      "Title": "Bayesian analysis of nontrivial features in the speed of sound inside neutron stars in light of astrophysical and pQCD constraints",
+      "Speaker": "D\u00e9bora Mroczek",
+      "Institute": "University of Illinois at Urbana-Champaign",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Light Flavor",
+      "Title": "Large isospin symmetry violation in kaon production",
+      "Speaker": "Wojciech Brylinski",
+      "Institute": "Warsaw University of Technology (PL)",
+      "Country": "PL"
+    },
+    {
+      "Session": "Light Flavor",
+      "Title": "Measurements of (anti)(hyper)nuclei with ALICE",
+      "Speaker": "Ivan Vorobyev",
+      "Institute": "CERN",
+      "Country": "Switzerland"
+    },
+    {
+      "Session": "Light Flavor",
+      "Title": "Accessing strong interaction in three-hadron systems with ALICE",
+      "Speaker": "Bhawani Singh",
+      "Institute": "Technische Universitaet Muenchen (DE)",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Jets",
+      "Title": "Probing the dynamics of color coherence with energy correlators",
+      "Speaker": "Carlota Andres",
+      "Institute": "Ecole Polytechnique, CPHT",
+      "Country": "Switzerland"
+    },
+    {
+      "Session": "Jets",
+      "Title": "Study of jet energy redistribution and broadening using acoplanarity and planar flow measurements in pp and Pb--Pb collisions with ALICE",
+      "Speaker": "Jaime Norman",
+      "Institute": "University of Liverpool (GB)",
+      "Country": "GB"
+    },
+    {
+      "Session": "Jets",
+      "Title": "Measurement of in-medium modification of energy-space structure of jets via $\\gamma$ and $\\pi^0$ triggered hadrons in Au+Au collisions at RHIC",
+      "Speaker": "Megan Connors",
+      "Institute": "Georgia State University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Jets",
+      "Title": "Studies of jet quenching and medium response using photon+jet events with ATLAS",
+      "Speaker": "Christopher Mc Ginn",
+      "Institute": "Massachusetts Inst. of Technology (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Jets",
+      "Title": "Measurements of the substructure and radius dependence of jet quenching in PbPb collisions",
+      "Speaker": "Dhanush Anil Hangal",
+      "Institute": "Lawrence Livermore Nat. Laboratory (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Heavy Flavor",
+      "Title": "A fluid-dynamic approach to heavy-quark diffusion in the quark-gluon plasma",
+      "Speaker": "Federica Capellino",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Heavy Flavor",
+      "Title": "Heavy-flavor transport and hadronization in proton-proton collisions",
+      "Speaker": "Andrea Beraudo",
+      "Institute": "INFN, sezione di Torino (IT)",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Heavy Flavor",
+      "Title": "Event-by-event heavy-flavour dynamics: estimating the spatial diffusion coefficient $D_s$ from charm to the infinite mass limit",
+      "Speaker": "Vincenzo Minissale",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Heavy Flavor",
+      "Title": "Microscopic Model for Quarkonia Production in Heavy-Ion collisions",
+      "Speaker": "Joerg Aichelin",
+      "Institute": "SUBATECH",
+      "Country": "Switzerland"
+    },
+    {
+      "Session": "Heavy Flavor",
+      "Title": "First energy-energy correlators measurements for inclusive and heavy-flavour tagged jets with ALICE",
+      "Speaker": "Wenqing Fan",
+      "Institute": "Lawrence Berkeley National Lab. (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Heavy Flavor",
+      "Title": "Probing parton formation times with $g\\rightarrow c\\bar{c}$ splitting",
+      "Speaker": "Wilke Van Der Schee",
+      "Institute": "CERN",
+      "Country": "Switzerland"
+    },
+    {
+      "Session": "Small Systems",
+      "Title": "Measurements of azimuthal anisotropies in $^{16}$O+$^{16}$O and $\\gamma$+Au collisions from STAR",
+      "Speaker": "Shengli Huang",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Small Systems",
+      "Title": "Flowing to the future: Simulating the tiniest fluids in 3+1 dimensions",
+      "Speaker": "Bjoern Schenke",
+      "Institute": "Brookhaven National Lab",
+      "Country": "USA"
+    },
+    {
+      "Session": "Small Systems",
+      "Title": "Correlation between $\\Upsilon$(nS) meson and underlying event in $pp$ collision",
+      "Speaker": "Zvi Citron",
+      "Institute": "Ben-Gurion University of the Negev (IL)",
+      "Country": "IL"
+    },
+    {
+      "Session": "Small Systems",
+      "Title": "Measuring jet quenching with a Bayesian Inference analysis of hadron and jet data by JETSCAPE",
+      "Speaker": "Raymond Ehlers",
+      "Institute": "University of California Berkeley (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Small Systems",
+      "Title": "Recent results from fixed-target collisions at LHCb",
+      "Speaker": "Kara Mattioli",
+      "Institute": "Centre National de la Recherche Scientifique (FR)",
+      "Country": "France"
+    },
+    {
+      "Session": "Small Systems",
+      "Title": "Small-system properties as measured with jets and high-$p_\\mathrm{T}$ azimuthal anisotropy by the CMS experiment",
+      "Speaker": "Dener De Souza Lemos",
+      "Institute": "University of Illinois at Chicago (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "QCD at finite T and density",
+      "Title": "Heavy quark diffusion from 2+1 flavor lattice QCD",
+      "Speaker": "Hai-Tao Shu",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "QCD at finite T and density",
+      "Title": "QCD equation of state with improved precision from lattice simulations",
+      "Speaker": "Paolo Parotto",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "QCD at finite T and density",
+      "Title": "Equation of state of a hot-and-dense quark gluon plasma: lattice simulations at real $\\mu_B$ vs. extrapolations",
+      "Speaker": "Chik Him Wong",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "QCD at finite T and density",
+      "Title": "Particle production in Au+Au collisions at Beam Energy Scan II energies at RHIC",
+      "Speaker": "Matthew Harasty",
+      "Institute": "University of California, Davis",
+      "Country": "Italy"
+    },
+    {
+      "Session": "UPC",
+      "Title": "First global study of super dense gluonic matter with UPCs by ALICE",
+      "Speaker": "Simone Ragoni",
+      "Institute": "Creighton University (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Initial State",
+      "Title": "First study of the initial gluonic fluctuations using UPCs with ALICE",
+      "Speaker": "Adam Matyja",
+      "Institute": "Polish Academy of Sciences (PL)",
+      "Country": "PL"
+    },
+    {
+      "Session": "QCD at finite T and density",
+      "Title": "Bayesian Inference of QGP Properties and 3D Dynamics in Heavy-Ion Collisions in the RHIC Beam Energy Scan Program",
+      "Speaker": "Chun Shen",
+      "Institute": "Wayne State University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "QCD at finite T and density",
+      "Title": "QCD based equation of state at finite density with a critical point from an alternative expansion scheme",
+      "Speaker": "Micheal  Kahangirwe",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Polarization of vector mesons in non-equilibrium hydrodynamics with spin",
+      "Speaker": "Kayman Gon\u00e7alves",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Poster Session",
+      "Title": "Advanced coalescence model based on the Wigner function formalism",
+      "Speaker": "Chiara Pinto",
+      "Institute": "Technische Universitaet Muenchen (DE)",
+      "Country": "Germany"
+    },
+    {
+      "Session": "QCD at finite T and density",
+      "Title": "High order fluctuations of conserved charges in the continuum limit",
+      "Speaker": "Szabolcs Istvan Borsanyi",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "New Theory",
+      "Title": "Far-from-equilibrium attractors for massive kinetic theory in the relaxation time approximation",
+      "Speaker": "Huda Alalawi",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "New Theory",
+      "Title": "Mapping the critical equation of state by resummations",
+      "Speaker": "Gokce Basar",
+      "Institute": "University of North Carolina, Chapel Hill",
+      "Country": "Italy"
+    },
+    {
+      "Session": "New Theory",
+      "Title": "Applicability of higher-order hydrodynamics in heavy-ion collisions",
+      "Speaker": "Sunil Jaiswal",
+      "Institute": "Tata Institute of Fundamental Research",
+      "Country": "Italy"
+    },
+    {
+      "Session": "New Theory",
+      "Title": "Transverse-momentum-dependent (TMD) factorization in reactions with nuclei: from Drell-Yan to hadron production",
+      "Speaker": "Weiyao Ke",
+      "Institute": "Los Alamos National Laboratory",
+      "Country": "USA"
+    },
+    {
+      "Session": "New Theory",
+      "Title": "Azimuthal anisotropies at high $p_T$ from transverse momentum dependent (TMD) parton distribution and fragmentation functions",
+      "Speaker": "ismail soudi",
+      "Institute": "Wayne State University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "New Theory",
+      "Title": "A new approach to stochastic relativistic fluid dynamics from information flow",
+      "Speaker": "Nicki Mullins",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Initial State",
+      "Title": "Using new methods for systematic study of nuclear structure in high-energy collisions to probe the effect of short-range correlations",
+      "Speaker": "Matthew William Luzum",
+      "Institute": "University of S\u00e3o Paulo",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Initial State",
+      "Title": "Constraining the low x structure of nuclei with LHCb",
+      "Speaker": "Thomas Boettcher",
+      "Institute": "University of Cincinnati (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Initial State",
+      "Title": "Adiabatic Hydrodynamization: a Natural Framework to Find and Describe Prehydrodynamic Attractors",
+      "Speaker": "Rachel Steinhorst",
+      "Institute": "Massachusetts Institute of Technology",
+      "Country": "USA"
+    },
+    {
+      "Session": "Initial State",
+      "Title": "Physics opportunities from nuclear structure studies with high-energy nuclear collisions",
+      "Speaker": "Jiangyong Jia",
+      "Institute": "Stony Brook University (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Initial State",
+      "Title": "Limiting attractors in heavy-ion collisions --- the interplay between bottom-up and hydrodynamical attractors",
+      "Speaker": "Florian Lindenbauer",
+      "Institute": "TU Wien",
+      "Country": "TU Wien"
+    },
+    {
+      "Session": "Initial State",
+      "Title": "Investigating the early magnetic field of QGP via heavy-flavour polarisation studies with ALICE",
+      "Speaker": "Luca Micheletti",
+      "Institute": "CERN",
+      "Country": "Switzerland"
+    },
+    {
+      "Session": "EM Probes",
+      "Title": "Measurement of dilepton and diphoton production from photon fusion processes in UPC in Pb+Pb collisions with the ATLAS detector",
+      "Speaker": "Peter Alan Steinberg",
+      "Institute": "Brookhaven National Laboratory (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "EM Probes",
+      "Title": "Thermal dielectron measurements in Au+Au collisions at $\\sqrt{s_{NN}}=$ 7.7, 14.6, and 19.6 GeV with the STAR experiment",
+      "Speaker": "Yiding Han",
+      "Institute": "Rice University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "EM Probes",
+      "Title": "Electromagnetic radiation in pp and Pb--Pb collisions with dielectrons in ALICE",
+      "Speaker": "Daiki Sekihata",
+      "Institute": "University of Tokyo (JP)",
+      "Country": "Japan"
+    },
+    {
+      "Session": "EM Probes",
+      "Title": "Measurement of low $p_T$ direct photons with PHENIX",
+      "Speaker": "Vassu Doomra",
+      "Institute": "Stony Brook University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "EM Probes",
+      "Title": "Thermal dilepton production in heavy-ion collisions at Beam Energy Scan (BES) energies",
+      "Speaker": "Charles Gale",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "EM Probes",
+      "Title": "Coherent J/$\\psi$ photoproduction and polarization in peripheral Pb-Pb collisions with ALICE",
+      "Speaker": "Afnan Shatat",
+      "Institute": "Universit\u00e9 Paris-Saclay (FR)",
+      "Country": "France"
+    },
+    {
+      "Session": "New Theory",
+      "Title": "Excited Hadron Channels in Hadronization",
+      "Speaker": "Rainer Fries",
+      "Institute": "Texas A&M University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "New Theory",
+      "Title": "Non-Gaussian fluctuation dynamics in relativistic fluid near a critical point",
+      "Speaker": "Xin An",
+      "Institute": "National Center for Nuclear Research",
+      "Country": "Switzerland"
+    },
+    {
+      "Session": "New Theory",
+      "Title": "A solvable quantum field theory with asymptotic freedom in 3+1 dimensions",
+      "Speaker": "Paul Romatschke",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "New Theory",
+      "Title": "Exploring the freeze-out hypersurface with a rapidity-dependent thermal model",
+      "Speaker": "Han Gao",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "New Theory",
+      "Title": "Non-Hydrodynamic Modes from Linear Response in Kinetic Theory",
+      "Speaker": "Stephan Ochsenfeld",
+      "Institute": "Bielefeld University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "New Theory",
+      "Title": "Far-from-equilibrium slow modes and momentum anisotropy in expanding plasma",
+      "Speaker": "Jasmine Therese Brewer",
+      "Institute": "CERN",
+      "Country": "Switzerland"
+    },
+    {
+      "Session": "New Theory",
+      "Title": "Testing Eigenstate Thermalization Hypothesis for Non-Abelian Gauge Theories",
+      "Speaker": "Xiaojun Yao",
+      "Institute": "University of Washington",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Light Flavor",
+      "Title": "Bulk flow and correlation measurements at LHCb",
+      "Speaker": "Cheuk Ping Wong",
+      "Institute": "Brookhaven National Laboratory",
+      "Country": "USA"
+    },
+    {
+      "Session": "Light Flavor",
+      "Title": "Shedding light on light flavour particle production in small systems at the LHC with ALICE",
+      "Speaker": "Francesca Ercolessi",
+      "Institute": "Universita e INFN, Bologna (IT)",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Light Flavor",
+      "Title": "Anomalous kaon correlations measured in Pb-Pb collisions at the LHC as evidence for the melting and refreezing of the QCD vacuum",
+      "Speaker": "Joseph Kapusta",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Light Flavor",
+      "Title": "Exploring the internal structure of exotic resonances with ALICE",
+      "Speaker": "Sonali Padhan",
+      "Institute": "IIT- Indian Institute of Technology (IN)",
+      "Country": "India"
+    },
+    {
+      "Session": "Light Flavor",
+      "Title": "Strangeness production in Au+Au collisions at $\\sqrt{s_{NN}}$ = 7.7, 14.6, 19.6, and 200 GeV with the STAR experiment",
+      "Speaker": "Yi Fang",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Jets",
+      "Title": "Isolating final state effects in high $p_T$ $\\pi^0$ production using direct photons in small system collisions with PHENIX",
+      "Speaker": "Daniel Firak",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Jets",
+      "Title": "Quantum to classical parton evolution in the QGP",
+      "Speaker": "Jo\u00e3o Barata",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Jets",
+      "Title": "Photon-triggered jets as probes of multi-stage jet modification",
+      "Speaker": "Chathuranga Sirimanna",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Jets",
+      "Title": "Readiness of the sPHENIX experiment for jet physics",
+      "Speaker": "Timothy Thomas Rinn",
+      "Institute": "Brookhaven National Laboratory",
+      "Country": "USA"
+    },
+    {
+      "Session": "Jets",
+      "Title": "New measurements of inclusive jet $R_{\\rm AA}$ with mixing technique and jet  $v_2$ properties with ALICE",
+      "Speaker": "Nadine Alice Gruenwald",
+      "Institute": "Heidelberg University (DE)",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Jets",
+      "Title": "Exploring medium properties and evolution with ALICE using correlated, groomed, and reclustered jet substructure",
+      "Speaker": "Hannah Bossi",
+      "Institute": "Massachusetts Inst. of Technology (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Jets",
+      "Title": "Parton cascades at DLA: the role of the evolution variable",
+      "Speaker": "Andr\u00e9 Cordeiro",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Heavy Flavor",
+      "Title": "Heavy Flavor machine learning algorithms for Fast Data Processing in sPHENIX",
+      "Speaker": "Cameron Dean",
+      "Institute": "Massachusetts Inst. of Technology (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Heavy Flavor",
+      "Title": "New LHCb results on quarkonia production in pp and pPb collisions",
+      "Speaker": "Cesar Luiz Da Silva",
+      "Institute": "Los Alamos National Laboratory (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Heavy Flavor",
+      "Title": "Measurements of Charm Quark Interaction with the QGP in Heavy-Ion Collisions at STAR",
+      "Speaker": "Yuan Su",
+      "Institute": "University of Science and Technology of China",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Heavy Flavor",
+      "Title": "Heavy Flavor and Quarkonia results from the PHENIX experiment",
+      "Speaker": "Krista Lizbeth Smith",
+      "Institute": "Los Alamos National Laboratory (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Jets",
+      "Title": "ATLAS measurements of $b$-jet suppression and heavy-flavor azimuthal correlations in 5.02 TeV Pb+Pb collisions",
+      "Speaker": "Anne Marie Sickles",
+      "Institute": "Univ. Illinois at Urbana Champaign (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Jets",
+      "Title": "Scanning the initial jet production points with dijet tomography in heavy-ion collisions",
+      "Speaker": "Yayun He",
+      "Institute": "South China Normal University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Jets",
+      "Title": "Identifying jet observables which can see the short-length structure of QGP",
+      "Speaker": "Krishna Rajagopal",
+      "Institute": "Massachusetts Inst. of Technology (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Heavy Flavor",
+      "Title": "Heavy quark momentum diffusion coefficient during hydrodynamization via effective kinetic theory",
+      "Speaker": "Jarkko Peuron",
+      "Institute": "University of Jyv\u00e4skyl\u00e4",
+      "Country": "Italy"
+    },
+    {
+      "Session": "QCD at finite T and density",
+      "Title": "Global angular momentum generation in heavy-ion reactions within a hadronic transport approach",
+      "Speaker": "Nils Sass",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Heavy Flavor",
+      "Title": "Measurements of charm quark production and hadronization at CMS",
+      "Speaker": "Soumik Chandra",
+      "Institute": "Purdue University (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Heavy Flavor",
+      "Title": "Studies of heavy quark dynamics using B mesons with the CMS experiment",
+      "Speaker": "Tzu-An Sheng",
+      "Institute": "Massachusetts Institute of Technology",
+      "Country": "USA"
+    },
+    {
+      "Session": "Critical Point",
+      "Title": "Location of the QCD critical point predicted by holographic Bayesian analysis",
+      "Speaker": "Mauricio Hippert Teixeira",
+      "Institute": "University of Illinois at Urbana-Champaign",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Critical Point",
+      "Title": "Femtoscopy analysis in small systems at NA61/SHINE",
+      "Speaker": "Barnabas Porfy",
+      "Institute": "Wigner Research Centre for Physics (Wigner RCP) (HU)",
+      "Country": "HU"
+    },
+    {
+      "Session": "Critical Point",
+      "Title": "Critical Expectations: Non-Gaussian Cumulants of Particle Multiplicities Near the Critical Point",
+      "Speaker": "Maneesha Sushama Pradeep",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Critical Point",
+      "Title": "Probing the nature of the QCD phase transition with higher-order net-proton number fluctuation and local parton density fluctuation measurements at RHIC-STAR",
+      "Speaker": "Dylan Neff",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Collective Dynamics",
+      "Title": "Thermalization of QGP through transverse momentum fluctuation in ultra-central Pb+Pb collision",
+      "Speaker": "Rupam Samanta",
+      "Institute": "AGH University of Science and Technology, Krakow, Poland and Institute of Theoretical Physics, CEA, Paris-Saclay University,  Gif-sur-Yvette, France",
+      "Country": "France"
+    },
+    {
+      "Session": "Collective Dynamics",
+      "Title": "What carries baryon number? Simulations of baryon and electric charge stopping in isobar collisions.",
+      "Speaker": "Gregoire Pihan",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Collective Dynamics",
+      "Title": "Measuring flow harmonics up to order 10 and net-charge fluctuations in PbPb collisions with the CMS experiment",
+      "Speaker": "Shengquan Tuo",
+      "Institute": "Vanderbilt University (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Collective Dynamics",
+      "Title": "Establishing the Range of Applicability of Hydrodynamics in High-Energy Collisions",
+      "Speaker": "Clemens Werthmann",
+      "Institute": "University of Wroclaw",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Collective Dynamics",
+      "Title": "Can we observe using the collective flow effects of the early nonequilirium dynamics",
+      "Speaker": "Piotr Bozek",
+      "Institute": "AGH University of Science and Technology",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Collective Dynamics",
+      "Title": "Quenching minijets in a concurrent jet+hydro evolution and its consequences for extracting transport coefficients of QGP",
+      "Speaker": "Mayank Singh",
+      "Institute": "University of Minnesota",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Collective Dynamics",
+      "Title": "Elliptic anisotropy measurement of the $f_0(980)$ in pPb collisions and determination of its quark content by CMS",
+      "Speaker": "An Gu",
+      "Institute": "Purdue University (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Collective Dynamics",
+      "Title": "Probing initial baryon stopping and equation of state with rapidity-dependent directed flow of identified particles",
+      "Speaker": "Lipei Du",
+      "Institute": "McGill University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Collective Dynamics",
+      "Title": "Rapidity-dependent dynamics of the initial state via 3D multi-system Bayesian calibration",
+      "Speaker": "Andi Mankolli",
+      "Institute": "Vanderbilt University (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Chirality",
+      "Title": "Post-blind Analysis of Isobar Collisions and Background-controlled Upper Limit on the Chiral Magnetic Effect from STAR",
+      "Speaker": "Yicheng Feng",
+      "Institute": "Purdue University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Chirality",
+      "Title": "Impact of globally spin-aligned vector mesons on the search for the chiral magnetic effect in heavy-ion collisions",
+      "Speaker": "Diyu Shen",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Chirality",
+      "Title": "Flow and hyperon polarization at RHIC BES from multi-fluid dynamics",
+      "Speaker": "Iurii Karpenko",
+      "Institute": "FNSPE CTU in Prague",
+      "Country": "India"
+    },
+    {
+      "Session": "Chirality",
+      "Title": "Sphaleron damping and effects on normal and anomalous charge transport in high-temperature QCD plasmas",
+      "Speaker": "Lillian de Bruin",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Chirality",
+      "Title": "Exact Polarization of Particles of Any Spin at Global Equilibrium",
+      "Speaker": "Andrea Palermo",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Chirality",
+      "Title": "A new stable and causal theory of viscous chiral hydrodynamics",
+      "Speaker": "Nick Abboud",
+      "Institute": "University of Illinois at Urbana-Champaign",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Chirality",
+      "Title": "New Insights into Global Spin Alignment in Heavy-Ion Collisions: Measurements of $\\phi$, $\\omega$, $\\rho^0$, and $J/\\psi$ at STAR",
+      "Speaker": "Baoshan Xi",
+      "Institute": "Fudan University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Chirality",
+      "Title": "QGP vortex rings as a new probe for jet-induced medium response and longitudinal dynamics",
+      "Speaker": "Willian Matioli Serenone",
+      "Institute": "Universidade de S\u00e3o Paulo",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Chirality",
+      "Title": "Hyperon Polarization in Heavy Ion Collisions from STAR",
+      "Speaker": "Xingrui Gou",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "UPC",
+      "Title": "Illuminating the impact-parameter dependence of UPC dijet photoproduction",
+      "Speaker": "Petja Paakkinen",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "UPC",
+      "Title": "Quarkonia production in ultra-peripheral PbPb collisions at LHCb",
+      "Speaker": "Xiaolin Wang",
+      "Institute": "South China Normal University (CN)",
+      "Country": "China"
+    },
+    {
+      "Session": "UPC",
+      "Title": "Looking for QGP signatures in ultraperipheral PbPb collisions",
+      "Speaker": "Sruthy Jyothi Das",
+      "Institute": "University of Colorado Boulder (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "UPC",
+      "Title": "Exclusive $J/\\psi$ Photoproduction and Entanglement-Enabled Spin Interference in Ultra-Peripheral Collisions at STAR",
+      "Speaker": "Ashik Ikbal Sheikh",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "UPC",
+      "Title": "Probing small-$x$ nuclear gluonic structure via coherent charmonium photoproduction in ultraperipheral PbPb collisions at CMS",
+      "Speaker": "Jiazhao Lin",
+      "Institute": "Rice University (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Light Flavor",
+      "Title": "$\\Sigma^0$ reconstruction in Ag+Ag collisions at 1.58 AGeV with the HADES experiment",
+      "Speaker": "Marten Becker",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Light Flavor",
+      "Title": "Cluster formation near midrapidity - can the mechanism be identified experimentally?",
+      "Speaker": "Elena Bratkovskaya",
+      "Institute": "GSI, Darmstadt",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Light Flavor",
+      "Title": "High-$p_t$ suppression in small systems",
+      "Speaker": "Cole Faraday",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Collective Dynamics",
+      "Title": "Constraining the medium properties with the anisotropic flow and its correlations in Pb--Pb collisions at the highest energy with ALICE",
+      "Speaker": "Cindy Mordasini",
+      "Institute": "University of Jyvaskyla (FI)",
+      "Country": "FI"
+    },
+    {
+      "Session": "Collective Dynamics",
+      "Title": "Simulating collectivity in dense baryon matter with multiple fluids",
+      "Speaker": "Boris Tomasik",
+      "Institute": "Univerzita Mateja Bela (SK)",
+      "Country": "SK"
+    },
+    {
+      "Session": "Collective Dynamics",
+      "Title": "Bayesian calibration of viscous anisotropic hydrodynamic simulations of heavy-ion collisions*",
+      "Speaker": "Ulrich Heinz",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Collective Dynamics",
+      "Title": "First-Order Event Plane Correlated Directed and Triangular Flow in BES-II Au+Au Collisions at STAR",
+      "Speaker": "Xiaoyu Liu",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Collective Dynamics",
+      "Title": "Chasing the onset of QCD thermalisation with ALICE",
+      "Speaker": "Mario Ciacco",
+      "Institute": "Politecnico di Torino and INFN Torino (IT)",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Collective Dynamics",
+      "Title": "Longitudinal Decorrelation Measurements from pp to A+A with the ATLAS detector",
+      "Speaker": "Blair Daniel Seidlitz",
+      "Institute": "Columbia University (US)",
+      "Country": "USA"
+    }
+  ],
+  "plenary_talks": [
+    {
+      "Session": "Plenary Session",
+      "Title": "Quantum Computing for Relativistic Particle Collisions",
+      "Speaker": "Phiala Shanahan",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "The Physics of small systems (remote)",
+      "Speaker": "Jiayin Sun",
+      "Institute": "Universita e INFN, Cagliari",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Conference Summary and Outlook",
+      "Speaker": "Helen Caines",
+      "Institute": "Yale University (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Future Facilities and Instrumentation",
+      "Speaker": "Luciano Musa",
+      "Institute": "CERN",
+      "Country": "Switzerland"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "The Physics of the EIC",
+      "Speaker": "Anna Maria Stasto",
+      "Institute": "Penn State",
+      "Country": "Penn State"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Open heavy flavor and quarkonium - theoretical overview",
+      "Speaker": "Miguel Angel Escobedo Espinosa",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Quarkonium - experimental overview",
+      "Speaker": "Andre Govinda Stahl Leiton",
+      "Institute": "CERN",
+      "Country": "Switzerland"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Jet modifications and medium response - theoretical overview",
+      "Speaker": "Daniel Pablos",
+      "Institute": "INFN Torino",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Medium response to jets - experimental overview",
+      "Speaker": "Yeonju Go",
+      "Institute": "University of Colorado Boulder (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Jet modifications - experimental overview",
+      "Speaker": "Laura Brittany Havener",
+      "Institute": "Yale University (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Quantum Computing for Nuclear Physics",
+      "Speaker": "Martin J. Savage",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Chirality, Vorticity and Spin Polarization - experimental overview",
+      "Speaker": "Aihong Tang",
+      "Institute": "Brookhaven National Laboratory",
+      "Country": "USA"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Ultra-peripheral Collisions",
+      "Speaker": "Daniel Brandenburg",
+      "Institute": "Ohio State University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Electromagnetic Probes",
+      "Speaker": "Raphaelle Bailhache",
+      "Institute": "Goethe University Frankfurt (DE)",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "New theoretical developments",
+      "Speaker": "J\u00fcrgen Berges",
+      "Institute": "Heidelberg University",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Approach to Equilibrium",
+      "Speaker": "Soeren Schlichting",
+      "Institute": "Universit\u00e4t Bielefeld",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Initial State Physics",
+      "Speaker": "Heikki M\u00e4ntysaari",
+      "Institute": "University of Jyvaskyla (FI)",
+      "Country": "FI"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "QCD at finite temperature and density - Equation of State",
+      "Speaker": "Jamie Karthein",
+      "Institute": "MIT",
+      "Country": "USA"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "QCD at finite temperature and density - Criticality",
+      "Speaker": "Volodymyr Vovchenko",
+      "Institute": "University of Houston",
+      "Country": "USA"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Search for the critical endpoint",
+      "Speaker": "Ashish Pandav",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "EPJ Featured Talk: Exotic Particle and Nuclei",
+      "Speaker": "Francesca Bellini",
+      "Institute": "Universita e INFN, Bologna (IT)",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Collective Dynamics - theoretical overview",
+      "Speaker": "Yuuka Kanakubo",
+      "Institute": "University of Jyv\u00e4skyl\u00e4",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Collective Dynamics - experimental overview",
+      "Speaker": "David Dobrigkeit Chinellato",
+      "Institute": "University of Campinas UNICAMP (BR)",
+      "Country": "BR"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Diversity, Equity and Inclusion in Nuclear and Particle Physics",
+      "Speaker": "Geraldine Cochran",
+      "Institute": "Rutgers University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "New Tools for Data Analysis and Simulations",
+      "Speaker": "James Mulligan",
+      "Institute": "University of California, Berkeley (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Quark Matter and Nuclear Astrophysics",
+      "Speaker": "Tyler Gorda",
+      "Institute": "TU Darmstadt",
+      "Country": "TU Darmstadt"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Lattice QCD Overview",
+      "Speaker": "Attila Pasztor",
+      "Institute": "E\u00f6tv\u00f6s University",
+      "Country": "Italy"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "NA61/SHINE Overview",
+      "Speaker": "Piotr Podlaski",
+      "Institute": "University of Warsaw (PL)",
+      "Country": "PL"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "sPHENIX Overview",
+      "Speaker": "Edward O'Brien",
+      "Institute": "Brookhaven  National Lab",
+      "Country": "USA"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "PHENIX Overview",
+      "Speaker": "Christine Nattrass",
+      "Institute": "University of Tennessee (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "STAR Overview",
+      "Speaker": "Rosi Reed",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "ALICE Overview",
+      "Speaker": "Ionut Cristian Arsene",
+      "Institute": "University of Oslo (NO)",
+      "Country": "NO"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "ATLAS Overview",
+      "Speaker": "Aaron Angerami",
+      "Institute": "Lawrence Livermore Nat. Laboratory (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "CMS Overview",
+      "Speaker": "Austin Alan Baty",
+      "Institute": "Rice University (US)",
+      "Country": "USA"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "LHCb Overview",
+      "Speaker": "John Matthew Durham",
+      "Institute": "Los Alamos National Laboratory",
+      "Country": "USA"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "HADES Overview",
+      "Speaker": "Simon Spies",
+      "Institute": "Johann-Wolfgang-Goethe Univ. (DE)",
+      "Country": "Germany"
+    },
+    {
+      "Session": "Plenary Session",
+      "Title": "Open heavy flavor - experimental overview",
+      "Speaker": "Fabrizio Grosa",
+      "Institute": "CERN",
+      "Country": "Switzerland"
+    }
+  ],
+  "parallel_talks": []
+}

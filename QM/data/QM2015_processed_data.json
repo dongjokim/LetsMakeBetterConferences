@@ -1,0 +1,194 @@
+{
+  "metadata": {
+    "year": "2015",
+    "indico_id": "297045",
+    "download_date": "2025-02-25T23:08:15.587260",
+    "conference_location": "Kobe, Japan"
+  },
+  "all_talks": [
+    {
+      "Session": null,
+      "Title": "Future Accelerators / School Conclusion",
+      "Speaker": "Frank Zimmermann",
+      "Institute": "CERN",
+      "Country": "Switzerland"
+    },
+    {
+      "Session": null,
+      "Title": "Accelerator Control Systems",
+      "Speaker": "Mark Plesko",
+      "Institute": "C",
+      "Country": "C"
+    },
+    {
+      "Session": null,
+      "Title": "Seminar: Roads into the anti-world",
+      "Speaker": "Michael Doser",
+      "Institute": "CERN",
+      "Country": "Switzerland"
+    },
+    {
+      "Session": null,
+      "Title": "Compact AMS Systems",
+      "Speaker": "Jose Maria Lopez",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": null,
+      "Title": "The European Spallation Source \u2013 The first \u2018green\u2019 accelerator",
+      "Speaker": "Andreas Jansson",
+      "Institute": "ESS",
+      "Country": "Spain"
+    },
+    {
+      "Session": null,
+      "Title": "Welcome / Introduction",
+      "Speaker": "Paul Hogg",
+      "Institute": "Vice Principal and Dean of Science",
+      "Country": "Germany"
+    },
+    {
+      "Session": null,
+      "Title": "Welcome / Introduction",
+      "Speaker": "Pavel Karataev",
+      "Institute": "Royal Holloway, University of London",
+      "Country": "Italy"
+    },
+    {
+      "Session": null,
+      "Title": "Admin / Logistics oPAC",
+      "Speaker": "Rita Galan",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": null,
+      "Title": "Beam Dynamics, recap",
+      "Speaker": "Carsten Welsch",
+      "Institute": "Cockcroft Institute / University of Liverpool",
+      "Country": "Italy"
+    },
+    {
+      "Session": null,
+      "Title": "History of Particle Accelerators",
+      "Speaker": "Philip BRYANT",
+      "Institute": "CERN",
+      "Country": "Switzerland"
+    },
+    {
+      "Session": null,
+      "Title": "Sourcery",
+      "Speaker": "Juergen Pozimski",
+      "Institute": "Imperial College London",
+      "Country": "Imperial College London"
+    },
+    {
+      "Session": null,
+      "Title": "Particle beam characterization",
+      "Speaker": "Pavel Karataev",
+      "Institute": "Royal Holloway, University of London",
+      "Country": "Italy"
+    },
+    {
+      "Session": null,
+      "Title": "Lattice Design",
+      "Speaker": "Bernhard Holzer",
+      "Institute": "CERN",
+      "Country": "Switzerland"
+    },
+    {
+      "Session": null,
+      "Title": "Accelerator Magnets",
+      "Speaker": "Neil Marks",
+      "Institute": "STFC",
+      "Country": "STFC"
+    },
+    {
+      "Session": null,
+      "Title": "Beam Position Measurements (also industry aspects)",
+      "Speaker": "Stewart Boogert",
+      "Institute": "Royal Holloway, University of London",
+      "Country": "Italy"
+    },
+    {
+      "Session": null,
+      "Title": "Beam Profile Measurements (basics, high intensity beams, cryo, high energy)",
+      "Speaker": "Enrico Bravin",
+      "Institute": "CERN",
+      "Country": "Switzerland"
+    },
+    {
+      "Session": null,
+      "Title": "Beam Loss Monitoring",
+      "Speaker": "Eduardo Nebot Del Busto",
+      "Institute": "University of Liverpool (GB)",
+      "Country": "GB"
+    },
+    {
+      "Session": null,
+      "Title": "High(er) accelerating gradients",
+      "Speaker": "Alan Wheelhouse",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": null,
+      "Title": "Beam Loss Monitoring - detectors",
+      "Speaker": "Sergey Vinogradov",
+      "Institute": "ULIV",
+      "Country": "ULIV"
+    },
+    {
+      "Session": null,
+      "Title": "Beam Cooling Techniques",
+      "Speaker": "Igor Meshkov",
+      "Institute": "Joint Institute for Nuclear Research (JINR)",
+      "Country": "Russia"
+    },
+    {
+      "Session": null,
+      "Title": "3rd generation Light source",
+      "Speaker": "Francis Perez",
+      "Institute": "ALBA Synchrotron",
+      "Country": "Switzerland"
+    },
+    {
+      "Session": null,
+      "Title": "Particle Tracking Codes",
+      "Speaker": "David Newton",
+      "Institute": "Liverpool University",
+      "Country": "Italy"
+    },
+    {
+      "Session": null,
+      "Title": "Next generation Light Sources",
+      "Speaker": "Jim Clarke",
+      "Institute": "STFC",
+      "Country": "STFC"
+    },
+    {
+      "Session": null,
+      "Title": "Outreach seminar for general public and local media: Higgs",
+      "Speaker": "Phil Burrows",
+      "Institute": "No affiliation",
+      "Country": "Unknown"
+    },
+    {
+      "Session": null,
+      "Title": "Numerical Optimization of Particle Accelerators",
+      "Speaker": "Oliver Boine-Frankenheim",
+      "Institute": "GSI, Darmstadt, Germany",
+      "Country": "Germany"
+    },
+    {
+      "Session": null,
+      "Title": "LHC Optimization",
+      "Speaker": "Rogelio Tomas Garcia",
+      "Institute": "CERN",
+      "Country": "Switzerland"
+    }
+  ],
+  "plenary_talks": [],
+  "parallel_talks": []
+}

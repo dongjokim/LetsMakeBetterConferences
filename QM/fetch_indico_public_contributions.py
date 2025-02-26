@@ -109,6 +109,9 @@ def extract_country(affiliation):
     return parts[-1] if parts else 'Unknown'
 
 def plot_distributions(all_data, plenary_data, parallel_data):
+    # Create directory for detailed analysis
+    os.makedirs('figs/analysis', exist_ok=True)
+    
     # Create figure with subplots
     fig = plt.figure(figsize=(20, 15))
     
@@ -208,6 +211,78 @@ def plot_distributions(all_data, plenary_data, parallel_data):
     plt.tight_layout()
     plt.savefig('figs/parallel_talks_institute.pdf', bbox_inches='tight')
     
+    # Additional analysis plots:
+    
+    # 1. Time series of talks per session (with None handling)
+    plt.figure(figsize=(15, 8))
+    session_times = Counter(talk['Session'] if talk['Session'] else 'Unspecified' for talk in all_data)
+    # Sort sessions to ensure consistent ordering
+    sorted_sessions = sorted(session_times.items(), key=lambda x: x[1], reverse=True)
+    sessions, counts = zip(*sorted_sessions)
+    plt.bar(range(len(sessions)), counts)
+    plt.xticks(range(len(sessions)), sessions, rotation=45, ha='right')
+    plt.title('Distribution of Talks Across Sessions')
+    plt.ylabel('Number of Talks')
+    plt.tight_layout()
+    plt.savefig('figs/analysis/session_distribution.pdf', bbox_inches='tight')
+    
+    # 2. Geographic diversity - Pie charts
+    plt.figure(figsize=(15, 8))
+    
+    # Calculate percentages for different regions
+    regions = {
+        'North America': ['USA', 'Canada', 'Mexico'],
+        'Europe': ['UK', 'Germany', 'France', 'Italy', 'Switzerland', 'Poland', 
+                  'Netherlands', 'Spain', 'Russia'],
+        'Asia': ['Japan', 'China', 'Korea', 'India'],
+        'Other': ['Brazil', 'Australia']
+    }
+    
+    def get_region_counts(talks_data):
+        region_counts = Counter()
+        for talk in talks_data:
+            found = False
+            for region, countries in regions.items():
+                if talk['Country'] in countries:
+                    region_counts[region] += 1
+                    found = True
+                    break
+            if not found:
+                region_counts['Other'] += 1
+        return region_counts
+    
+    plt.subplot(1, 2, 1)
+    all_region_counts = get_region_counts(all_data)
+    plt.pie(all_region_counts.values(), labels=all_region_counts.keys(), autopct='%1.1f%%')
+    plt.title('Regional Distribution - All Talks')
+    
+    plt.subplot(1, 2, 2)
+    plenary_region_counts = get_region_counts(plenary_data)
+    plt.pie(plenary_region_counts.values(), labels=plenary_region_counts.keys(), autopct='%1.1f%%')
+    plt.title('Regional Distribution - Plenary Talks')
+    
+    plt.tight_layout()
+    plt.savefig('figs/analysis/regional_distribution.pdf', bbox_inches='tight')
+    
+    # 3. Institute diversity - Number of speakers per institute
+    institute_speaker_counts = {}
+    for talk in all_data:
+        inst = talk['Institute']
+        if inst not in institute_speaker_counts:
+            institute_speaker_counts[inst] = set()
+        institute_speaker_counts[inst].add(talk['Speaker'])
+    
+    # Convert to number of unique speakers
+    institute_diversity = {k: len(v) for k, v in institute_speaker_counts.items()}
+    top_15_diverse = dict(sorted(institute_diversity.items(), key=lambda x: x[1], reverse=True)[:15])
+    
+    plt.figure(figsize=(15, 8))
+    plt.bar(top_15_diverse.keys(), top_15_diverse.values())
+    plt.title('Number of Unique Speakers per Institute (Top 15)')
+    plt.xticks(rotation=45, ha='right')
+    plt.tight_layout()
+    plt.savefig('figs/analysis/institute_speaker_diversity.pdf', bbox_inches='tight')
+    
     # Print statistics
     print("\nTotal number of talks:", len(all_data))
     print("\nTop 10 countries by number of talks:")
@@ -216,6 +291,34 @@ def plot_distributions(all_data, plenary_data, parallel_data):
     print("\nTop 10 institutes by number of talks:")
     for inst, count in sorted(institute_counts.items(), key=lambda x: x[1], reverse=True)[:10]:
         print(f"{inst}: {count}")
+    
+    # Print additional statistics
+    print("\nRegional Distribution of Talks:")
+    for region, count in all_region_counts.items():
+        print(f"{region}: {count} talks ({count/len(all_data)*100:.1f}%)")
+    
+    print("\nMost Diverse Institutes (by number of unique speakers):")
+    for inst, count in sorted(institute_diversity.items(), key=lambda x: x[1], reverse=True)[:10]:
+        print(f"{inst}: {count} speakers")
+    
+    # Calculate and print gender diversity if names are available
+    # Note: This is a simple approximation and may not be accurate
+    try:
+        import gender_guesser.detector as gender
+        d = gender.Detector()
+        
+        gender_stats = Counter()
+        for talk in all_data:
+            first_name = talk['Speaker'].split()[0]
+            gender_guess = d.get_gender(first_name)
+            gender_stats[gender_guess] += 1
+        
+        print("\nApproximate Gender Distribution (based on first names):")
+        total = sum(gender_stats.values())
+        for gender_type, count in gender_stats.items():
+            print(f"{gender_type}: {count} ({count/total*100:.1f}%)")
+    except ImportError:
+        print("\nNote: Install gender-guesser package for approximate gender distribution analysis")
 
 def fetch_and_process_contributions():
     try:
