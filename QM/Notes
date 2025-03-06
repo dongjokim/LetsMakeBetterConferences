@@ -1,0 +1,36 @@
+QM2015: https://indico.cern.ch/event/355454/timetable/#20150927, no contribution list..https://indico.cern.ch/event/355454/attachments/1149473/1658247/List_of_contributed_talk_20150915.pdf
+
+=== QM2015 (ID: 355454) ===
+  Processed data already exists, loading from file...
+  Indico page returns status code 400
+  Summary: 26 talks, 0 plenary, 0 parallel
+
+=== QM2014 (ID: 219436) ===
+  Processed data already exists, loading from file...
+  Indico page returns status code 400
+  Summary: 626 talks, 31 plenary, 0 parallel  ???
+
+  https://indico.cern.ch/event/219436/contributions/speakers
+  
+=== QM2011 (ID: 137579) ===
+  Processed data already exists, loading from file...
+  Indico page returns status code 400
+  Summary: 4 talks, 0 plenary, 0 parallel
+
+  Issues with Talk Data
+There are some unusual patterns in the data that might need investigation:
+QM2011 (Annecy) shows only 4 talks with no plenary/parallel classification
+QM2015 (Kobe) shows only 26 talks with no plenary/parallel classification
+QM2014 (Darmstadt) and QM2023 (Houston) show 0 parallel talks
+These anomalies suggest there might be issues with how talks are being categorized or extracted from older conferences.
+Possible Causes
+Different Session Naming: Older conferences might use different terminology for "plenary" and "parallel" sessions
+Indico Format Changes: The Indico API structure has evolved over the years
+Data Availability: Some older conferences may have limited data in the Indico system
+Suggested Improvements
+To address these issues, we could:
+
+   # Enhance the session type detection
+   if any(plenary_term in str(session).lower() for plenary_term in 
+         ['plenary', 'keynote', 'overview', 'summary', 'highlight']):
+       plenary_talks.append(talk_data)

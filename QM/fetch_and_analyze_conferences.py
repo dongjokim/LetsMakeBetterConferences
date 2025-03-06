@@ -434,7 +434,8 @@ def fetch_and_analyze_conferences():
     # Read conference IDs
     try:
         with open('listofQMindigo', 'r') as f:
-            conferences = [line.strip().split() for line in f]
+            # Skip lines that start with '#' and split the remaining lines
+            conferences = [line.strip().split() for line in f if not line.strip().startswith('#')]
     except FileNotFoundError:
         print("Error: 'listofQMindigo' file not found")
         return
