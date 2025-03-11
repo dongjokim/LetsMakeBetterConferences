@@ -65,6 +65,20 @@ INSTITUTION_COUNTRY = {
     # Add more institutions as needed
 }
 
+# Add this near the top of the file with other constants
+CONFERENCE_LOCATIONS = {
+    '2011': 'Annecy, France',
+    '2012': 'Washington DC, USA',
+    '2014': 'Darmstadt, Germany',
+    '2015': 'Kobe, Japan',
+    '2017': 'Chicago, USA',
+    '2018': 'Venice, Italy',
+    '2019': 'Wuhan, China',
+    '2022': 'Krakow, Poland',
+    '2023': 'Houston, USA',
+    '2025': 'Brisbane, Australia'
+}
+
 def extract_country(affiliation):
     if not affiliation:
         return 'Unknown'
@@ -148,6 +162,23 @@ def fetch_and_process_contributions(indico_id, year):
             # Extract event metadata if available
             event_data = results[0]
             
+            # Get conference dates safely
+            start_date = event_data.get('startDate', {})
+            end_date = event_data.get('endDate', {})
+            
+            # Handle both string and dict date formats
+            if isinstance(start_date, dict):
+                start_str = start_date.get('date', '')
+            else:
+                start_str = str(start_date)
+                
+            if isinstance(end_date, dict):
+                end_str = end_date.get('date', '')
+            else:
+                end_str = str(end_date)
+                
+            conference_dates = f"{start_str} to {end_str}" if start_str and end_str else ""
+            
             # Try different possible paths for location information
             conference_location = (
                 event_data.get('location', '') or 
@@ -186,8 +217,6 @@ def fetch_and_process_contributions(indico_id, year):
                 
             print(f"  Extracted location: {conference_location}")
             
-            conference_dates = event_data.get('startDate', '') + ' to ' + event_data.get('endDate', '')
-            
             all_talks = []
             plenary_talks = []
             parallel_talks = []
@@ -198,7 +227,6 @@ def fetch_and_process_contributions(indico_id, year):
                 session = contribution.get('session', 'No session')
                 
                 # Try different possible paths for speaker information
-                # Indico schema can vary between events
                 speakers = (contribution.get('speakers', []) or 
                           contribution.get('person_links', []) or 
                           contribution.get('primary_authors', []))
@@ -242,15 +270,15 @@ def fetch_and_process_contributions(indico_id, year):
                     
                     all_talks.append(talk_data)
                     
-                    # Categorize talks based on session name
-                    if any(plenary_term in str(session).lower() for plenary_term in ['plenary', 'keynote']):
+                    # More comprehensive session type detection
+                    session_str = str(session).lower()
+                    if any(plenary_term in session_str for plenary_term in ['plenary', 'keynote', 'overview']):
                         plenary_talks.append(talk_data)
-                    elif any(parallel_term in str(session).lower() for parallel_term in ['parallel', 'concurrent']):
+                    elif any(parallel_term in session_str for parallel_term in ['parallel', 'concurrent', 'breakout']):
                         parallel_talks.append(talk_data)
-                    # Check for poster sessions
-                    elif 'poster' in str(session).lower():
-                        # You could add a poster list here if needed
-                        pass
+                    # Print session types for debugging
+                    if year in ['2011', '2014', '2015', '2023']:
+                        print(f"Session type: {session}")
             
             # Add more metadata about the conference
             processed_data = {
@@ -258,7 +286,7 @@ def fetch_and_process_contributions(indico_id, year):
                     'year': year,
                     'indico_id': indico_id,
                     'download_date': datetime.now().isoformat(),
-                    'conference_location': conference_location,
+                    'conference_location': CONFERENCE_LOCATIONS.get(year, 'Unknown location'),
                     'conference_dates': conference_dates,
                     'total_talks': len(all_talks),
                     'plenary_talks': len(plenary_talks),
@@ -434,8 +462,8 @@ def fetch_and_analyze_conferences():
     # Read conference IDs
     try:
         with open('listofQMindigo', 'r') as f:
-            # Skip lines that start with '#' and split the remaining lines
-            conferences = [line.strip().split() for line in f if not line.strip().startswith('#')]
+            # Skip lines that start with '#' and take only first two items (year and ID)
+            conferences = [line.strip().split()[:2] for line in f if not line.strip().startswith('#')]
     except FileNotFoundError:
         print("Error: 'listofQMindigo' file not found")
         return
@@ -452,15 +480,13 @@ def fetch_and_analyze_conferences():
         if os.path.exists(processed_file):
             print(f"  Processed data already exists, loading from file...")
             try:
-                # Still validate the URL even if we have the data
-                is_valid, message = validate_indico_url(indico_id, year)
-                print(f"  {message}")
-                
                 with open(processed_file, 'r') as f:
                     data = json.load(f)
                     metadata = data.get('metadata', {})
-                    location = metadata.get('conference_location', 'Unknown location')
-                    print(f"  Found location in metadata: {location}")
+                    
+                    # Get location from CONFERENCE_LOCATIONS instead of metadata
+                    location = CONFERENCE_LOCATIONS.get(year, 'Unknown location')
+                    print(f"  Found location: {location}")
                     
                     all_talks = data.get('all_talks', [])
                     plenary_talks = data.get('plenary_talks', [])
@@ -470,18 +496,18 @@ def fetch_and_analyze_conferences():
                     processed_conferences.append({
                         'year': year,
                         'indico_id': indico_id,
-                        'location': location,
+                        'location': location,  # Use the location from our mapping
                         'dates': metadata.get('conference_dates', ''),
                         'all_talks': len(all_talks),
                         'plenary_talks': len(plenary_talks),
                         'parallel_talks': len(parallel_talks),
                     })
-                
-                # Generate plots from existing data without verbose output
-                conference_stats = plot_distributions(all_talks, plenary_talks, parallel_talks, year, verbose=False)
-                if conference_stats:
-                    conference_data[year] = conference_stats
-                    print(f"  Summary: {len(all_talks)} talks, {len(plenary_talks)} plenary, {len(parallel_talks)} parallel")
+                    
+                    # Generate plots from existing data without verbose output
+                    conference_stats = plot_distributions(all_talks, plenary_talks, parallel_talks, year, verbose=False)
+                    if conference_stats:
+                        conference_data[year] = conference_stats
+                        print(f"  Summary: {len(all_talks)} talks, {len(plenary_talks)} plenary, {len(parallel_talks)} parallel")
             except Exception as e:
                 print(f"  Error loading processed data: {e}")
                 # Try to fetch and process again
@@ -501,7 +527,7 @@ def fetch_and_analyze_conferences():
                         processed_conferences.append({
                             'year': year,
                             'indico_id': indico_id,
-                            'location': data.get('metadata', {}).get('conference_location', 'Unknown'),
+                            'location': CONFERENCE_LOCATIONS.get(year, 'Unknown location'),  # Use the location from our mapping
                             'dates': data.get('metadata', {}).get('conference_dates', ''),
                             'all_talks': conference_stats['all_talks'],
                             'plenary_talks': conference_stats['plenary_talks'],

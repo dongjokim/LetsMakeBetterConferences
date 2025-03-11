@@ -5,6 +5,7 @@ from collections import Counter
 import matplotlib.pyplot as plt
 import os
 import matplotlib as mpl
+from datetime import datetime
 
 # Set font that supports CJK characters
 plt.rcParams['font.sans-serif'] = ['Arial Unicode MS', 'DejaVu Sans', 'Microsoft YaHei']
@@ -108,7 +109,7 @@ def extract_country(affiliation):
     parts = [p.strip() for p in affiliation.split(',')]
     return parts[-1] if parts else 'Unknown'
 
-def plot_distributions(all_data, plenary_data, parallel_data):
+def plot_distributions(all_data, plenary_data, parallel_data, year):
     # Create directory for detailed analysis
     os.makedirs('figs/analysis', exist_ok=True)
     
@@ -160,7 +161,7 @@ def plot_distributions(all_data, plenary_data, parallel_data):
     plt.xticks(rotation=45, ha='right')
     
     plt.tight_layout()
-    plt.savefig('figs/talk_distributions.pdf', bbox_inches='tight')
+    plt.savefig(f'figs/QM{year}_talk_distributions.pdf', bbox_inches='tight')
     
     # Create individual plots for better visibility
     # All talks country distribution
@@ -169,7 +170,7 @@ def plot_distributions(all_data, plenary_data, parallel_data):
     plt.title('All Talks by Country')
     plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
-    plt.savefig('figs/all_talks_country.pdf', bbox_inches='tight')
+    plt.savefig(f'figs/QM{year}_all_talks_country.pdf', bbox_inches='tight')
     
     # All talks institute distribution (top 20)
     plt.figure(figsize=(15, 8))
@@ -177,7 +178,7 @@ def plot_distributions(all_data, plenary_data, parallel_data):
     plt.title('All Talks by Institute (Top 20)')
     plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
-    plt.savefig('figs/all_talks_institute.pdf', bbox_inches='tight')
+    plt.savefig(f'figs/QM{year}_all_talks_institute.pdf', bbox_inches='tight')
     
     # Plenary talks country distribution
     plt.figure(figsize=(15, 8))
@@ -185,7 +186,7 @@ def plot_distributions(all_data, plenary_data, parallel_data):
     plt.title('Plenary Talks by Country')
     plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
-    plt.savefig('figs/plenary_talks_country.pdf', bbox_inches='tight')
+    plt.savefig(f'figs/QM{year}_plenary_talks_country.pdf', bbox_inches='tight')
     
     # Plenary talks institute distribution
     plt.figure(figsize=(15, 8))
@@ -193,7 +194,7 @@ def plot_distributions(all_data, plenary_data, parallel_data):
     plt.title('Plenary Talks by Institute')
     plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
-    plt.savefig('figs/plenary_talks_institute.pdf', bbox_inches='tight')
+    plt.savefig(f'figs/QM{year}_plenary_talks_institute.pdf', bbox_inches='tight')
     
     # Parallel talks country distribution
     plt.figure(figsize=(15, 8))
@@ -201,7 +202,7 @@ def plot_distributions(all_data, plenary_data, parallel_data):
     plt.title('Parallel Talks by Country')
     plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
-    plt.savefig('figs/parallel_talks_country.pdf', bbox_inches='tight')
+    plt.savefig(f'figs/QM{year}_parallel_talks_country.pdf', bbox_inches='tight')
     
     # Parallel talks institute distribution (top 20)
     plt.figure(figsize=(15, 8))
@@ -209,7 +210,7 @@ def plot_distributions(all_data, plenary_data, parallel_data):
     plt.title('Parallel Talks by Institute (Top 20)')
     plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
-    plt.savefig('figs/parallel_talks_institute.pdf', bbox_inches='tight')
+    plt.savefig(f'figs/QM{year}_parallel_talks_institute.pdf', bbox_inches='tight')
     
     # Additional analysis plots:
     
@@ -224,7 +225,7 @@ def plot_distributions(all_data, plenary_data, parallel_data):
     plt.title('Distribution of Talks Across Sessions')
     plt.ylabel('Number of Talks')
     plt.tight_layout()
-    plt.savefig('figs/analysis/session_distribution.pdf', bbox_inches='tight')
+    plt.savefig(f'figs/analysis/QM{year}_session_distribution.pdf', bbox_inches='tight')
     
     # 2. Geographic diversity - Pie charts
     plt.figure(figsize=(15, 8))
@@ -262,7 +263,7 @@ def plot_distributions(all_data, plenary_data, parallel_data):
     plt.title('Regional Distribution - Plenary Talks')
     
     plt.tight_layout()
-    plt.savefig('figs/analysis/regional_distribution.pdf', bbox_inches='tight')
+    plt.savefig(f'figs/analysis/QM{year}_regional_distribution.pdf', bbox_inches='tight')
     
     # 3. Institute diversity - Number of speakers per institute
     institute_speaker_counts = {}
@@ -281,7 +282,7 @@ def plot_distributions(all_data, plenary_data, parallel_data):
     plt.title('Number of Unique Speakers per Institute (Top 15)')
     plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
-    plt.savefig('figs/analysis/institute_speaker_diversity.pdf', bbox_inches='tight')
+    plt.savefig(f'figs/analysis/QM{year}_institute_speaker_diversity.pdf', bbox_inches='tight')
     
     # Print statistics
     print("\nTotal number of talks:", len(all_data))
@@ -320,8 +321,12 @@ def plot_distributions(all_data, plenary_data, parallel_data):
     except ImportError:
         print("\nNote: Install gender-guesser package for approximate gender distribution analysis")
 
-def fetch_and_process_contributions():
+def fetch_and_process_contributions(event_id, year):
+    # Update URL for specific event
+    url = f"https://indico.cern.ch/export/event/{event_id}.json?detail=contributions&pretty=yes"
+    
     try:
+        print(f"\nProcessing QM{year} (ID: {event_id})")
         response = requests.get(url, timeout=10)
         
         if response.status_code == 200:
@@ -372,8 +377,25 @@ def fetch_and_process_contributions():
                     elif 'Parallel' in str(session):
                         parallel_talks.append(talk_data)
             
-            # Create plots and print statistics
-            plot_distributions(all_talks, plenary_talks, parallel_talks)
+            # Create plots with year in filenames
+            plot_distributions(all_talks, plenary_talks, parallel_talks, year)
+            
+            # Save processed data
+            output_file = f'data/QM{year}_processed_data.json'
+            processed_data = {
+                'metadata': {
+                    'year': year,
+                    'event_id': event_id,
+                    'download_date': datetime.now().isoformat()
+                },
+                'all_talks': all_talks,
+                'plenary_talks': plenary_talks,
+                'parallel_talks': parallel_talks
+            }
+            
+            with open(output_file, 'w', encoding='utf-8') as f:
+                json.dump(processed_data, f, indent=2, ensure_ascii=False)
+            print(f"Data saved to {output_file}")
 
     except requests.exceptions.RequestException as e:
         print(f"Request failed: {str(e)}")
@@ -384,7 +406,17 @@ def fetch_and_process_contributions():
 
 # Main execution
 if __name__ == "__main__":
-    print("Fetching contribution details...")
-    fetch_and_process_contributions() 
+    print("Processing all QM conferences...")
+    
+    try:
+        with open('listofQMindigo', 'r') as f:
+            # Skip lines that start with '#' and take only first two items (year and ID)
+            conferences = [line.strip().split()[:2] for line in f if not line.strip().startswith('#')]
+            
+        for year, event_id in conferences:
+            fetch_and_process_contributions(event_id, year)
+            
+    except FileNotFoundError:
+        print("Error: 'listofQMindigo' file not found") 
 
     
