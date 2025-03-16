@@ -8,63 +8,14 @@ Event title: Quark Matter 2025
 
 QM2025 (ID: 1334113): Valid Indico page with correct year
 
-QM2025 Session distribution:
-  None: 559
-  Early Career Researcher Day: 13
-  Parallel session 23: 7
-  Parallel session 24: 7
-  Parallel session 22: 7
-  Parallel session 4: 7
-  Parallel session 21: 7
-  Parallel session 5: 7
-  Parallel session 2: 7
-  Parallel session 3: 7
-  Parallel session 1: 7
-  Parallel session 25: 7
-  Parallel session 29: 6
-  Parallel session 30: 6
-  Parallel sessions 26: 6
-  Parallel session 28: 6
-  Parallel session 27: 6
-  Parallel session 35: 5
-  Parallel session 10: 5
-  Parallel session 34: 5
-  Parallel session 15: 5
-  Parallel session 32: 5
-  Parallel session 17: 5
-  Parallel session 31: 5
-  Parallel session 16: 5
-  Parallel session 12: 5
-  Parallel session 13: 5
-  Parallel session 33: 5
-  Parallel session 8: 5
-  Parallel session 18: 5
-  Parallel session 14: 5
-  Parallel session 20: 5
-  Parallel session 7: 5
-  Parallel session 11: 5
-  Parallel session 9: 5
-  Parallel session 19: 5
-  Plenary session 3: 5
-  Plenary session 4: Heavy flavor & quarkonia: 4
-  Parallel session 6: 4
-  Plenary session 10: Electromagnetic probes — Light and strange flavor physics & nuclei: 4
-  Plenary session 9: Correlations & fluctuations — New theoretical developments — Physics of ultraperipheral collisions — QCD matter in astrophysics: 4
-  Plenary session 6: Chirality — Collective dynamics & small systems: 4
-  Plenary session 7: Initial state of hadronic and electron-ion collisions & nuclear structure: 4
-  Plenary session 5:Jets: 4
-  Plenary session 2: 4
-  Plenary session 8: QCD phase diagram & critical point: 3
-  Plenary session 12: Summary talks: 2
-  Plenary session 11: Detectors & future experiments: 2
-  Poster Session 2: 1
-  Plenary session 1: 1
+Detailed information for talks with unknown institutes in QM2025:
 
-QM2025 Categorization results:
-  Total talks: 813
-  Plenary talks: 41
-  Parallel talks: 199
-  Uncategorized: 573
+Plenary talks with unknown institutes:
+
+---
+Title: Plenary talk 15
+Session: Plenary session 7: Initial state of hadronic and electron-ion collisions & nuclear structure
+Speaker: No name
 
 Processing QM2023 (ID: 1139644)
 
@@ -73,34 +24,6 @@ Response status code: 200
 Event title: Quark Matter 2023
 
 QM2023 (ID: 1139644): Valid Indico page with correct year
-
-QM2023 Session distribution:
-  Poster Session: 301
-  Plenary Session: 37
-  Jets: 25
-  Heavy Flavor: 24
-  Collective Dynamics: 19
-  New Theory: 19
-  Small Systems: 18
-  Initial State: 17
-  QCD at finite T and density: 17
-  Light Flavor: 13
-  EM Probes: 12
-  Flash Talks: 11
-  Critical Point: 11
-  Chirality: 11
-  Student Lectures: 8
-  None: 6
-  Spin/EIC Physics: 6
-  Future Experiments: 6
-  Astrophysics: 6
-  UPC: 6
-
-QM2023 Categorization results:
-  Total talks: 573
-  Plenary talks: 37
-  Parallel talks: 210
-  Uncategorized: 326
 
 Processing QM2022 (ID: 895086)
 
@@ -119,60 +42,6 @@ Event title: Quark Matter 2019 - the XXVIIIth International Conference on Ultra-
 
 QM2019 (ID: 792436): Valid Indico page with correct year
 
-QM2019 Session distribution:
-  Poster Session: 338
-  Plenary Session XI: 10
-  Parallel Session - Initial state  I: 7
-  Parallel Session - Future facilities: 7
-  Parallel Session - Collective dynamics  III: 7
-  Parallel Session - Heavy flavor III: 7
-  Parallel Session -  Small systems I: 6
-  Parallel Session - Collective dynamics I: 6
-  Parallel Session - Collective dynamics IV: 6
-  Parallel Session - Collective dynamics II: 6
-  Parallel Session - Search for the CP II: 6
-  Parallel Session - Chirality I: 6
-  Parallel Session - Chirality III: 6
-  Parallel Session - Jet modifications IV: 6
-  Parallel Session - Jet modifications I: 6
-  Parallel Session -  Jet modifications II: 6
-  Parallel Session - Heavy flavor II: 6
-  Parallel Session - EM probes I: 6
-  Parallel Session - New theoretical developments I: 6
-  Parallel Session - New theoretical developments II: 6
-  Parallel Session - Small systems IV: 6
-  Parallel Session - Initial state II: 6
-  Parallel Session - QCD at finite temperature I: 5
-  Parallel Session - QCD at finite temperature III: 5
-  Parallel Session - QCD at finite temperature II: 5
-  Parallel Session - Small systems II: 5
-  Parallel Session - Small systems III: 5
-  Parallel Session - Search for the CP I: 5
-  Parallel Session - Chirality II: 5
-  Parallel Session - QM & nuclear astrophysics: 5
-  Parallel Session - Jet Modification III: 5
-  Parallel Session - Heavy flavor IV: 5
-  Parallel Session - Heavy Flavor I: 5
-  Parallel Session - EM probes II: 5
-  Plenary Session III: 5
-  Plenary Session II: 4
-  Student Day: 4
-  Plenary Session IV: 4
-  Plenary Session V: 4
-  Plenary Session I: 4
-  Plenary Session - VIII: 4
-  Plenary Session VI: 3
-  Plenary Session VII: 3
-  Plenary Session X: 3
-  Plenary Session IX: 3
-  None: 1
-
-QM2019 Categorization results:
-  Total talks: 574
-  Plenary talks: 47
-  Parallel talks: 184
-  Uncategorized: 343
-
 Processing QM2018 (ID: 656452)
 
 Checking URL: https://indico.cern.ch/export/event/656452.json?detail=contributions&pretty=yes
@@ -180,34 +49,6 @@ Response status code: 200
 Event title: Quark Matter 2018
 
 QM2018 (ID: 656452): Valid Indico page with correct year
-
-QM2018 Session distribution:
-  Poster Session: 389
-  Plenary: 37
-  Jet modifications and high-pT hadrons: 28
-  Collective dynamics: 23
-  Collectivity in small systems: 19
-  Quarkonia: 18
-  Initial state physics and approach to equilibrium: 18
-  Correlations and fluctuations: 18
-  Open heavy flavour: 17
-  Chirality, vorticity and polarisation effects: 16
-  Phase diagram and search for the critical point: 16
-  QCD at high temperature: 11
-  Electromagnetic and weak probes: 11
-  New theoretical developments: 10
-  Future facilities, upgrades and instrumentation: 10
-  Student Day: 10
-  Best-poster flash talks: 10
-  Thermodynamics and hadron chemistry: 7
-  High baryon density and astrophysics: 7
-  None: 6
-
-QM2018 Categorization results:
-  Total talks: 681
-  Plenary talks: 37
-  Parallel talks: 219
-  Uncategorized: 425
 
 Processing QM2017 (ID: 433345)
 
@@ -217,63 +58,6 @@ Event title: Quark Matter 2017
 
 QM2017 (ID: 433345): Valid Indico page with correct year
 
-QM2017 Session distribution:
-  Poster Session: 282
-  Student Day: 8
-  Flash talks: 8
-  Parallel Session 8.2: Future Experimental Facilities, Upgrades, and Instrumentation: 6
-  Parallel Session 3.2: CME, Vorticity and Spin Polarization (I): 6
-  Parallel Session 4.1: Baryon-Rich QCD Matter and Astrophysics (I): 6
-  Parallel Session 8.1: Baryon-Rich QCD Matter and Astrophysics (III): 6
-  Parallel Session 7.3: Collective Dynamics (II): 6
-  Parallel Session 3.1: QCD at High Temperature: 6
-  Parallel Session 4.2: CME, Vorticity and Spin Polarization (II): 6
-  Parallel Session 7.2: Correlations and Fluctuations (II): 6
-  Parallel Session 7.1: Baryon-Rich QCD Matter and Astrophysics (II): 6
-  Parallel Session 7.4: Open Heavy Flavors (II): 6
-  Parallel Session 3.4: Jets and High pT Hadrons (III): 6
-  Parallel Session 4.4: Open Heavy Flavors (I): 6
-  Parallel Session 8.4: Open Heavy Flavors (III): 6
-  Parallel Session 8.3: Collective Dynamics (III): 6
-  Parallel Session 4.3: Quarkonia (II): 6
-  Parallel Session 3.3: Quarkonia (I): 6
-  Closing Session: 5
-  Parallel Session 6.2: Correlations and Fluctuations (I): 5
-  Parallel Session 6.1: QCD in Small Systems (III): 5
-  Parallel Session 2.2: QCD in Small Systems (II): 5
-  Parallel Session 2.3: Electromagnetic Probes (II): 5
-  Parallel Session 1.3: Electromagnetic Probes (I): 5
-  Parallel Session 5.4: Jets and High pT Hadrons (IV): 5
-  Parallel Session 5.2: Initial State Physics and Approach to Equilibrium (III): 5
-  Parallel Session 2.4: Jets and High pT Hadrons (II): 5
-  Parallel Session 1.4: Jets and High pT Hadrons (I): 5
-  Parallel Session 6.4: Jets and High pT Hadrons (V): 5
-  Parallel Session 6.3: New Theoretical Developments (II): 5
-  Parallel Session 5.3: New Theoretical Developments (I): 5
-  Parallel Session 1.2: QCD in Small Systems (I): 5
-  Parallel Session 5.1: Collective Dynamics (I): 5
-  Parallel Session 2.1: Initial State Physics and Approach to Equilibrium (II): 5
-  Parallel Session 1.1: Initial State Physics and Approach to Equilibrium (I): 5
-  Experimental Preview Talks I: 4
-  Experimental Preview Talks - II: 4
-  Plenary Session I: Equilibration, flow and QGP parameters: 4
-  Plenary Session IV: Jet Quenching: 4
-  Plenary Session III: Search for Critical Phenomena and Chiral Anomalies in Heavy-ion Collisions: 4
-  Plenary Session VI: Heavy Flavor and Quarkonia: 4
-  Plenary Session VII: Other Recent Developments: 4
-  Plenary Session II: Collective dynamics from pp to AA: 4
-  None: 4
-  Plenary Session VIII: Future Facilities and Directions: 3
-  Welcome: 2
-  Plenary Session V: Electromagnetic radiation: 2
-  Documentary: “Smashing Matters: Behind the Science Scene”: 1
-
-QM2017 Categorization results:
-  Total talks: 523
-  Plenary talks: 29
-  Parallel talks: 176
-  Uncategorized: 318
-
 Processing QM2015 (ID: 355454)
 
 Checking URL: https://indico.cern.ch/export/event/355454.json?detail=contributions&pretty=yes
@@ -281,62 +65,6 @@ Response status code: 200
 Event title: Quark Matter 2015 - XXV International Conference on Ultrarelativistic Nucleus-Nucleus Collisions
 
 QM2015 (ID: 355454): Valid Indico page with correct year
-
-QM2015 Session distribution:
-  Poster Session: 401
-  Poster flash talk: 8
-  Student Day: 8
-  Opening Ceremony: 7
-  Jets and High pT Hadrons IV: 7
-  Future Experimental Facilities, Upgrades, and Instrumentation: 7
-  Correlations and Fluctuations IV: 7
-  QGP in Small Systems II: 7
-  Special session on "QGP in small systems?": 6
-  Initial State Physics and Approach to Equilibrium II: 6
-  Jets and High pT Hadrons II: 6
-  Open Heavy Flavors and Strangeness II: 6
-  QGP in Small Systems I: 6
-  Correlations and Fluctuations I: 6
-  Correlations and Fluctuations II: 6
-  Initial State Physics and Approach to Equilibrium I: 6
-  Jets and High pT Hadrons I: 6
-  Teaser Talks: 5
-  Collective Dynamics IV: 5
-  Quarkonia IV: 5
-  New Theoretical Development I: 5
-  Collective Dynamics II: 5
-  Open Heavy Flavors and Strangeness I: 5
-  Open Heavy Flavors and Strangeness IV: 5
-  Electromagnetic Probes II: 5
-  Quarkonia I: 5
-  Jets and High pT Hadrons III: 5
-  QCD at High Temperture: 5
-  Correlations and Fluctuations III: 5
-  Baryon Rich QCD Matter: 5
-  Plenary Session VIII: 4
-  Plenary Session VII: 4
-  Plenary Session IV: 4
-  Plenary Session III: 4
-  Quarkonia III: 4
-  Open Heavy Flavors and Strangeness III: 4
-  New Theoretical Developments II: 4
-  Quark Matter in Astrophysics: 4
-  Collective Dynamics III: 4
-  Collective Dynamics I: 4
-  Electromagnetic Probes I: 4
-  Quarkonia II: 4
-  Plenary Session VI: 3
-  Plenary Session V: 3
-  None: 3
-  Plenary Session II: 3
-  Plenary Session I: 3
-  Opening Talk: 1
-
-QM2015 Categorization results:
-  Total talks: 635
-  Plenary talks: 28
-  Parallel talks: 144
-  Uncategorized: 463
 
 Processing QM2014 (ID: 219436)
 
@@ -346,34 +74,6 @@ Event title: Quark Matter 2014 - XXIV International Conference on Ultrarelativis
 
 QM2014 (ID: 219436): Valid Indico page with correct year
 
-QM2014 Session distribution:
-  Poster session: 372
-  Heavy flavor: 32
-  Plenary: 31
-  Jets: 28
-  Correlations and fluctuations: 23
-  Collective dynamics: 22
-  None: 18
-  QCD phase diagram: 17
-  Electromagnetic probes: 17
-  Initial state physics: 12
-  Closing session: 11
-  Opening session: 8
-  Future experimental facilities, upgrades, and instrumentation: 7
-  Recent developments: 6
-  Observables and concepts: 6
-  New theoretical developments: 6
-  QCD at high temperature and/or density: 6
-  Thermodynamics and hadron chemistry: 5
-  Approach to equilibrium: 5
-  Public evening lecture: 1
-
-QM2014 Categorization results:
-  Total talks: 633
-  Plenary talks: 31
-  Parallel talks: 167
-  Uncategorized: 435
-
 Processing QM2012 (ID: 181055)
 
 Checking URL: https://indico.cern.ch/export/event/181055.json?detail=contributions&pretty=yes
@@ -381,65 +81,6 @@ Response status code: 200
 Event title: Quark Matter 2012
 
 QM2012 (ID: 181055): Valid Indico page with correct year
-
-QM2012 Session distribution:
-  Poster Session Reception: 297
-  Plenary VIB: Flash Talks: 8
-  Plenary IIA: Jets (Chair M. Gyulassy): 7
-  Plenary VA: Exploring the QCD Phase Diagram (Chair: P. Braun-Munzinger): 7
-  Parallel 6B: Exploring the QCD Phase Diagram (Chair K. Rajagopal): 6
-  Parallel 6A: Heavy Flavor & Quarkonia (Chair Y. Akiba): 6
-  Parallel 3D: Pre-Equilibrium & Initial State (Chair K. Eskola): 6
-  Parallel 5C: High pt and Jets (Chair B. Cole): 6
-  Parallel 1D: Heavy Flavor & Quarkonia (Chair R. Granier de Cassagnac): 6
-  Parallel 6D: Correlations & Fluctuations (Chair O. Evdokimov): 6
-  Parallel 1A: Global & Collective Dynamics (Chair U. Heinz): 6
-  Parallel 6C: New Experimental Developments (Chair J. Stroth): 6
-  Parallel 6E: Initial State and p-A (Chair E. Wang): 6
-  Parallel 3B: Jets (Chair S. Mioduszewski): 6
-  Parallel 1C: Correlations & Fluctuations (Chair J. Schukraft): 6
-  Parallel 3A: Global & Collective Dynamics (Chair T. Kodama): 6
-  Parallel 5A: Hadron Thermodynamics and Chemistry (Chair R. Stock): 6
-  Parallel 5D: New Theoretical Developments (Chair B. Sinha): 6
-  Parallel 5B: QCD at Finite Temperature and Density (Chair F. Karsch): 6
-  Plenary IIB: Heavy Flavor (Chair: P. Giubellino): 5
-  Plenary IVB: Quarkonia, Real & Virtual Photons (Chair Y. Schutz): 5
-  Parallel 4A: Global & Collective Dynamics (Chair P. Sorenson): 5
-  Plenary IB: Experimental Highlights (Chair: J. Stachel): 5
-  Plenary IC: Initial State, Global & Collective Dynamics (Chair: L. McLerran): 5
-  Parallel 2B: Jets (Chair P. Jacobs): 5
-  Parallel 2D: Heavy Flavor & Quarkonia (Chair J.-P. Blaizot): 5
-  Parallel 7A: Heavy Flavor & Quarkonia (Chair F. Antinori): 5
-  Parallel 3C: Electro-Weak Probes (Chair J. Kapusta): 5
-  Parallel 2A: Global & Collective Dynamics (Chair A. Poskanzer): 5
-  Parallel 1B, Jets (Chair X.N. Wang): 5
-  Parallel 7D: Correlations & Fluctuations (Chair B. Wosiek): 5
-  Parallel 2C: Correlations & Fluctuations (Chair X. Dong): 5
-  Parallel 7B: Exploring the QCD Phase Diagram (Chair H. Huang): 5
-  Parallel 7E: New Theoretical Developments (Chair P. Levai): 5
-  Parallel 4D: Pre-Equilibrium & Initial State (Chair T. Ludlam): 5
-  Plenary IVA: Real & Virtual Photons (Chair: T. Nayak): 4
-  Plenary ID: Initial State, Global & Collective Dynamics (Chair: B. Jacak): 4
-  Parallel 4B: Jets (Chair N. Armesto): 4
-  Parallel 4C: Electro-Weak Probes (Chair D. D'Enterria): 4
-  Parallel 7C: New Experimental Developments (Chair T. Peitzmann): 4
-  Teacher's Day: 3
-  Student's Day A (Chair S. Bass): 3
-  Plenary VIC: Rapporteur Talks (Chair W. Busza): 3
-  Plenary IA: Opening Session (Chairs: J. Harris, D. Kharzeev, T. Ullrich): 3
-  Plenary VB: Future Developments I (Chair: C. Greiner): 3
-  None: 2
-  Student Day B (Chair G. Roland): 2
-  Plenary VIA: Future Developments II (Chair W. Zajc): 2
-  Student and Teacher Joint Session (Chair R. Venugopalan): 1
-  Student's Day C (Chair R. Venugopalan): 1
-  Plenary VIE: Closing: 1
-
-QM2012 Categorization results:
-  Total talks: 533
-  Plenary talks: 50
-  Parallel talks: 162
-  Uncategorized: 321
 
 Processing QM2011 (ID: 30248)
 
@@ -450,13 +91,13 @@ Event title: QM 2011 - XXII International Conference on Ultrarelativistic Nucleu
 QM2011 (ID: 30248): Indico page exists but may not be for QM2011 (title: QM 2011 - XXII International Conference on Ultrarelativistic Nucleus-Nucleus Collisions)
   Warning: Could not fetch valid data for QM2011
 
-Year Location Total Plenary Parallel
------------------------------------------------------------------
-2012 Washington DC, USA 533 50 162
-2014 Darmstadt, Germany 633 31 167
-2015 Kobe, Japan 635 28 144
-2017 Chicago, USA 523 29 176
-2018 Venice, Italy 681 37 219
-2019 Wuhan, China 574 47 184
-2023 Houston, USA 573 37 210
-2025 Frankfurt, Germany 813 41 199
+Year Location Total Plenary Parallel Unk_Plen Unk_Par
+-------------------------------------------------------------------------------------
+2012 Washington DC, USA        521    46       162      0        0
+2014 Darmstadt, Germany        613    31       167      0        0
+2015 Kobe, Japan               614    28       132      0        0
+2017 Chicago, USA              507    28       176      0        0
+2018 Venice, Italy             662    34       219      0        0
+2019 Wuhan, China              570    43       184      0        0
+2023 Houston, USA              557    37       210      0        0
+2025 Frankfurt, Germany        813    41       199      1        0

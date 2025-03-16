@@ -143,41 +143,28 @@ def validate_indico_url(indico_id, year):
     except requests.exceptions.RequestException as e:
         return False, f"Error validating URL: {str(e)}", None
 
-def categorize_session(session_name, year):
-    """Categorize a session as plenary or parallel based on its name and year"""
+def categorize_session(session_name, title):
+    """Categorize a session as plenary or parallel based on its name and title"""
     if not session_name:
         return "unknown"
         
     session_lower = str(session_name).lower()
+    title_lower = str(title).lower()
     
-    # Skip known non-talk sessions
-    if any(x in session_lower for x in [
-        'poster', 'flash', 'student', 'opening', 'closing',
-        'welcome', 'teacher', 'public'
-    ]):
+    # Only exclude discussions from plenary, but keep them for parallel
+    if 'discussion' in title_lower and 'plenary' in session_lower:
         return "other"
     
     # Year-specific patterns
-    if year == '2018':
-        if 'plenary' in session_lower:
-            return "plenary"
-        if any(x in session_lower for x in [
-            'jet modifications', 'collective dynamics', 'collectivity in small systems',
-            'quarkonia', 'initial state physics', 'correlations and fluctuations',
-            'open heavy flavour', 'chirality', 'phase diagram', 'qcd at high temperature',
-            'electromagnetic and weak probes', 'new theoretical developments',
-            'thermodynamics and hadron chemistry', 'high baryon density'
-        ]):
-            return "parallel"
-            
-    elif year == '2023':
+    if year == '2023':
         if 'plenary session' in session_lower:
             return "plenary"
         if any(x in session_lower for x in [
             'jets', 'heavy flavor', 'collective dynamics', 'new theory',
             'small systems', 'initial state', 'qcd at finite t',
             'light flavor', 'em probes', 'critical point', 'chirality',
-            'spin/eic physics', 'future experiments', 'astrophysics', 'upc'
+            'spin/eic physics', 'future experiments', 'astrophysics', 'upc',
+            'discussion'  # Include discussions in parallel sessions
         ]):
             return "parallel"
             
@@ -188,7 +175,8 @@ def categorize_session(session_name, year):
             'heavy flavor', 'jets', 'correlations and fluctuations',
             'collective dynamics', 'qcd phase diagram', 'electromagnetic probes',
             'initial state physics', 'new theoretical developments',
-            'thermodynamics and hadron chemistry', 'approach to equilibrium'
+            'thermodynamics and hadron chemistry', 'approach to equilibrium',
+            'discussion'  # Include discussions in parallel sessions
         ]):
             return "parallel"
             
@@ -199,7 +187,21 @@ def categorize_session(session_name, year):
             'jets and high pt', 'correlations and fluctuations',
             'qgp in small systems', 'initial state physics',
             'open heavy flavors', 'collective dynamics',
-            'quarkonia', 'electromagnetic probes'
+            'quarkonia', 'electromagnetic probes',
+            'discussion'  # Include discussions in parallel sessions
+        ]):
+            return "parallel"
+            
+    elif year == '2018':
+        if 'plenary' in session_lower:
+            return "plenary"
+        if any(x in session_lower for x in [
+            'jet modifications', 'collective dynamics', 'collectivity in small systems',
+            'quarkonia', 'initial state physics', 'correlations and fluctuations',
+            'open heavy flavour', 'chirality', 'phase diagram', 'qcd at high temperature',
+            'electromagnetic and weak probes', 'new theoretical developments',
+            'thermodynamics and hadron chemistry', 'high baryon density',
+            'discussion'  # Include discussions in parallel sessions
         ]):
             return "parallel"
             
@@ -207,10 +209,92 @@ def categorize_session(session_name, year):
         # General patterns for other years
         if 'plenary' in session_lower:
             return "plenary"
-        if 'parallel' in session_lower:
+        if 'parallel' in session_lower or 'discussion' in session_lower:
             return "parallel"
     
     return "unknown"
+
+def should_exclude_contribution(title, session, year):
+    """Check if a contribution should be excluded from statistics"""
+    title_lower = str(title).lower()
+    session_lower = str(session).lower()
+    
+    # Basic exclusion keywords for all years
+    exclude_keywords = [
+        'qm2021',
+        'awards',
+        'closing',
+        'opening',
+        'welcome',
+        'medal',
+        'flash talks',
+        'zimanyi',
+        'theory medal',
+        'presentation',
+        'ceremony'
+    ]
+    
+    # Year-specific exclusions
+    if year == '2015':
+        if 'round table discussion' in title_lower:
+            return True
+        if 'special session' in session_lower:
+            return True
+        if session_lower == 'correlations and fluctuations ii':
+            return True
+    
+    # Check both title and session name for general exclusion keywords
+    return any(keyword in title_lower or keyword in session_lower 
+              for keyword in exclude_keywords)
+
+def extract_speaker_info(speakers):
+    """Extract speaker information from raw data"""
+    if not speakers:
+        return "No name", "Unknown", "Unknown"
+        
+    speaker = speakers[0]
+    
+    # Try different name formats
+    name = (speaker.get('fullName') or 
+            f"{speaker.get('first_name', '')} {speaker.get('last_name', '')}" or 
+            speaker.get('name', 'No name')).strip()
+    
+    affiliation = speaker.get('affiliation', 'Unknown')
+    country = speaker.get('country', 'Unknown')
+    
+    # Special cases for known speakers
+    if name == "Hatsuda, Tetsuo":
+        affiliation = "RIKEN"
+        country = "Japan"
+    
+    return name, affiliation, country
+
+# Add manual corrections for known cases
+MANUAL_CORRECTIONS = {
+    '2015': {
+        'Systematics of higher order net-baryon number fluctuations at small values of the baryon chemical potential: A comparison of lattice QCD and beam energy scan results': {
+            'Speaker': 'Karsch, Frithjof',
+            'Institute': 'Brookhaven National Laboratory & Bielefeld University',
+            'Country': 'USA & Germany'
+        }
+    },
+    '2018': {
+        'A novel invariant mass method to isolate resonance backgrounds from the chiral magnetic effect': {
+            'Speaker': 'Wang, Fuqiang',
+            'Institute': 'Purdue University & Huzhou University',
+            'Country': 'USA & China'
+        }
+    }
+}
+
+def apply_manual_corrections(talk_data, year):
+    """Apply manual corrections for known cases"""
+    if year in MANUAL_CORRECTIONS:
+        title = talk_data['Title']
+        if title in MANUAL_CORRECTIONS[year]:
+            corrections = MANUAL_CORRECTIONS[year][title]
+            talk_data.update(corrections)
+    return talk_data
 
 def fetch_and_process_contributions(indico_id, year):
     """Fetch and process contributions from Indico"""
@@ -229,31 +313,40 @@ def fetch_and_process_contributions(indico_id, year):
         event_data = results[0]
         contributions = event_data.get('contributions', [])
         
-        # Print session distribution first
-        session_counts = Counter()
-        for contribution in contributions:
-            session = contribution.get('session', '')
-            session_counts[session] += 1
-        
-        print(f"\nQM{year} Session distribution:")
-        for session, count in session_counts.most_common():
-            print(f"  {session}: {count}")
-            
         all_talks = []
         plenary_talks = []
         parallel_talks = []
         
         # Process contributions
         for contribution in contributions:
+            title = contribution.get('title', '')
             session = contribution.get('session', '')
-            session_type = categorize_session(session, year)
             
-            # Basic talk data
+            # Skip excluded contributions
+            if should_exclude_contribution(title, session, year):
+                continue
+                
+            session_type = categorize_session(session, title)
+            
+            # Extract speaker information
+            speakers = (contribution.get('speakers', []) or 
+                      contribution.get('person_links', []) or 
+                      contribution.get('primary_authors', []))
+            
+            name, affiliation, country = extract_speaker_info(speakers)
+            
             talk_data = {
                 'Session': session,
                 'Type': session_type,
-                'Title': contribution.get('title', 'No title')
+                'Title': title,
+                'Speaker': name,
+                'Institute': affiliation,
+                'Country': country,
+                'Raw_Speaker_Data': speakers[0] if speakers else None
             }
+            
+            # Apply any manual corrections
+            talk_data = apply_manual_corrections(talk_data, year)
             
             all_talks.append(talk_data)
             if session_type == "plenary":
@@ -261,11 +354,36 @@ def fetch_and_process_contributions(indico_id, year):
             elif session_type == "parallel":
                 parallel_talks.append(talk_data)
         
-        print(f"\nQM{year} Categorization results:")
-        print(f"  Total talks: {len(all_talks)}")
-        print(f"  Plenary talks: {len(plenary_talks)}")
-        print(f"  Parallel talks: {len(parallel_talks)}")
-        print(f"  Uncategorized: {len(all_talks) - len(plenary_talks) - len(parallel_talks)}")
+        # Print detailed information for unknown institutes
+        unknown_plenary = [t for t in plenary_talks if t['Institute'] == 'Unknown']
+        unknown_parallel = [t for t in parallel_talks if t['Institute'] == 'Unknown']
+        
+        if unknown_plenary or unknown_parallel:
+            print(f"\nDetailed information for talks with unknown institutes in QM{year}:")
+            
+            if unknown_plenary:
+                print("\nPlenary talks with unknown institutes:")
+                for talk in unknown_plenary:
+                    print("\n---")
+                    print(f"Title: {talk['Title']}")
+                    print(f"Session: {talk['Session']}")
+                    print(f"Speaker: {talk['Speaker']}")
+                    if talk['Raw_Speaker_Data']:
+                        print("Raw speaker data:")
+                        for key, value in talk['Raw_Speaker_Data'].items():
+                            print(f"  {key}: {value}")
+            
+            if unknown_parallel:
+                print("\nParallel talks with unknown institutes:")
+                for talk in unknown_parallel:
+                    print("\n---")
+                    print(f"Title: {talk['Title']}")
+                    print(f"Session: {talk['Session']}")
+                    print(f"Speaker: {talk['Speaker']}")
+                    if talk['Raw_Speaker_Data']:
+                        print("Raw speaker data:")
+                        for key, value in talk['Raw_Speaker_Data'].items():
+                            print(f"  {key}: {value}")
         
         return {
             'all_talks': all_talks,
@@ -490,22 +608,20 @@ if __name__ == "__main__":
     print("=== FETCHING AND PROCESSING CONFERENCES ===")
     try:
         with open('listofQMindigo', 'r') as f:
-            # Skip lines that start with '#' and take only first two items (year and ID)
             conferences = [line.strip().split()[:2] for line in f if not line.strip().startswith('#')]
             
         conference_data = {}
         processed_conferences = []
         
-        # Process each conference fresh (no caching)
         for year, indico_id in conferences:
             print(f"\nProcessing QM{year} (ID: {indico_id})")
             conference_stats = fetch_and_process_contributions(indico_id, year)
             if conference_stats:
                 conference_data[year] = conference_stats
-                
-        # Print final summary table
-        print("\nYear Location Total Plenary Parallel")
-        print("-" * 65)
+        
+        # Print final summary table with unknown institutes split by type
+        print("\nYear Location Total Plenary Parallel Unk_Plen Unk_Par")
+        print("-" * 85)
         
         # Sort conferences by year
         conferences.sort(key=lambda x: x[0])
@@ -517,7 +633,12 @@ if __name__ == "__main__":
                 total = len(data['all_talks'])
                 plenary = len(data['plenary_talks'])
                 parallel = len(data['parallel_talks'])
-                print(f"{year} {location} {total} {plenary} {parallel}")
+                
+                # Count unknown institutes separately for plenary and parallel
+                unknown_plenary = len([t for t in data['plenary_talks'] if t['Institute'] == 'Unknown'])
+                unknown_parallel = len([t for t in data['parallel_talks'] if t['Institute'] == 'Unknown'])
+                
+                print(f"{year} {location:<25} {total:<6} {plenary:<8} {parallel:<8} {unknown_plenary:<8} {unknown_parallel}")
                 
     except FileNotFoundError:
         print("Error: 'listofQMindigo' file not found")
