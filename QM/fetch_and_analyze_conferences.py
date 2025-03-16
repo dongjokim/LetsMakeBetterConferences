@@ -65,7 +65,7 @@ INSTITUTION_COUNTRY = {
     # Add more institutions as needed
 }
 
-# Add this near the top of the file with other constants
+# Update the conference locations with correct information
 CONFERENCE_LOCATIONS = {
     '2011': 'Annecy, France',
     '2012': 'Washington DC, USA',
@@ -76,7 +76,7 @@ CONFERENCE_LOCATIONS = {
     '2019': 'Wuhan, China',
     '2022': 'Krakow, Poland',
     '2023': 'Houston, USA',
-    '2025': 'Brisbane, Australia'
+    '2025': 'Frankfurt, Germany'  # Updated to Frankfurt
 }
 
 def extract_country(affiliation):
@@ -120,205 +120,161 @@ def extract_country(affiliation):
 
 def validate_indico_url(indico_id, year):
     """Validate that the Indico URL is correct for the given year"""
-    url = f"https://indico.cern.ch/event/{indico_id}/"
-    try:
-        response = requests.head(url, timeout=10)
-        if response.status_code == 200:
-            # Make a GET request to check the title
-            response = requests.get(url, timeout=10)
-            # Look for QM and the year in the page title
-            if f"QM{year}" in response.text or f"Quark Matter {year}" in response.text:
-                return True, "Valid Indico page with correct year"
-            else:
-                return False, f"Indico page exists but may not be for QM{year}"
-        else:
-            return False, f"Indico page returns status code {response.status_code}"
-    except requests.exceptions.RequestException as e:
-        return False, f"Error validating URL: {str(e)}"
-
-def fetch_and_process_contributions(indico_id, year):
-    # Use the detailed API endpoint to get contributions
     url = f"https://indico.cern.ch/export/event/{indico_id}.json?detail=contributions&pretty=yes"
-    
-    # First validate the Indico URL
-    is_valid, message = validate_indico_url(indico_id, year)
-    print(f"QM{year} (ID: {indico_id}): {message}")
-    
-    if not is_valid:
-        print(f"  Warning: Indico ID {indico_id} may not be correct for QM{year}")
-    
     try:
-        print(f"  Fetching contribution details...")
-        response = requests.get(url, timeout=30)
+        # Use GET and print the response details for debugging
+        print(f"\nChecking URL: {url}")
+        response = requests.get(url, timeout=10)
+        print(f"Response status code: {response.status_code}")
         
         if response.status_code == 200:
             data = response.json()
-            results = data.get('results', [])
+            # Print event title for verification
+            event_data = data.get('results', [{}])[0]
+            title = event_data.get('title', '')
+            print(f"Event title: {title}")
             
-            if not results:
-                print(f"  No results found for QM{year}")
-                return None
-            
-            # Extract event metadata if available
-            event_data = results[0]
-            
-            # Get conference dates safely
-            start_date = event_data.get('startDate', {})
-            end_date = event_data.get('endDate', {})
-            
-            # Handle both string and dict date formats
-            if isinstance(start_date, dict):
-                start_str = start_date.get('date', '')
+            if f"QM{year}" in title or f"Quark Matter {year}" in title:
+                return True, "Valid Indico page with correct year", data
             else:
-                start_str = str(start_date)
-                
-            if isinstance(end_date, dict):
-                end_str = end_date.get('date', '')
-            else:
-                end_str = str(end_date)
-                
-            conference_dates = f"{start_str} to {end_str}" if start_str and end_str else ""
+                return False, f"Indico page exists but may not be for QM{year} (title: {title})", None
+        else:
+            return False, f"Indico page returns status code {response.status_code}", None
+    except requests.exceptions.RequestException as e:
+        return False, f"Error validating URL: {str(e)}", None
+
+def categorize_session(session_name, year):
+    """Categorize a session as plenary or parallel based on its name and year"""
+    if not session_name:
+        return "unknown"
+        
+    session_lower = str(session_name).lower()
+    
+    # Skip known non-talk sessions
+    if any(x in session_lower for x in [
+        'poster', 'flash', 'student', 'opening', 'closing',
+        'welcome', 'teacher', 'public'
+    ]):
+        return "other"
+    
+    # Year-specific patterns
+    if year == '2018':
+        if 'plenary' in session_lower:
+            return "plenary"
+        if any(x in session_lower for x in [
+            'jet modifications', 'collective dynamics', 'collectivity in small systems',
+            'quarkonia', 'initial state physics', 'correlations and fluctuations',
+            'open heavy flavour', 'chirality', 'phase diagram', 'qcd at high temperature',
+            'electromagnetic and weak probes', 'new theoretical developments',
+            'thermodynamics and hadron chemistry', 'high baryon density'
+        ]):
+            return "parallel"
             
-            # Try different possible paths for location information
-            conference_location = (
-                event_data.get('location', '') or 
-                event_data.get('room', '') or 
-                event_data.get('venue', '') or
-                event_data.get('address', '')
-            )
+    elif year == '2023':
+        if 'plenary session' in session_lower:
+            return "plenary"
+        if any(x in session_lower for x in [
+            'jets', 'heavy flavor', 'collective dynamics', 'new theory',
+            'small systems', 'initial state', 'qcd at finite t',
+            'light flavor', 'em probes', 'critical point', 'chirality',
+            'spin/eic physics', 'future experiments', 'astrophysics', 'upc'
+        ]):
+            return "parallel"
             
-            # If still no location, try to extract from event title or description
-            if not conference_location:
-                title = event_data.get('title', '')
-                description = event_data.get('description', '')
-                
-                # Common location patterns in titles: "QM2018 in Venice" or "Quark Matter 2018, Venice, Italy"
-                location_match = re.search(r'(?:in|at|,)\s+([^,]+(?:,\s*[^,]+)?)', title + ' ' + description)
-                if location_match:
-                    conference_location = location_match.group(1).strip()
-                else:
-                    # Manually map known conference years to locations
-                    location_map = {
-                        '2011': 'Annecy, France',
-                        '2012': 'Washington DC, USA',
-                        '2014': 'Darmstadt, Germany',
-                        '2015': 'Kobe, Japan',
-                        '2017': 'Chicago, USA',
-                        '2018': 'Venice, Italy',
-                        '2019': 'Wuhan, China',
-                        '2022': 'Krakow, Poland',
-                        '2023': 'Houston, USA',
-                        '2025': 'Brisbane, Australia'
-                    }
-                    conference_location = location_map.get(year, 'Unknown location')
+    elif year == '2014':
+        if 'plenary' in session_lower:
+            return "plenary"
+        if any(x in session_lower for x in [
+            'heavy flavor', 'jets', 'correlations and fluctuations',
+            'collective dynamics', 'qcd phase diagram', 'electromagnetic probes',
+            'initial state physics', 'new theoretical developments',
+            'thermodynamics and hadron chemistry', 'approach to equilibrium'
+        ]):
+            return "parallel"
             
-            if not conference_location:
-                conference_location = 'Unknown location'
-                
-            print(f"  Extracted location: {conference_location}")
+    elif year == '2015':
+        if 'plenary session' in session_lower:
+            return "plenary"
+        if any(x in session_lower.replace('-', ' ') for x in [
+            'jets and high pt', 'correlations and fluctuations',
+            'qgp in small systems', 'initial state physics',
+            'open heavy flavors', 'collective dynamics',
+            'quarkonia', 'electromagnetic probes'
+        ]):
+            return "parallel"
             
-            all_talks = []
-            plenary_talks = []
-            parallel_talks = []
+    else:
+        # General patterns for other years
+        if 'plenary' in session_lower:
+            return "plenary"
+        if 'parallel' in session_lower:
+            return "parallel"
+    
+    return "unknown"
+
+def fetch_and_process_contributions(indico_id, year):
+    """Fetch and process contributions from Indico"""
+    is_valid, message, data = validate_indico_url(indico_id, year)
+    print(f"\nQM{year} (ID: {indico_id}): {message}")
+    
+    if not is_valid or not data:
+        print(f"  Warning: Could not fetch valid data for QM{year}")
+        return None
+    
+    try:
+        results = data.get('results', [])
+        if not results:
+            return None
             
-            # Process each contribution
-            for contribution in results[0].get('contributions', []):
-                title = contribution.get('title', 'No title')
-                session = contribution.get('session', 'No session')
-                
-                # Try different possible paths for speaker information
-                speakers = (contribution.get('speakers', []) or 
-                          contribution.get('person_links', []) or 
-                          contribution.get('primary_authors', []))
-                
-                # If no speakers found, check if there's a nested structure
-                if not speakers and 'persons' in contribution:
-                    speakers = contribution['persons']
-                
-                # Process each speaker
-                for speaker in speakers:
-                    # Handle different name formats in Indico
-                    name = (speaker.get('name', '') or 
-                           speaker.get('full_name', '') or 
-                           f"{speaker.get('first_name', '')} {speaker.get('last_name', '')}")
-                    
-                    # Handle different affiliation formats
-                    affiliation = (speaker.get('affiliation', '') or 
-                                 speaker.get('institution', '') or 
-                                 speaker.get('institute', '') or
-                                 speaker.get('affiliation_link', {}).get('name', ''))
-                    
-                    country = extract_country(affiliation)
-                    
-                    # Save additional data if available
-                    abstract = contribution.get('description', '')
-                    start_time = contribution.get('startDate', {})
-                    duration = contribution.get('duration', '')
-                    board_number = contribution.get('board_number', '')
-                    
-                    talk_data = {
-                        'Session': session,
-                        'Title': title,
-                        'Speaker': name.strip() or 'No name',
-                        'Institute': affiliation or 'No affiliation',
-                        'Country': country,
-                        'Abstract': abstract,
-                        'Start_Time': start_time,
-                        'Duration': duration,
-                        'Board_Number': board_number
-                    }
-                    
-                    all_talks.append(talk_data)
-                    
-                    # More comprehensive session type detection
-                    session_str = str(session).lower()
-                    if any(plenary_term in session_str for plenary_term in ['plenary', 'keynote', 'overview']):
-                        plenary_talks.append(talk_data)
-                    elif any(parallel_term in session_str for parallel_term in ['parallel', 'concurrent', 'breakout']):
-                        parallel_talks.append(talk_data)
-                    # Print session types for debugging
-                    if year in ['2011', '2014', '2015', '2023']:
-                        print(f"Session type: {session}")
+        event_data = results[0]
+        contributions = event_data.get('contributions', [])
+        
+        # Print session distribution first
+        session_counts = Counter()
+        for contribution in contributions:
+            session = contribution.get('session', '')
+            session_counts[session] += 1
+        
+        print(f"\nQM{year} Session distribution:")
+        for session, count in session_counts.most_common():
+            print(f"  {session}: {count}")
             
-            # Add more metadata about the conference
-            processed_data = {
-                'metadata': {
-                    'year': year,
-                    'indico_id': indico_id,
-                    'download_date': datetime.now().isoformat(),
-                    'conference_location': CONFERENCE_LOCATIONS.get(year, 'Unknown location'),
-                    'conference_dates': conference_dates,
-                    'total_talks': len(all_talks),
-                    'plenary_talks': len(plenary_talks),
-                    'parallel_talks': len(parallel_talks)
-                },
-                'all_talks': all_talks,
-                'plenary_talks': plenary_talks,
-                'parallel_talks': parallel_talks
+        all_talks = []
+        plenary_talks = []
+        parallel_talks = []
+        
+        # Process contributions
+        for contribution in contributions:
+            session = contribution.get('session', '')
+            session_type = categorize_session(session, year)
+            
+            # Basic talk data
+            talk_data = {
+                'Session': session,
+                'Type': session_type,
+                'Title': contribution.get('title', 'No title')
             }
             
-            # Save processed data
-            with open(f'data/QM{year}_processed_data.json', 'w') as f:
-                json.dump(processed_data, f, indent=2)
-                
-            print(f"  Successfully processed: {len(all_talks)} talks, {len(plenary_talks)} plenary, {len(parallel_talks)} parallel")
-            print(f"  Location: {conference_location}, Dates: {conference_dates}")
-            
-            # Generate plots without detailed output
-            return plot_distributions(all_talks, plenary_talks, parallel_talks, year, verbose=False)
-            
-        else:
-            print(f"  Failed to fetch data: HTTP {response.status_code}")
-            return None
-
-    except requests.exceptions.RequestException as e:
-        print(f"  Request failed: {str(e)}")
-        return None
-    except json.JSONDecodeError as e:
-        print(f"  Failed to parse JSON response: {str(e)}")
-        return None
+            all_talks.append(talk_data)
+            if session_type == "plenary":
+                plenary_talks.append(talk_data)
+            elif session_type == "parallel":
+                parallel_talks.append(talk_data)
+        
+        print(f"\nQM{year} Categorization results:")
+        print(f"  Total talks: {len(all_talks)}")
+        print(f"  Plenary talks: {len(plenary_talks)}")
+        print(f"  Parallel talks: {len(parallel_talks)}")
+        print(f"  Uncategorized: {len(all_talks) - len(plenary_talks) - len(parallel_talks)}")
+        
+        return {
+            'all_talks': all_talks,
+            'plenary_talks': plenary_talks,
+            'parallel_talks': parallel_talks
+        }
+        
     except Exception as e:
-        print(f"  Error processing data: {str(e)}")
+        print(f"Error processing QM{year}: {str(e)}")
         return None
 
 def plot_distributions(all_data, plenary_data, parallel_data, year, verbose=True):
@@ -459,118 +415,110 @@ def analyze_trends_across_conferences(conference_data):
         print(f"{country}: {count} talks")
 
 def fetch_and_analyze_conferences():
-    # Read conference IDs
+    print("=== FETCHING AND PROCESSING CONFERENCES ===")
+    try:
+        with open('listofQMindigo', 'r') as f:
+            conferences = [line.strip().split()[:2] for line in f if not line.strip().startswith('#')]
+            
+        conference_data = {}
+        processed_conferences = []
+        
+        for year, indico_id in conferences:
+            print(f"\nProcessing QM{year} (ID: {indico_id})")
+            processed_file = f'data/QM{year}_processed_data.json'
+            
+            try:
+                with open(processed_file, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                    conference_data[year] = {
+                        'all_talks': data['all_talks'],
+                        'plenary_talks': data['plenary_talks'],
+                        'parallel_talks': data['parallel_talks'],
+                        'metadata': data['metadata']
+                    }
+            except (FileNotFoundError, json.JSONDecodeError) as e:
+                print(f"  Could not load processed data: {e}")
+                continue
+        
+        # Print final summary table
+        print("\nYear Location Total Plenary Parallel")
+        print("-" * 65)
+        
+        # Sort conferences by year
+        conferences.sort(key=lambda x: x[0])
+        
+        for year, _ in conferences:
+            if year in conference_data:
+                data = conference_data[year]
+                location = CONFERENCE_LOCATIONS.get(year, 'Unknown location')
+                total = len(data['all_talks'])
+                plenary = len(data['plenary_talks'])
+                parallel = len(data['parallel_talks'])
+                print(f"{year} {location} {total} {plenary} {parallel}")
+        
+        print("\nUnknown Institutes Analysis:")
+        print("-" * 65)
+        for year, _ in conferences:
+            if year in conference_data:
+                print(f"\nQM{year}:")
+                # Get unknown institutes for plenary talks
+                unknown_plenary = [talk['Institute'] for talk in conference_data[year]['plenary_talks'] 
+                                 if talk['Country'] == 'Unknown']
+                if unknown_plenary:
+                    print(f"  Plenary unknown institutes ({len(unknown_plenary)}):")
+                    for inst in sorted(set(unknown_plenary))[:5]:
+                        print(f"    - {inst}")
+                    if len(unknown_plenary) > 5:
+                        print(f"    ... and {len(set(unknown_plenary)) - 5} more")
+                
+                # Get unknown institutes for parallel talks
+                unknown_parallel = [talk['Institute'] for talk in conference_data[year]['parallel_talks'] 
+                                 if talk['Country'] == 'Unknown']
+                if unknown_parallel:
+                    print(f"  Parallel unknown institutes ({len(unknown_parallel)}):")
+                    for inst in sorted(set(unknown_parallel))[:5]:
+                        print(f"    - {inst}")
+                    if len(unknown_parallel) > 5:
+                        print(f"    ... and {len(set(unknown_parallel)) - 5} more")
+                
+    except FileNotFoundError:
+        print("Error: 'listofQMindigo' file not found")
+        exit(1)
+
+if __name__ == "__main__":
+    # First, fetch and process all conferences
+    print("=== FETCHING AND PROCESSING CONFERENCES ===")
     try:
         with open('listofQMindigo', 'r') as f:
             # Skip lines that start with '#' and take only first two items (year and ID)
             conferences = [line.strip().split()[:2] for line in f if not line.strip().startswith('#')]
-    except FileNotFoundError:
-        print("Error: 'listofQMindigo' file not found")
-        return
-    
-    print("\n=== VALIDATING INDICO PAGES FOR QM CONFERENCES ===")
-    conference_data = {}
-    processed_conferences = []
-    
-    for year, indico_id in conferences:
-        print(f"\n=== QM{year} (ID: {indico_id}) ===")
+            
+        conference_data = {}
+        processed_conferences = []
         
-        # Check if we already have processed data
-        processed_file = f'data/QM{year}_processed_data.json'
-        if os.path.exists(processed_file):
-            print(f"  Processed data already exists, loading from file...")
-            try:
-                with open(processed_file, 'r') as f:
-                    data = json.load(f)
-                    metadata = data.get('metadata', {})
-                    
-                    # Get location from CONFERENCE_LOCATIONS instead of metadata
-                    location = CONFERENCE_LOCATIONS.get(year, 'Unknown location')
-                    print(f"  Found location: {location}")
-                    
-                    all_talks = data.get('all_talks', [])
-                    plenary_talks = data.get('plenary_talks', [])
-                    parallel_talks = data.get('parallel_talks', [])
-                    
-                    # Store metadata for summary
-                    processed_conferences.append({
-                        'year': year,
-                        'indico_id': indico_id,
-                        'location': location,  # Use the location from our mapping
-                        'dates': metadata.get('conference_dates', ''),
-                        'all_talks': len(all_talks),
-                        'plenary_talks': len(plenary_talks),
-                        'parallel_talks': len(parallel_talks),
-                    })
-                    
-                    # Generate plots from existing data without verbose output
-                    conference_stats = plot_distributions(all_talks, plenary_talks, parallel_talks, year, verbose=False)
-                    if conference_stats:
-                        conference_data[year] = conference_stats
-                        print(f"  Summary: {len(all_talks)} talks, {len(plenary_talks)} plenary, {len(parallel_talks)} parallel")
-            except Exception as e:
-                print(f"  Error loading processed data: {e}")
-                # Try to fetch and process again
-                conference_stats = fetch_and_process_contributions(indico_id, year)
-                if conference_stats:
-                    conference_data[year] = conference_stats
-        else:
-            # Fetch and process data
+        # Process each conference fresh (no caching)
+        for year, indico_id in conferences:
+            print(f"\nProcessing QM{year} (ID: {indico_id})")
             conference_stats = fetch_and_process_contributions(indico_id, year)
             if conference_stats:
                 conference_data[year] = conference_stats
                 
-                # Read the newly created file to get metadata
-                try:
-                    with open(processed_file, 'r') as f:
-                        data = json.load(f)
-                        processed_conferences.append({
-                            'year': year,
-                            'indico_id': indico_id,
-                            'location': CONFERENCE_LOCATIONS.get(year, 'Unknown location'),  # Use the location from our mapping
-                            'dates': data.get('metadata', {}).get('conference_dates', ''),
-                            'all_talks': conference_stats['all_talks'],
-                            'plenary_talks': conference_stats['plenary_talks'],
-                            'parallel_talks': conference_stats['parallel_talks'],
-                        })
-                except Exception as e:
-                    print(f"  Error reading processed data for summary: {e}")
-    
-    # After processing all conferences, perform trend analysis
-    if conference_data:
-        print("\n=== GENERATING CROSS-CONFERENCE ANALYSIS ===")
-        analyze_trends_across_conferences(conference_data)
-        
-        # Print final summary table with consistent data
-        print("\n=== SUMMARY OF QM CONFERENCES ===")
-        print(f"{'Year':<6} {'Location':<25} {'Total':<8} {'Plenary':<8} {'Parallel':<8}")
+        # Print final summary table
+        print("\nYear Location Total Plenary Parallel")
         print("-" * 65)
         
-        # Sort by year for consistent display
-        processed_conferences.sort(key=lambda x: x['year'])
+        # Sort conferences by year
+        conferences.sort(key=lambda x: x[0])
         
-        for conf in processed_conferences:
-            year = conf['year']
-            location = conf['location']
-            if len(location) > 23:
-                location = location[:20] + "..."
-            total = conf['all_talks']
-            plenary = conf['plenary_talks']
-            parallel = conf['parallel_talks']
-            
-            print(f"{year:<6} {location:<25} {total:<8} {plenary:<8} {parallel:<8}")
-            
-        # Save summary to CSV for easy reference
-        try:
-            with open('data/conference_summary.csv', 'w') as f:
-                f.write("Year,Location,Total Talks,Plenary Talks,Parallel Talks\n")
-                for conf in processed_conferences:
-                    f.write(f"{conf['year']},{conf['location']},{conf['all_talks']},{conf['plenary_talks']},{conf['parallel_talks']}\n")
-            print("\nSummary saved to data/conference_summary.csv")
-        except Exception as e:
-            print(f"Error saving summary to CSV: {e}")
-    else:
-        print("No conference data was successfully processed for trend analysis")
-
-if __name__ == "__main__":
-    fetch_and_analyze_conferences() 
+        for year, _ in conferences:
+            if year in conference_data:
+                data = conference_data[year]
+                location = CONFERENCE_LOCATIONS.get(year, 'Unknown location')
+                total = len(data['all_talks'])
+                plenary = len(data['plenary_talks'])
+                parallel = len(data['parallel_talks'])
+                print(f"{year} {location} {total} {plenary} {parallel}")
+                
+    except FileNotFoundError:
+        print("Error: 'listofQMindigo' file not found")
+        exit(1) 
