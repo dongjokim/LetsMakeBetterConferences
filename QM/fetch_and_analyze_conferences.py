@@ -143,13 +143,28 @@ def validate_indico_url(indico_id, year):
     except requests.exceptions.RequestException as e:
         return False, f"Error validating URL: {str(e)}", None
 
-def categorize_session(session_name, title):
-    """Categorize a session as plenary or parallel based on its name and title"""
+def categorize_session(session_name, title, year):
+    """Categorize a session as plenary, parallel, poster, flash, or other"""
     if not session_name:
         return "unknown"
         
     session_lower = str(session_name).lower()
     title_lower = str(title).lower()
+    
+    # Check for flash talks
+    if any(x in session_lower or x in title_lower for x in ['flash']):
+        return "flash"
+    
+    # Check for posters
+    if any(x in session_lower or x in title_lower for x in ['poster']):
+        return "poster"
+    
+    # Check for other non-talk sessions
+    if any(x in session_lower or x in title_lower for x in [
+        'student day', 'teacher', 'award', 'medal',
+        'opening', 'closing', 'welcome'
+    ]):
+        return "other"
     
     # Only exclude discussions from plenary, but keep them for parallel
     if 'discussion' in title_lower and 'plenary' in session_lower:
@@ -316,18 +331,28 @@ def fetch_and_process_contributions(indico_id, year):
         all_talks = []
         plenary_talks = []
         parallel_talks = []
+        poster_talks = []
+        flash_talks = []  # New list for flash talks
         
         # Process contributions
         for contribution in contributions:
             title = contribution.get('title', '')
             session = contribution.get('session', '')
             
+            # Pass year to categorization function
+            session_type = categorize_session(session, title, year)
+            
+            # Debug print for QM2025 poster detection
+            if year == '2025' and ('poster' in session.lower() or 'poster' in title.lower() or 'flash' in session.lower()):
+                print(f"QM2025 Poster/Flash detection:")
+                print(f"  Title: {title}")
+                print(f"  Session: {session}")
+                print(f"  Categorized as: {session_type}")
+            
             # Skip excluded contributions
             if should_exclude_contribution(title, session, year):
                 continue
                 
-            session_type = categorize_session(session, title)
-            
             # Extract speaker information
             speakers = (contribution.get('speakers', []) or 
                       contribution.get('person_links', []) or 
@@ -353,42 +378,25 @@ def fetch_and_process_contributions(indico_id, year):
                 plenary_talks.append(talk_data)
             elif session_type == "parallel":
                 parallel_talks.append(talk_data)
+            elif session_type == "poster":
+                poster_talks.append(talk_data)
+            elif session_type == "flash":
+                flash_talks.append(talk_data)
         
-        # Print detailed information for unknown institutes
-        unknown_plenary = [t for t in plenary_talks if t['Institute'] == 'Unknown']
-        unknown_parallel = [t for t in parallel_talks if t['Institute'] == 'Unknown']
-        
-        if unknown_plenary or unknown_parallel:
-            print(f"\nDetailed information for talks with unknown institutes in QM{year}:")
-            
-            if unknown_plenary:
-                print("\nPlenary talks with unknown institutes:")
-                for talk in unknown_plenary:
-                    print("\n---")
-                    print(f"Title: {talk['Title']}")
-                    print(f"Session: {talk['Session']}")
-                    print(f"Speaker: {talk['Speaker']}")
-                    if talk['Raw_Speaker_Data']:
-                        print("Raw speaker data:")
-                        for key, value in talk['Raw_Speaker_Data'].items():
-                            print(f"  {key}: {value}")
-            
-            if unknown_parallel:
-                print("\nParallel talks with unknown institutes:")
-                for talk in unknown_parallel:
-                    print("\n---")
-                    print(f"Title: {talk['Title']}")
-                    print(f"Session: {talk['Session']}")
-                    print(f"Speaker: {talk['Speaker']}")
-                    if talk['Raw_Speaker_Data']:
-                        print("Raw speaker data:")
-                        for key, value in talk['Raw_Speaker_Data'].items():
-                            print(f"  {key}: {value}")
+        print(f"\nQM{year} Talk Type Breakdown:")
+        print(f"  Total contributions: {len(all_talks)}")
+        print(f"  - Plenary talks: {len(plenary_talks)}")
+        print(f"  - Parallel talks: {len(parallel_talks)}")
+        print(f"  - Posters: {len(poster_talks)}")
+        print(f"  - Flash talks: {len(flash_talks)}")
+        print(f"  - Other/Unknown: {len(all_talks) - len(plenary_talks) - len(parallel_talks) - len(poster_talks) - len(flash_talks)}")
         
         return {
             'all_talks': all_talks,
             'plenary_talks': plenary_talks,
-            'parallel_talks': parallel_talks
+            'parallel_talks': parallel_talks,
+            'poster_talks': poster_talks,
+            'flash_talks': flash_talks
         }
         
     except Exception as e:
@@ -532,6 +540,64 @@ def analyze_trends_across_conferences(conference_data):
     for country, count in country_total.most_common(10):
         print(f"{country}: {count} talks")
 
+def plot_conference_statistics(conference_data):
+    """Plot conference statistics over the years"""
+    # Prepare data
+    years = []
+    totals = []
+    plenaries = []
+    parallels = []
+    posters = []
+    flashes = []  # New list for flash talks
+    
+    # Sort by year and collect data
+    for year in sorted(conference_data.keys()):
+        data = conference_data[year]
+        years.append(int(year))
+        totals.append(len(data['all_talks']))
+        plenaries.append(len(data['plenary_talks']))
+        parallels.append(len(data['parallel_talks']))
+        posters.append(len(data['poster_talks']))
+        flashes.append(len(data['flash_talks']))
+    
+    # Create the plot
+    plt.figure(figsize=(12, 8))
+    
+    # Plot lines with markers
+    plt.plot(years, totals, 'bo-', label='Total Contributions', linewidth=2, markersize=8)
+    plt.plot(years, plenaries, 'rs-', label='Plenary Talks', linewidth=2, markersize=8)
+    plt.plot(years, parallels, 'gv-', label='Parallel Talks', linewidth=2, markersize=8)
+    plt.plot(years, posters, 'md-', label='Posters', linewidth=2, markersize=8)
+    plt.plot(years, flashes, 'c^-', label='Flash Talks', linewidth=2, markersize=8)  # Add flash talks line
+    
+    # Customize the plot
+    plt.xlabel('Year', fontsize=12)
+    plt.ylabel('Number of Talks', fontsize=12)
+    plt.title('QM Conference Talk Statistics Over Time', fontsize=14)
+    plt.grid(True, linestyle='--', alpha=0.7)
+    plt.legend(fontsize=10)
+    
+    # Adjust axis
+    plt.xticks(years, rotation=45)
+    
+    # Add value labels
+    for x, y1, y2, y3, y4, y5 in zip(years, totals, plenaries, parallels, posters, flashes):
+        plt.text(x, y1+20, str(y1), ha='center', va='bottom')
+        plt.text(x, y2-15, str(y2), ha='center', va='top')
+        plt.text(x, y3+10, str(y3), ha='center', va='bottom')
+        plt.text(x, y4+10, str(y4), ha='center', va='bottom')
+        plt.text(x, y5+10, str(y5), ha='center', va='bottom')
+    
+    # Adjust layout to prevent label cutoff
+    plt.tight_layout()
+    
+    # Create figures directory if it doesn't exist
+    os.makedirs('figures', exist_ok=True)
+    
+    # Save the plot as PDF in figures directory
+    plt.savefig('figures/QM_talk_statistics.pdf')
+    plt.close()
+
 def fetch_and_analyze_conferences():
     print("=== FETCHING AND PROCESSING CONFERENCES ===")
     try:
@@ -552,6 +618,8 @@ def fetch_and_analyze_conferences():
                         'all_talks': data['all_talks'],
                         'plenary_talks': data['plenary_talks'],
                         'parallel_talks': data['parallel_talks'],
+                        'poster_talks': data['poster_talks'],
+                        'flash_talks': data['flash_talks'],
                         'metadata': data['metadata']
                     }
             except (FileNotFoundError, json.JSONDecodeError) as e:
@@ -559,7 +627,7 @@ def fetch_and_analyze_conferences():
                 continue
         
         # Print final summary table
-        print("\nYear Location Total Plenary Parallel")
+        print("\nYear Location Total Plenary Parallel Poster Flash")
         print("-" * 65)
         
         # Sort conferences by year
@@ -572,7 +640,9 @@ def fetch_and_analyze_conferences():
                 total = len(data['all_talks'])
                 plenary = len(data['plenary_talks'])
                 parallel = len(data['parallel_talks'])
-                print(f"{year} {location} {total} {plenary} {parallel}")
+                poster = len(data['poster_talks'])
+                flash = len(data['flash_talks'])
+                print(f"{year} {location} {total} {plenary} {parallel} {poster} {flash}")
         
         print("\nUnknown Institutes Analysis:")
         print("-" * 65)
@@ -620,7 +690,7 @@ if __name__ == "__main__":
                 conference_data[year] = conference_stats
         
         # Print final summary table with unknown institutes split by type
-        print("\nYear Location Total Plenary Parallel Unk_Plen Unk_Par")
+        print("\nYear Location Total Plenary Parallel Poster Flash Unk_Plen Unk_Par")
         print("-" * 85)
         
         # Sort conferences by year
@@ -633,13 +703,18 @@ if __name__ == "__main__":
                 total = len(data['all_talks'])
                 plenary = len(data['plenary_talks'])
                 parallel = len(data['parallel_talks'])
+                poster = len(data['poster_talks'])
+                flash = len(data['flash_talks'])
                 
                 # Count unknown institutes separately for plenary and parallel
                 unknown_plenary = len([t for t in data['plenary_talks'] if t['Institute'] == 'Unknown'])
                 unknown_parallel = len([t for t in data['parallel_talks'] if t['Institute'] == 'Unknown'])
                 
-                print(f"{year} {location:<25} {total:<6} {plenary:<8} {parallel:<8} {unknown_plenary:<8} {unknown_parallel}")
+                print(f"{year} {location:<25} {total:<6} {plenary:<8} {parallel:<8} {poster:<8} {flash:<8} {unknown_plenary:<8} {unknown_parallel}")
                 
     except FileNotFoundError:
         print("Error: 'listofQMindigo' file not found")
-        exit(1) 
+        exit(1)
+
+    # After processing all conferences
+    plot_conference_statistics(conference_data) 
