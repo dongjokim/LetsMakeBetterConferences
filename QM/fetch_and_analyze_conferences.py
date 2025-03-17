@@ -6,6 +6,7 @@ from datetime import datetime
 from collections import Counter
 import matplotlib.pyplot as plt
 import matplotlib as mpl
+import numpy as np
 
 # Set font that supports CJK characters
 plt.rcParams['font.sans-serif'] = ['Arial Unicode MS', 'DejaVu Sans', 'Microsoft YaHei']
@@ -815,6 +816,447 @@ def plot_conference_statistics(conference_data):
     plt.savefig('figures/QM_talk_statistics.pdf')
     plt.close()
 
+def extract_keywords(title):
+    """Extract meaningful keywords from title"""
+    # Common words to exclude
+    stop_words = {'a', 'an', 'and', 'are', 'as', 'at', 'be', 'by', 'for', 'from', 
+                 'has', 'he', 'in', 'is', 'it', 'its', 'of', 'on', 'that', 'the', 
+                 'to', 'was', 'were', 'will', 'with', 'via', 'using', 'vs', 'versus',
+                 'new', 'recent', 'results', 'measurements', 'study', 'studies',
+                 'measurement', 'analysis', 'observation', 'observations', 'evidence',
+                 'search', 'searching', 'towards', 'approach', 'investigation'}
+    
+    # Remove special characters and convert to lowercase
+    title = title.lower()
+    title = ''.join(c if c.isalnum() or c.isspace() else ' ' for c in title)
+    
+    # Split into words and filter
+    words = title.split()
+    keywords = [word for word in words 
+               if word not in stop_words 
+               and len(word) > 2  # Skip very short words
+               and not word.isdigit()]  # Skip pure numbers
+    
+    return keywords
+
+def print_summary(conferences):
+    """Print summary of all conferences"""
+    print("\nSummary of all conferences:")
+    print("Year  Location                  Total  Plenary  Parallel  Poster  Flash  Unknown_Aff  Unknown_Inst")
+    print("-" * 85)
+    
+    # Prepare data for the plot
+    years = []
+    top_keywords = []
+    top_counts = []
+    
+    # First, let's print the full structure to debug
+    print("\nDebug - conferences type:", type(conferences))
+    print("Debug - first item type:", type(conferences[0]) if conferences else "No conferences")
+    print("Debug - first item keys:", conferences[0].keys() if conferences and isinstance(conferences[0], dict) else "Not a dict")
+    
+    # Sort conferences by year
+    conferences_sorted = sorted(conferences, key=lambda x: x['year'] if isinstance(x, dict) and 'year' in x else '')
+    
+    for conf in conferences_sorted:
+        # Check if conf is a dictionary
+        if not isinstance(conf, dict):
+            print(f"Debug - Skipping non-dict conf: {conf}")
+            continue
+            
+        year = conf.get('year', '')
+        location = conf.get('location', '')
+        
+        # Check if necessary data exists
+        if not all(key in conf for key in ['plenary_talks', 'parallel_talks', 'poster_talks']):
+            print(f"Debug - Missing talk data for {year}")
+            continue
+            
+        plenary = len(conf.get('plenary_talks', []))
+        parallel = len(conf.get('parallel_talks', []))
+        poster = len(conf.get('poster_talks', []))
+        flash = len(conf.get('flash_talks', []))
+        total = plenary + parallel + poster + flash
+        
+        # Count unknown affiliations and institutes
+        unknown_aff = conf.get('unknown_affiliations', {}).get('total', 0)
+        all_talks = (conf.get('plenary_talks', []) + 
+                   conf.get('parallel_talks', []) + 
+                   conf.get('poster_talks', []) + 
+                   conf.get('flash_talks', []))
+        unknown_inst = len(set(talk.get('Institute', '') for talk in all_talks if not talk.get('Institute')))
+        
+        print(f"{year}  {location:<22} {total:>6}  {plenary:>7}  {parallel:>8}  {poster:>6}  {flash:>5}  {unknown_aff:>10}  {unknown_inst:>12}")
+        
+        try:
+            # Analyze keywords
+            keywords_count = {}
+            for talk in all_talks:
+                title = talk.get('Title', '')
+                if title:
+                    keywords = extract_keywords(title)
+                    for keyword in keywords:
+                        keywords_count[keyword] = keywords_count.get(keyword, 0) + 1
+            
+            # Get top 3 keywords
+            sorted_keywords = sorted(keywords_count.items(), key=lambda x: x[1], reverse=True)
+            if sorted_keywords:
+                print(f"Top keywords: {', '.join([f'{k}({v})' for k, v in sorted_keywords[:3]])}")
+                
+                # Store data for plotting
+                years.append(year)
+                top3_keywords = [kw for kw, _ in sorted_keywords[:3]]
+                top3_counts = [count for _, count in sorted_keywords[:3]]
+                top_keywords.append(top3_keywords)
+                top_counts.append(top3_counts)
+        except Exception as e:
+            print(f"Error analyzing keywords for {year}: {str(e)}")
+    
+    try:
+        if years and top_keywords and top_counts:
+            # Create figures directory if it doesn't exist
+            figures_dir = 'figures'
+            os.makedirs(figures_dir, exist_ok=True)
+            
+            # Create the plot
+            plt.figure(figsize=(15, 8))
+            x = np.arange(len(years))
+            width = 0.25
+            
+            # Plot bars for each keyword position
+            for i in range(3):
+                counts = [counts[i] if i < len(counts) else 0 for counts in top_counts]
+                plt.bar(x + i*width, counts, width, 
+                       label=f'#{i+1} keyword',
+                       alpha=0.8)
+            
+            # Customize the plot
+            plt.xlabel('Conference Year')
+            plt.ylabel('Keyword Count')
+            plt.title('Top 3 Keywords Usage in QM Conferences')
+            plt.xticks(x + width, years)
+            plt.legend()
+            
+            # Add keyword labels on top of bars
+            for i in range(len(years)):
+                for j in range(3):
+                    if j < len(top_keywords[i]):
+                        plt.text(i + j*width, top_counts[i][j], 
+                                top_keywords[i][j],
+                                ha='center', va='bottom',
+                                rotation=45)
+            
+            # Adjust layout and save
+            plt.tight_layout()
+            save_path = os.path.join(figures_dir, 'top_keywords.pdf')
+            print(f"Saving plot to {save_path}")
+            plt.savefig(save_path, format='pdf')
+            plt.close()
+            print("Plot saved successfully")
+    except Exception as e:
+        print(f"Error creating plot: {str(e)}")
+
+def create_keywords_plot(all_conference_data):
+    """Create plot of top keywords from all conferences"""
+    # Prepare data for the plot
+    years = []
+    top_keywords = []
+    top_counts = []
+    
+    print("\nCreating plot of top keywords...")
+    
+    # Process each conference
+    for year, data in sorted(all_conference_data.items()):
+        location = data.get('location', '')
+        
+        # Get all talks from main categories
+        all_talks = (data.get('plenary_talks', []) + 
+                    data.get('parallel_talks', []) + 
+                    data.get('poster_talks', []) + 
+                    data.get('flash_talks', []))
+        
+        # Analyze keywords
+        keywords_count = {}
+        for talk in all_talks:
+            title = talk.get('Title', '')
+            if title:
+                keywords = extract_keywords(title)
+                for keyword in keywords:
+                    keywords_count[keyword] = keywords_count.get(keyword, 0) + 1
+        
+        # Get top 7 keywords
+        sorted_keywords = sorted(keywords_count.items(), key=lambda x: x[1], reverse=True)
+        if sorted_keywords:
+            print(f"QM{year} Top keywords: {', '.join([f'{k}({v})' for k, v in sorted_keywords[:7]])}")
+            
+            # Store data for plotting
+            years.append(year)
+            top7_keywords = [kw for kw, _ in sorted_keywords[:7]]
+            top7_counts = [count for _, count in sorted_keywords[:7]]
+            top_keywords.append(top7_keywords)
+            top_counts.append(top7_counts)
+    
+    try:
+        if years and top_keywords and top_counts:
+            # Create figures directory if it doesn't exist
+            figures_dir = 'figures'
+            os.makedirs(figures_dir, exist_ok=True)
+            
+            # Create the plot - make it wider for more keywords
+            plt.figure(figsize=(18, 10))
+            x = np.arange(len(years))
+            width = 0.12  # Narrower bars to fit 7 per year
+            
+            # Plot bars for each keyword position
+            colors = plt.cm.tab10(np.linspace(0, 1, 7))
+            for i in range(7):
+                counts = [counts[i] if i < len(counts) else 0 for counts in top_counts]
+                plt.bar(x + i*width - 0.36, counts, width, 
+                       label=f'#{i+1} keyword',
+                       alpha=0.8,
+                       color=colors[i])
+            
+            # Customize the plot
+            plt.xlabel('Conference Year', fontsize=12)
+            plt.ylabel('Keyword Count', fontsize=12)
+            plt.title('Top 7 Keywords Usage in QM Conferences', fontsize=14)
+            plt.xticks(x, years, fontsize=10)
+            plt.yticks(fontsize=10)
+            plt.legend(fontsize=10)
+            plt.grid(axis='y', linestyle='--', alpha=0.7)
+            
+            # Add keyword labels on top of bars
+            for i in range(len(years)):
+                for j in range(7):
+                    if j < len(top_keywords[i]):
+                        plt.text(i + j*width - 0.36, top_counts[i][j] + 1, 
+                                top_keywords[i][j],
+                                ha='center', va='bottom',
+                                fontsize=9,
+                                rotation=45)
+            
+            # Adjust layout and save as PDF
+            plt.tight_layout()
+            save_path = os.path.join(figures_dir, 'top_keywords.pdf')
+            print(f"Saving plot to {save_path}")
+            plt.savefig(save_path, format='pdf')
+            plt.close()
+            print("Plot saved successfully")
+        else:
+            print("Not enough data to create plot")
+    except Exception as e:
+        print(f"Error creating plot: {str(e)}")
+
+def create_country_institute_plots(all_conference_data):
+    """Create plots showing distribution of talks by country and institute"""
+    print("\nCreating plots for country and institute distributions...")
+    
+    # Create figures directory if it doesn't exist
+    figures_dir = 'figures'
+    os.makedirs(figures_dir, exist_ok=True)
+    
+    # Process each conference to collect country and institute data
+    years = []
+    country_data_plenary = {}
+    country_data_parallel = {}
+    institute_data_plenary = {}
+    institute_data_parallel = {}
+    
+    for year, data in sorted(all_conference_data.items()):
+        years.append(year)
+        
+        # Process plenary talks
+        plenary_talks = data.get('plenary_talks', [])
+        country_counts_plenary = {}
+        institute_counts_plenary = {}
+        
+        for talk in plenary_talks:
+            country = talk.get('Country', 'Unknown')
+            institute = talk.get('Institute', 'Unknown')
+            
+            if country:
+                country_counts_plenary[country] = country_counts_plenary.get(country, 0) + 1
+            if institute:
+                institute_counts_plenary[institute] = institute_counts_plenary.get(institute, 0) + 1
+        
+        # Store country and institute data for plenary talks
+        country_data_plenary[year] = country_counts_plenary
+        institute_data_plenary[year] = institute_counts_plenary
+        
+        # Process parallel talks
+        parallel_talks = data.get('parallel_talks', [])
+        country_counts_parallel = {}
+        institute_counts_parallel = {}
+        
+        for talk in parallel_talks:
+            country = talk.get('Country', 'Unknown')
+            institute = talk.get('Institute', 'Unknown')
+            
+            if country:
+                country_counts_parallel[country] = country_counts_parallel.get(country, 0) + 1
+            if institute:
+                institute_counts_parallel[institute] = institute_counts_parallel.get(institute, 0) + 1
+        
+        # Store country and institute data for parallel talks
+        country_data_parallel[year] = country_counts_parallel
+        institute_data_parallel[year] = institute_counts_parallel
+    
+    # Create plots for country distribution
+    create_country_plot(years, country_data_plenary, country_data_parallel, figures_dir)
+    
+    # Create plots for institute distribution
+    create_institute_plot(years, institute_data_plenary, institute_data_parallel, figures_dir)
+
+def create_country_plot(years, plenary_data, parallel_data, figures_dir):
+    """Create plots showing distribution of talks by country"""
+    # Get top countries across all years
+    all_countries = set()
+    country_total_counts = {}
+    
+    for year in years:
+        plenary_counts = plenary_data.get(year, {})
+        parallel_counts = parallel_data.get(year, {})
+        
+        for country, count in plenary_counts.items():
+            all_countries.add(country)
+            country_total_counts[country] = country_total_counts.get(country, 0) + count
+            
+        for country, count in parallel_counts.items():
+            all_countries.add(country)
+            country_total_counts[country] = country_total_counts.get(country, 0) + count
+    
+    # Get top 10 countries by total count
+    top_countries = [country for country, _ in sorted(country_total_counts.items(), key=lambda x: x[1], reverse=True)[:10]]
+    
+    # Create plot for plenary talks by country
+    plt.figure(figsize=(15, 10))
+    
+    # Prepare data for plotting
+    country_year_data = {country: [] for country in top_countries}
+    
+    for year in years:
+        plenary_counts = plenary_data.get(year, {})
+        for country in top_countries:
+            country_year_data[country].append(plenary_counts.get(country, 0))
+    
+    # Create stacked bar chart
+    bottom = np.zeros(len(years))
+    
+    for i, country in enumerate(top_countries):
+        plt.bar(years, country_year_data[country], bottom=bottom, label=country)
+        bottom += np.array(country_year_data[country])
+    
+    plt.xlabel('Conference Year')
+    plt.ylabel('Number of Plenary Talks')
+    plt.title('Distribution of Plenary Talks by Country')
+    plt.legend(title='Country', bbox_to_anchor=(1.05, 1), loc='upper left')
+    plt.grid(axis='y', linestyle='--', alpha=0.7)
+    plt.tight_layout()
+    plt.savefig(os.path.join(figures_dir, 'plenary_talks_by_country.pdf'), format='pdf')
+    plt.close()
+    
+    # Create plot for parallel talks by country
+    plt.figure(figsize=(15, 10))
+    
+    # Prepare data for plotting
+    country_year_data = {country: [] for country in top_countries}
+    
+    for year in years:
+        parallel_counts = parallel_data.get(year, {})
+        for country in top_countries:
+            country_year_data[country].append(parallel_counts.get(country, 0))
+    
+    # Create stacked bar chart
+    bottom = np.zeros(len(years))
+    
+    for i, country in enumerate(top_countries):
+        plt.bar(years, country_year_data[country], bottom=bottom, label=country)
+        bottom += np.array(country_year_data[country])
+    
+    plt.xlabel('Conference Year')
+    plt.ylabel('Number of Parallel Talks')
+    plt.title('Distribution of Parallel Talks by Country')
+    plt.legend(title='Country', bbox_to_anchor=(1.05, 1), loc='upper left')
+    plt.grid(axis='y', linestyle='--', alpha=0.7)
+    plt.tight_layout()
+    plt.savefig(os.path.join(figures_dir, 'parallel_talks_by_country.pdf'), format='pdf')
+    plt.close()
+
+def create_institute_plot(years, plenary_data, parallel_data, figures_dir):
+    """Create plots showing distribution of talks by institute"""
+    # Get top institutes across all years
+    all_institutes = set()
+    institute_total_counts = {}
+    
+    for year in years:
+        plenary_counts = plenary_data.get(year, {})
+        parallel_counts = parallel_data.get(year, {})
+        
+        for institute, count in plenary_counts.items():
+            all_institutes.add(institute)
+            institute_total_counts[institute] = institute_total_counts.get(institute, 0) + count
+            
+        for institute, count in parallel_counts.items():
+            all_institutes.add(institute)
+            institute_total_counts[institute] = institute_total_counts.get(institute, 0) + count
+    
+    # Get top 15 institutes by total count
+    top_institutes = [institute for institute, _ in sorted(institute_total_counts.items(), key=lambda x: x[1], reverse=True)[:15]]
+    
+    # Create plot for plenary talks by institute
+    plt.figure(figsize=(18, 12))
+    
+    # Prepare data for plotting
+    institute_year_data = {institute: [] for institute in top_institutes}
+    
+    for year in years:
+        plenary_counts = plenary_data.get(year, {})
+        for institute in top_institutes:
+            institute_year_data[institute].append(plenary_counts.get(institute, 0))
+    
+    # Create stacked bar chart
+    bottom = np.zeros(len(years))
+    
+    for i, institute in enumerate(top_institutes):
+        plt.bar(years, institute_year_data[institute], bottom=bottom, label=institute)
+        bottom += np.array(institute_year_data[institute])
+    
+    plt.xlabel('Conference Year')
+    plt.ylabel('Number of Plenary Talks')
+    plt.title('Distribution of Plenary Talks by Institute')
+    plt.legend(title='Institute', bbox_to_anchor=(1.05, 1), loc='upper left')
+    plt.grid(axis='y', linestyle='--', alpha=0.7)
+    plt.tight_layout()
+    plt.savefig(os.path.join(figures_dir, 'plenary_talks_by_institute.pdf'), format='pdf')
+    plt.close()
+    
+    # Create plot for parallel talks by institute
+    plt.figure(figsize=(18, 12))
+    
+    # Prepare data for plotting
+    institute_year_data = {institute: [] for institute in top_institutes}
+    
+    for year in years:
+        parallel_counts = parallel_data.get(year, {})
+        for institute in top_institutes:
+            institute_year_data[institute].append(parallel_counts.get(institute, 0))
+    
+    # Create stacked bar chart
+    bottom = np.zeros(len(years))
+    
+    for i, institute in enumerate(top_institutes):
+        plt.bar(years, institute_year_data[institute], bottom=bottom, label=institute)
+        bottom += np.array(institute_year_data[institute])
+    
+    plt.xlabel('Conference Year')
+    plt.ylabel('Number of Parallel Talks')
+    plt.title('Distribution of Parallel Talks by Institute')
+    plt.legend(title='Institute', bbox_to_anchor=(1.05, 1), loc='upper left')
+    plt.grid(axis='y', linestyle='--', alpha=0.7)
+    plt.tight_layout()
+    plt.savefig(os.path.join(figures_dir, 'parallel_talks_by_institute.pdf'), format='pdf')
+    plt.close()
+
 def fetch_and_analyze_conferences():
     print("=== FETCHING AND PROCESSING CONFERENCES ===")
     try:
@@ -928,6 +1370,13 @@ if __name__ == "__main__":
         
         # Generate plot
         plot_conference_statistics(conference_data)
+        print_summary(conferences)
+        
+        # Create the keywords plot
+        create_keywords_plot(conference_data)
+        
+        # Create country and institute plots
+        create_country_institute_plots(conference_data)
                 
     except FileNotFoundError:
         print("Error: 'listofQMindigo' file not found")
