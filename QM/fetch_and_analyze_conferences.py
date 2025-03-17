@@ -367,9 +367,57 @@ def fetch_and_process_contributions(indico_id, year):
         plenary_talks = []
         parallel_talks = []
         poster_talks = []
+        other_talks = []
         
         total = len(contributions)
-        if year == '2011':
+        
+        # Special handling for 2025
+        if year == '2025':
+            # Define session categories
+            other_sessions = ['Early Career Researcher Day']
+            
+            for i, contribution in enumerate(contributions, 1):
+                title = contribution.get('title', '')
+                session = contribution.get('session', '')
+                contrib_type = str(contribution.get('type', '')).lower()
+                session_str = str(session)
+                
+                # Determine session type for 2025
+                if 'poster' in session_str.lower() or 'poster' in contrib_type:
+                    session_type = 'poster'
+                elif any(os in session_str for os in other_sessions):
+                    session_type = 'other'
+                else:
+                    session_type = categorize_session(session, title, year)
+                
+                # Extract speaker information
+                speakers = (contribution.get('speakers', []) or 
+                          contribution.get('person_links', []) or 
+                          contribution.get('primary_authors', []))
+                
+                name, affiliation, country = extract_speaker_info(speakers)
+                
+                talk_data = {
+                    'Session': session,
+                    'Type': session_type,
+                    'Title': title,
+                    'Speaker': name,
+                    'Institute': affiliation,
+                    'Country': country,
+                    'Raw_Speaker_Data': speakers[0] if speakers else None
+                }
+                
+                all_talks.append(talk_data)
+                if session_type == "plenary":
+                    plenary_talks.append(talk_data)
+                elif session_type == "parallel":
+                    parallel_talks.append(talk_data)
+                elif session_type == "poster":
+                    poster_talks.append(talk_data)
+                elif session_type == "other":
+                    other_talks.append(talk_data)
+        
+        elif year == '2011':
             print(f"\nProcessing {total} contributions for QM2011...")
             
             for i, contribution in enumerate(contributions, 1):
@@ -457,24 +505,20 @@ def fetch_and_process_contributions(indico_id, year):
                 elif session_type == "poster":
                     poster_talks.append(talk_data)
         
-        if year == '2011':
-            print(f"\nFinished processing QM2011:")
+        if year == '2025':
+            print(f"\nFinished processing QM2025:")
             print(f"Total: {len(all_talks)}")
             print(f"Plenary: {len(plenary_talks)}")
             print(f"Parallel: {len(parallel_talks)}")
             print(f"Poster: {len(poster_talks)}")
-            
-            print("\nSummary of Plenary Talks:")
-            for i, talk in enumerate(plenary_talks, 1):
-                print(f"\n{i}. {talk['Title']}")
-                print(f"   Speaker: {talk['Speaker']}")
-                print(f"   Track: {talk['Session']}")
+            print(f"Other: {len(other_talks)}")
         
         return {
             'all_talks': all_talks,
             'plenary_talks': plenary_talks,
             'parallel_talks': parallel_talks,
-            'poster_talks': poster_talks
+            'poster_talks': poster_talks,
+            'other_talks': other_talks
         }
         
     except Exception as e:
