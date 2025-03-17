@@ -79,6 +79,19 @@ CONFERENCE_LOCATIONS = {
     '2025': 'Frankfurt, Germany'  # Updated to Frankfurt
 }
 
+# Manual flash talk counts from conference timetables
+FLASH_TALK_COUNTS = {
+    '2011': 8,   # From timetable
+    '2012': 8,   # From session https://indico.cern.ch/event/181055/sessions/25214/
+    '2014': 8,   # From timetable only
+    '2015': 8,   # From timetable only
+    '2017': 8,   # From Flash talks session
+    '2018': 10,  # From Plenary Talk Best-poster flash talks
+    '2019': 6,   # From timetable only
+    '2022': 10,  # From Flash Talks session
+    '2023': 10   # From session https://indico.cern.ch/event/1139644/sessions/488508/
+}
+
 def extract_country(affiliation):
     if not affiliation:
         return 'Unknown'
@@ -144,24 +157,22 @@ def validate_indico_url(indico_id, year):
         return False, f"Error validating URL: {str(e)}", None
 
 def categorize_session(session_name, title, year):
-    """Categorize a session as plenary, parallel, poster, flash, or other"""
-    if not session_name:
-        return "unknown"
-        
-    session_lower = str(session_name).lower()
-    title_lower = str(title).lower()
+    """Categorize a session as plenary, parallel, or poster"""
+    # Convert inputs to strings and handle None values
+    session_lower = str(session_name or '').lower()
+    title_lower = str(title or '').lower()
     
-    # Check for flash talks
-    if any(x in session_lower or x in title_lower for x in ['flash']):
-        return "flash"
+    # Special handling for 2018 flash talks
+    if year == '2018' and 'best-poster flash' in session_lower:
+        return "other"  # Categorize as other to avoid double counting
     
     # Check for posters
-    if any(x in session_lower or x in title_lower for x in ['poster']):
+    if 'poster' in session_lower or 'poster' in title_lower:
         return "poster"
     
     # Check for other non-talk sessions
     if any(x in session_lower or x in title_lower for x in [
-        'student day', 'teacher', 'award', 'medal',
+        'flash', 'student day', 'teacher', 'award', 'medal',
         'opening', 'closing', 'welcome'
     ]):
         return "other"
@@ -314,10 +325,8 @@ def apply_manual_corrections(talk_data, year):
 def fetch_and_process_contributions(indico_id, year):
     """Fetch and process contributions from Indico"""
     is_valid, message, data = validate_indico_url(indico_id, year)
-    print(f"\nQM{year} (ID: {indico_id}): {message}")
     
     if not is_valid or not data:
-        print(f"  Warning: Could not fetch valid data for QM{year}")
         return None
     
     try:
@@ -332,27 +341,13 @@ def fetch_and_process_contributions(indico_id, year):
         plenary_talks = []
         parallel_talks = []
         poster_talks = []
-        flash_talks = []  # New list for flash talks
         
         # Process contributions
         for contribution in contributions:
             title = contribution.get('title', '')
             session = contribution.get('session', '')
-            
-            # Pass year to categorization function
             session_type = categorize_session(session, title, year)
             
-            # Debug print for QM2025 poster detection
-            if year == '2025' and ('poster' in session.lower() or 'poster' in title.lower() or 'flash' in session.lower()):
-                print(f"QM2025 Poster/Flash detection:")
-                print(f"  Title: {title}")
-                print(f"  Session: {session}")
-                print(f"  Categorized as: {session_type}")
-            
-            # Skip excluded contributions
-            if should_exclude_contribution(title, session, year):
-                continue
-                
             # Extract speaker information
             speakers = (contribution.get('speakers', []) or 
                       contribution.get('person_links', []) or 
@@ -380,27 +375,15 @@ def fetch_and_process_contributions(indico_id, year):
                 parallel_talks.append(talk_data)
             elif session_type == "poster":
                 poster_talks.append(talk_data)
-            elif session_type == "flash":
-                flash_talks.append(talk_data)
-        
-        print(f"\nQM{year} Talk Type Breakdown:")
-        print(f"  Total contributions: {len(all_talks)}")
-        print(f"  - Plenary talks: {len(plenary_talks)}")
-        print(f"  - Parallel talks: {len(parallel_talks)}")
-        print(f"  - Posters: {len(poster_talks)}")
-        print(f"  - Flash talks: {len(flash_talks)}")
-        print(f"  - Other/Unknown: {len(all_talks) - len(plenary_talks) - len(parallel_talks) - len(poster_talks) - len(flash_talks)}")
         
         return {
             'all_talks': all_talks,
             'plenary_talks': plenary_talks,
             'parallel_talks': parallel_talks,
-            'poster_talks': poster_talks,
-            'flash_talks': flash_talks
+            'poster_talks': poster_talks
         }
         
     except Exception as e:
-        print(f"Error processing QM{year}: {str(e)}")
         return None
 
 def plot_distributions(all_data, plenary_data, parallel_data, year, verbose=True):
@@ -548,7 +531,7 @@ def plot_conference_statistics(conference_data):
     plenaries = []
     parallels = []
     posters = []
-    flashes = []  # New list for flash talks
+    flashes = []
     
     # Sort by year and collect data
     for year in sorted(conference_data.keys()):
@@ -558,7 +541,7 @@ def plot_conference_statistics(conference_data):
         plenaries.append(len(data['plenary_talks']))
         parallels.append(len(data['parallel_talks']))
         posters.append(len(data['poster_talks']))
-        flashes.append(len(data['flash_talks']))
+        flashes.append(FLASH_TALK_COUNTS.get(year, 0))  # Add manual flash talk counts
     
     # Create the plot
     plt.figure(figsize=(12, 8))
@@ -581,12 +564,11 @@ def plot_conference_statistics(conference_data):
     plt.xticks(years, rotation=45)
     
     # Add value labels
-    for x, y1, y2, y3, y4, y5 in zip(years, totals, plenaries, parallels, posters, flashes):
+    for x, y1, y2, y3, y4 in zip(years, totals, plenaries, parallels, posters):
         plt.text(x, y1+20, str(y1), ha='center', va='bottom')
         plt.text(x, y2-15, str(y2), ha='center', va='top')
         plt.text(x, y3+10, str(y3), ha='center', va='bottom')
         plt.text(x, y4+10, str(y4), ha='center', va='bottom')
-        plt.text(x, y5+10, str(y5), ha='center', va='bottom')
     
     # Adjust layout to prevent label cutoff
     plt.tight_layout()
@@ -674,8 +656,6 @@ def fetch_and_analyze_conferences():
         exit(1)
 
 if __name__ == "__main__":
-    # First, fetch and process all conferences
-    print("=== FETCHING AND PROCESSING CONFERENCES ===")
     try:
         with open('listofQMindigo', 'r') as f:
             conferences = [line.strip().split()[:2] for line in f if not line.strip().startswith('#')]
@@ -684,12 +664,11 @@ if __name__ == "__main__":
         processed_conferences = []
         
         for year, indico_id in conferences:
-            print(f"\nProcessing QM{year} (ID: {indico_id})")
             conference_stats = fetch_and_process_contributions(indico_id, year)
             if conference_stats:
                 conference_data[year] = conference_stats
         
-        # Print final summary table with unknown institutes split by type
+        # Print final summary table
         print("\nYear Location Total Plenary Parallel Poster Flash Unk_Plen Unk_Par")
         print("-" * 85)
         
@@ -704,17 +683,17 @@ if __name__ == "__main__":
                 plenary = len(data['plenary_talks'])
                 parallel = len(data['parallel_talks'])
                 poster = len(data['poster_talks'])
-                flash = len(data['flash_talks'])
+                flash = FLASH_TALK_COUNTS.get(year, 0)  # Get flash talk count from manual dictionary
                 
-                # Count unknown institutes separately for plenary and parallel
+                # Count unknown institutes
                 unknown_plenary = len([t for t in data['plenary_talks'] if t['Institute'] == 'Unknown'])
                 unknown_parallel = len([t for t in data['parallel_talks'] if t['Institute'] == 'Unknown'])
                 
-                print(f"{year} {location:<25} {total:<6} {plenary:<8} {parallel:<8} {poster:<8} {flash:<8} {unknown_plenary:<8} {unknown_parallel}")
+                print(f"{year} {location:<25} {total:<6} {plenary:<8} {parallel:<8} {poster:<6} {flash:<5} {unknown_plenary:<8} {unknown_parallel}")
+        
+        # Generate plot
+        plot_conference_statistics(conference_data)
                 
     except FileNotFoundError:
         print("Error: 'listofQMindigo' file not found")
-        exit(1)
-
-    # After processing all conferences
-    plot_conference_statistics(conference_data) 
+        exit(1) 
