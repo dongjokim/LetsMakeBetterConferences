@@ -93,7 +93,156 @@ FLASH_TALK_COUNTS = {
     '2023': 10   # From session https://indico.cern.ch/event/1139644/sessions/488508/
 }
 
-def extract_country(affiliation):
+def normalize_institute_name(name):
+    """Normalize institute name for better matching"""
+    if not name:
+        return ""
+    
+    # Convert to lowercase
+    name = name.lower()
+    
+    # Remove special characters and extra whitespace
+    name = re.sub(r'[^\w\s]', ' ', name)
+    name = re.sub(r'\s+', ' ', name).strip()
+    
+    # Remove common words that don't help with matching
+    for word in ['university', 'institute', 'national', 'laboratory', 'department', 
+                'center', 'centre', 'research', 'of', 'for', 'and', 'the', 'in']:
+        name = re.sub(r'\b' + word + r'\b', '', name)
+    
+    # Remove country codes in parentheses
+    name = re.sub(r'\([a-z]{2}\)', '', name)
+    
+    # Remove numbers
+    name = re.sub(r'\d+', '', name)
+    
+    # Remove extra spaces created during the process
+    name = re.sub(r'\s+', ' ', name).strip()
+    
+    return name
+
+def load_institute_country_database():
+    """Load institute-to-country mappings from external database file"""
+    database_file = 'institute_country_database.csv'
+    institute_country = {}
+    normalized_map = {}
+    
+    # Add mappings for the specific remaining unknown institutes
+    exact_mappings = {
+        'B': 'Unknown',
+        'CEA, Paris-Saclay University': 'France',
+        'CEA-Saclay': 'France',
+        'Central China Normal University': 'China',
+        'Central China Normal University ': 'China',
+        'Central China Normal University / Tsinghua University': 'China',
+        'Central China Normal University, China': 'China',
+        'Central China Normal University.': 'China',
+        'D': 'Unknown',
+        'EMMI/GSI': 'Germany',
+        'F': 'Unknown',
+        'Gesellschaft fuer Schwerionenforschung mbH (GSI)': 'Germany',
+        'High Energy Accelerator Research Organization (KEK)': 'Japan',
+        'I': 'Unknown',
+        'INT, University of Washington': 'USA',
+        'L': 'Unknown',
+        'LBNL': 'USA',
+        'N': 'Unknown',
+        'PhD student': 'Unknown',
+        'R': 'Unknown',
+        'Research Division and ExtreMe Matter Institute EMMI, GSI Helmholtzzentrum für Schwerionenforschung, Darmstadt, Germany': 'Germany',
+        'SINAP/LBNL': 'China',
+        'STAR Collaboration': 'USA',
+        'SUBATECH': 'France',
+        'SUBATECH Nantes': 'France',
+        'SUBATECH, Nantes': 'France',
+        'SUNY, Stony Brook': 'USA',
+        'State University of New York at Stony Brook': 'USA',
+        'Stony Brook U./BNL': 'USA',
+        'Stony Brook University': 'USA',
+        'Stony Brook University and BNL': 'USA',
+        'Stony Brook and BNL': 'USA',
+        'Subatech': 'France',
+        'Tsinghua University': 'China',
+        'U': 'Unknown',
+        'Uiniversity of california, Los Angeles': 'USA',
+        'University of California - Los Angeles': 'USA',
+        'University of California Los Angeles': 'USA',
+        'University of California, Davis': 'USA',
+        'University of California, Los Angeles': 'USA',
+        'University of California, Riverside': 'USA',
+        'University of Colorado Boulder': 'USA',
+        'University of Colorado, Boulder': 'USA',
+        'University of Maryland': 'USA',
+        'University of Maryland, College Park': 'USA',
+        'University of Minnesota': 'USA',
+        'University of Tennessee, Knoxville': 'USA',
+        'University of Washington': 'USA',
+        'Unknown': 'Unknown',
+        'Unknown-Unknown-Unknown': 'Unknown',
+        'V': 'Unknown',
+        'VECC': 'India',
+        'Vanderbilt University': 'USA',
+        'Variable Energy Cyclotron Centre': 'India',
+        'Variable Energy Cyclotron Centre, Kolkata': 'India',
+        'W': 'Unknown',
+        'Wayne State University': 'USA',
+        'Wayne state university': 'USA',
+        'Yale University': 'USA',
+        'Yale University-Unknown-Unknown': 'USA',
+        'for the STAR collaboration': 'USA',
+        'l': 'Unknown',
+        'lbnl': 'USA',
+        'stony brook university': 'USA',
+        'subatech': 'France'
+    }
+    
+    try:
+        with open(database_file, 'r', encoding='utf-8') as f:
+            for line in f:
+                if line.strip() and not line.startswith('#'):
+                    parts = line.strip().split(',')
+                    if len(parts) >= 2:
+                        institute = parts[0].strip()
+                        country = parts[1].strip()
+                        institute_country[institute] = country
+                        
+                        # Also store normalized version for fuzzy matching
+                        normalized = normalize_institute_name(institute)
+                        if normalized:
+                            normalized_map[normalized] = country
+        
+        # Add the exact mappings for remaining institutes
+        for institute, country in exact_mappings.items():
+            institute_country[institute] = country
+            normalized = normalize_institute_name(institute)
+            if normalized:
+                normalized_map[normalized] = country
+                
+        print(f"Loaded {len(institute_country)} institute-to-country mappings from database")
+    except FileNotFoundError:
+        print(f"Warning: Institute-country database file '{database_file}' not found")
+        institute_country = exact_mappings
+        normalized_map = {normalize_institute_name(k): v for k, v in exact_mappings.items() if normalize_institute_name(k)}
+    
+    return institute_country, normalized_map
+
+def update_institute_country_database(unknown_institutes):
+    """Update the database with unknown institutes that need mapping"""
+    database_file = 'institute_country_database.csv'
+    unknown_file = 'unknown_institutes.txt'
+    
+    # Write unknown institutes to a separate file for manual processing
+    with open(unknown_file, 'w', encoding='utf-8') as f:
+        f.write("# Unknown institutes that need country mapping\n")
+        f.write("# Format: Institute,Country\n")
+        for institute in sorted(unknown_institutes):
+            f.write(f"{institute},\n")
+    
+    print(f"Wrote {len(unknown_institutes)} unknown institutes to '{unknown_file}'")
+    print("Please add country information to these institutes and merge into the main database")
+
+def extract_country(affiliation, institute_country_db):
+    """Extract country from affiliation using various methods including database lookup"""
     if not affiliation:
         return 'Unknown'
     
@@ -117,8 +266,8 @@ def extract_country(affiliation):
         }
         return country_code_map.get(country_code, country_code)
     
-    # Check against known institutions
-    for inst, country in INSTITUTION_COUNTRY.items():
+    # Check against institute-country database
+    for inst, country in institute_country_db.items():
         if inst.upper() in affiliation.upper():
             return country
     
@@ -1055,12 +1204,135 @@ def create_country_institute_plots(all_conference_data):
     figures_dir = 'figures'
     os.makedirs(figures_dir, exist_ok=True)
     
+    # Direct mappings for problematic institutes
+    direct_mappings = {
+        'B': 'Unknown',
+        'D': 'Unknown',
+        'Department of Physics and Technology': 'Norway',
+        'F': 'Unknown',
+        'Federal University of Alfenas': 'Brazil',
+        'GSI Darmstadt': 'Germany',
+        'GSI, Darmstadt': 'Germany',
+        'GSI, Darmstadt, Germany': 'Germany',
+        'GSI/NNRC': 'Germany',
+        'I': 'Unknown',
+        'L': 'Unknown',
+        'LIP, Lisbon': 'Portugal',
+        'N': 'Unknown',
+        'PhD student': 'Unknown',
+        'R': 'Unknown',
+        'RBRC': 'USA',
+        'Roma Sapienza University': 'Italy',
+        'Rutgers University': 'USA',
+        'SINAP&BNL': 'China',
+        'SINAP, BNL': 'China',
+        'SINAP/BNL': 'China',
+        'SPhT, Saclay': 'France',
+        'Shandong University': 'China',
+        'Shandong University at Weihai': 'China',
+        'Shanghai INstitute of Applied Physics (SINAP), CAS': 'China',
+        'Shanghai Institute of Applied Physics': 'China',
+        'Shanghai Institute of Applied Physics (SINAP)': 'China',
+        'Shanghai Institute of Applied Physics, Chinese Academy of Sciences, P.O. Box 800-204, Shanghai 201800, China': 'China',
+        'Sophia Univ': 'Japan',
+        'Sophia Univ.': 'Japan',
+        'Sophia University, Japan': 'Japan',
+        'Sophia university': 'Japan',
+        'South China Normal Univeristy': 'China',
+        'South China Normal University': 'China',
+        'St. Petersburg State Technical University': 'Russia',
+        'Stanford University': 'USA',
+        'Suranaree University of Technology': 'Thailand',
+        'Swansea University': 'UK',
+        'TAMU': 'USA',
+        'TIFR': 'India',
+        'TIFR, Mumbai': 'India',
+        'TU Darmstadt': 'Germany',
+        'TU Darmstadt / GSI': 'Germany',
+        'TU Wien': 'Austria',
+        'Tata Institute of Fundamental Research': 'India',
+        'Tata Institute, Mumbai, India': 'India',
+        'Technion': 'Israel',
+        'Technische Universitaet Muenchen': 'Germany',
+        'Technische Universität Darmstadt': 'Germany',
+        'Texas A&M University + RBRC': 'USA',
+        'The University of Tokyo': 'Japan',
+        'U': 'Unknown',
+        'UCLA': 'USA',
+        'UIC': 'USA',
+        'USP': 'Brazil',
+        'USTC': 'China',
+        'USTC && BNL': 'China',
+        'USTC, China': 'China',
+        'USTC/BNL': 'China',
+        'UTFSM': 'Chile',
+        'Univ. Tsukuba': 'Japan',
+        'Univ. del Piemonte Orientale, Dip.Scienze eTecnologie': 'Italy',
+        'Universidad de Santiago de Compostela': 'Spain',
+        'Universidade Federal Fluminense': 'Brazil',
+        'Universidade Federal Fluminense (UFF), Rio de Janeiro, Brazil': 'Brazil',
+        'Universidade Federal do Rio de Janeiro': 'Brazil',
+        'Universidade de São Paulo': 'Brazil',
+        'Universitat de Barcelona': 'Spain',
+        'Universiteit Utrecht': 'Netherlands',
+        'University of Bergen': 'Norway',
+        'University of Bergen, Norway': 'Norway',
+        'University of California (UCD)': 'USA',
+        'University of Cape Town': 'South Africa',
+        'University of Catania': 'Italy',
+        'University of Catania (Italy)': 'Italy',
+        'University of Colorado at Boulder': 'USA',
+        'University of Houston': 'USA',
+        'University of Illinois Chicago': 'USA',
+        'University of Illinois Urbana-Champaign': 'USA',
+        'University of Jyväskylä': 'Finland',
+        'University of Kansas': 'USA',
+        'University of Mississippi, Texas A&M University': 'USA',
+        'University of North Carolina, Chapel Hill': 'USA',
+        'University of Oxford': 'UK',
+        'University of Pisa': 'Italy',
+        'University of Science and Technology of China': 'China',
+        'University of Science and Technology of China (USTC)': 'China',
+        'University of Stavanger': 'Norway',
+        'University of São Paulo': 'Brazil',
+        'University of Tokyo': 'Japan',
+        'University of Virginia': 'USA',
+        'University of Wrocław': 'Poland',
+        'Università La Sapienza di Roma': 'Italy',
+        'Università degli Studi di Catania': 'Italy',
+        'Universität Bern': 'Switzerland',
+        'Université Paris-Saclay': 'France',
+        'Universiyu of Oslo': 'Norway',
+        'Unknown': 'Unknown',
+        'Unknown-Unknown-Unknown': 'Unknown',
+        'V': 'Unknown',
+        'W': 'Unknown',
+        'Warsaw University of Technology': 'Poland',
+        'Warsaw Universty of Technology': 'Poland',
+        'Weizmann Institute of Science': 'Israel',
+        'West University of Timisoara': 'Romania',
+        'Westfälische Wilhelms-Universität Münster': 'Germany',
+        'Xinyang Normal University': 'China',
+        'Yonsei University': 'South Korea',
+        'iit-bombay': 'India',
+        'l': 'Unknown',
+        'lapp-Laboratoire d\'Annecy-le-Vieux de Physique des Particules-In': 'France'
+    }
+    
+    # Load institute-country database
+    institute_country_db, normalized_db = load_institute_country_database()
+    
+    # Add direct mappings to the database
+    for institute, country in direct_mappings.items():
+        institute_country_db[institute] = country
+    
     # Process each conference to collect country and institute data
     years = []
     country_data_plenary = {}
     country_data_parallel = {}
     institute_data_plenary = {}
     institute_data_parallel = {}
+    unknown_institutes = set()
     
     for year, data in sorted(all_conference_data.items()):
         years.append(year)
@@ -1071,35 +1343,161 @@ def create_country_institute_plots(all_conference_data):
         institute_counts_plenary = {}
         
         for talk in plenary_talks:
-            country = talk.get('Country', 'Unknown')
-            institute = talk.get('Institute', 'Unknown')
+            institute = talk.get('Institute', '')
+            country = talk.get('Country', '')
             
-            if country:
-                country_counts_plenary[country] = country_counts_plenary.get(country, 0) + 1
-            if institute:
-                institute_counts_plenary[institute] = institute_counts_plenary.get(institute, 0) + 1
+            # Try to determine country from institute if country is missing or unknown
+            if (not country or country == 'Unknown') and institute:
+                # Check direct mappings first
+                if institute in direct_mappings:
+                    country = direct_mappings[institute]
+                # Then try database
+                elif institute in institute_country_db:
+                    country = institute_country_db[institute]
+                else:
+                    # Try case-insensitive match
+                    institute_lower = institute.lower()
+                    for db_institute, db_country in institute_country_db.items():
+                        if db_institute.lower() == institute_lower:
+                            country = db_country
+                            break
+                    
+                    # If still not found, try normalized matching
+                    if not country or country == 'Unknown':
+                        normalized_institute = normalize_institute_name(institute)
+                        if normalized_institute in normalized_db:
+                            country = normalized_db[normalized_institute]
+                        else:
+                            # Try partial matching with normalized names
+                            for norm_inst, norm_country in normalized_db.items():
+                                if (len(norm_inst) > 3 and norm_inst in normalized_institute) or \
+                                   (len(normalized_institute) > 3 and normalized_institute in norm_inst):
+                                    country = norm_country
+                                    break
+                
+                # Extract country code from parentheses if present
+                if (not country or country == 'Unknown') and '(' in institute and ')' in institute:
+                    country_code_match = re.search(r'\(([A-Z]{2})\)', institute)
+                    if country_code_match:
+                        code = country_code_match.group(1)
+                        country_map = {
+                            'US': 'USA', 'UK': 'United Kingdom', 'DE': 'Germany', 'FR': 'France',
+                            'IT': 'Italy', 'JP': 'Japan', 'CN': 'China', 'RU': 'Russia',
+                            'CH': 'Switzerland', 'IN': 'India', 'BR': 'Brazil', 'CA': 'Canada',
+                            'AU': 'Australia', 'NL': 'Netherlands', 'ES': 'Spain', 'SE': 'Sweden',
+                            'DK': 'Denmark', 'NO': 'Norway', 'FI': 'Finland', 'PL': 'Poland',
+                            'CZ': 'Czech Republic', 'AT': 'Austria', 'BE': 'Belgium', 'PT': 'Portugal',
+                            'GR': 'Greece', 'IL': 'Israel', 'KR': 'South Korea', 'TW': 'Taiwan',
+                            'SG': 'Singapore', 'MY': 'Malaysia', 'TH': 'Thailand', 'ZA': 'South Africa',
+                            'MX': 'Mexico', 'AR': 'Argentina', 'CL': 'Chile', 'CO': 'Colombia',
+                            'HU': 'Hungary', 'RO': 'Romania', 'BG': 'Bulgaria', 'SK': 'Slovakia',
+                            'SI': 'Slovenia', 'HR': 'Croatia', 'RS': 'Serbia', 'UA': 'Ukraine',
+                            'TR': 'Turkey', 'IE': 'Ireland', 'IS': 'Iceland', 'LU': 'Luxembourg',
+                            'NZ': 'New Zealand'
+                        }
+                        country = country_map.get(code, code)
+                
+                if not country or country == 'Unknown':
+                    unknown_institutes.add(institute)
+            
+            # Use 'Unknown' as a last resort
+            country = country if country and country != 'Unknown' else 'Unknown'
+            institute = institute if institute else 'Unknown'
+            
+            country_counts_plenary[country] = country_counts_plenary.get(country, 0) + 1
+            institute_counts_plenary[institute] = institute_counts_plenary.get(institute, 0) + 1
         
         # Store country and institute data for plenary talks
         country_data_plenary[year] = country_counts_plenary
         institute_data_plenary[year] = institute_counts_plenary
         
-        # Process parallel talks
+        # Process parallel talks (similar logic)
         parallel_talks = data.get('parallel_talks', [])
         country_counts_parallel = {}
         institute_counts_parallel = {}
         
         for talk in parallel_talks:
-            country = talk.get('Country', 'Unknown')
-            institute = talk.get('Institute', 'Unknown')
+            institute = talk.get('Institute', '')
+            country = talk.get('Country', '')
             
-            if country:
-                country_counts_parallel[country] = country_counts_parallel.get(country, 0) + 1
-            if institute:
-                institute_counts_parallel[institute] = institute_counts_parallel.get(institute, 0) + 1
+            # Try to determine country from institute if country is missing or unknown
+            if (not country or country == 'Unknown') and institute:
+                # Check direct mappings first
+                if institute in direct_mappings:
+                    country = direct_mappings[institute]
+                # Then try database
+                elif institute in institute_country_db:
+                    country = institute_country_db[institute]
+                else:
+                    # Try case-insensitive match
+                    institute_lower = institute.lower()
+                    for db_institute, db_country in institute_country_db.items():
+                        if db_institute.lower() == institute_lower:
+                            country = db_country
+                            break
+                    
+                    # If still not found, try normalized matching
+                    if not country or country == 'Unknown':
+                        normalized_institute = normalize_institute_name(institute)
+                        if normalized_institute in normalized_db:
+                            country = normalized_db[normalized_institute]
+                        else:
+                            # Try partial matching with normalized names
+                            for norm_inst, norm_country in normalized_db.items():
+                                if (len(norm_inst) > 3 and norm_inst in normalized_institute) or \
+                                   (len(normalized_institute) > 3 and normalized_institute in norm_inst):
+                                    country = norm_country
+                                    break
+                
+                # Extract country code from parentheses if present
+                if (not country or country == 'Unknown') and '(' in institute and ')' in institute:
+                    country_code_match = re.search(r'\(([A-Z]{2})\)', institute)
+                    if country_code_match:
+                        code = country_code_match.group(1)
+                        country_map = {
+                            'US': 'USA', 'UK': 'United Kingdom', 'DE': 'Germany', 'FR': 'France',
+                            'IT': 'Italy', 'JP': 'Japan', 'CN': 'China', 'RU': 'Russia',
+                            'CH': 'Switzerland', 'IN': 'India', 'BR': 'Brazil', 'CA': 'Canada',
+                            'AU': 'Australia', 'NL': 'Netherlands', 'ES': 'Spain', 'SE': 'Sweden',
+                            'DK': 'Denmark', 'NO': 'Norway', 'FI': 'Finland', 'PL': 'Poland',
+                            'CZ': 'Czech Republic', 'AT': 'Austria', 'BE': 'Belgium', 'PT': 'Portugal',
+                            'GR': 'Greece', 'IL': 'Israel', 'KR': 'South Korea', 'TW': 'Taiwan',
+                            'SG': 'Singapore', 'MY': 'Malaysia', 'TH': 'Thailand', 'ZA': 'South Africa',
+                            'MX': 'Mexico', 'AR': 'Argentina', 'CL': 'Chile', 'CO': 'Colombia',
+                            'HU': 'Hungary', 'RO': 'Romania', 'BG': 'Bulgaria', 'SK': 'Slovakia',
+                            'SI': 'Slovenia', 'HR': 'Croatia', 'RS': 'Serbia', 'UA': 'Ukraine',
+                            'TR': 'Turkey', 'IE': 'Ireland', 'IS': 'Iceland', 'LU': 'Luxembourg',
+                            'NZ': 'New Zealand'
+                        }
+                        country = country_map.get(code, code)
+                
+                if not country or country == 'Unknown':
+                    unknown_institutes.add(institute)
+            
+            # Use 'Unknown' as a last resort
+            country = country if country and country != 'Unknown' else 'Unknown'
+            institute = institute if institute else 'Unknown'
+            
+            country_counts_parallel[country] = country_counts_parallel.get(country, 0) + 1
+            institute_counts_parallel[institute] = institute_counts_parallel.get(institute, 0) + 1
         
         # Store country and institute data for parallel talks
         country_data_parallel[year] = country_counts_parallel
         institute_data_parallel[year] = institute_counts_parallel
+    
+    # Update database with unknown institutes
+    if unknown_institutes:
+        print(f"\nFound {len(unknown_institutes)} institutes without country mapping:")
+        for inst in sorted(unknown_institutes):
+            print(f"  - '{inst}'")
+        
+        # Optionally, write to a file for easier processing
+        with open('remaining_unknown_institutes.txt', 'w', encoding='utf-8') as f:
+            f.write("# Remaining institutes without country mapping\n")
+            f.write("# Format: Institute,Country\n")
+            for inst in sorted(unknown_institutes):
+                f.write(f"{inst},\n")
+        print(f"\nList of unknown institutes saved to 'remaining_unknown_institutes.txt'")
     
     # Create plots for country distribution
     create_country_plot(years, country_data_plenary, country_data_parallel, figures_dir)
@@ -1257,6 +1655,99 @@ def create_institute_plot(years, plenary_data, parallel_data, figures_dir):
     plt.savefig(os.path.join(figures_dir, 'parallel_talks_by_institute.pdf'), format='pdf')
     plt.close()
 
+def create_venue_plot(all_conference_data):
+    """Create a plot showing conference venues over time"""
+    print("\nCreating conference venue plot...")
+    
+    # Create figures directory if it doesn't exist
+    figures_dir = 'figures'
+    os.makedirs(figures_dir, exist_ok=True)
+    
+    # Gather venue data
+    years = []
+    venues = []
+    countries = []
+    continents = {
+        'USA': 'North America',
+        'China': 'Asia',
+        'Italy': 'Europe',
+        'Germany': 'Europe',
+        'Japan': 'Asia',
+        'Netherlands': 'Europe',
+        'France': 'Europe',
+        'Poland': 'Europe',
+        'Denmark': 'Europe',
+        'Canada': 'North America',
+        'India': 'Asia',
+        'South Korea': 'Asia',
+        'Australia': 'Oceania'
+    }
+    continent_colors = {
+        'North America': '#1f77b4',  # blue
+        'Europe': '#ff7f0e',        # orange
+        'Asia': '#2ca02c',          # green
+        'Oceania': '#d62728',       # red
+        'Other': '#9467bd'          # purple
+    }
+    
+    for year, data in sorted(all_conference_data.items()):
+        years.append(year)
+        location = data.get('location', '')
+        venues.append(location)
+        
+        # Extract country from location (assuming format "City, Country")
+        if ',' in location:
+            country = location.split(',')[-1].strip()
+        else:
+            country = location  # Use full location if no comma
+        countries.append(country)
+    
+    # Create the venue plot
+    plt.figure(figsize=(12, 6))
+    
+    # Plot points
+    for i, (year, venue, country) in enumerate(zip(years, venues, countries)):
+        continent = continents.get(country, 'Other')
+        color = continent_colors.get(continent, '#9467bd')
+        plt.scatter(i, 0, s=200, color=color, edgecolor='black', zorder=3)
+        
+        # Add venue labels
+        plt.annotate(venue, xy=(i, 0), xytext=(0, 20),
+                    textcoords='offset points', ha='center', va='bottom',
+                    fontsize=10, fontweight='bold')
+        
+        # Add year labels
+        plt.annotate(f"QM{year}", xy=(i, 0), xytext=(0, -20),
+                    textcoords='offset points', ha='center', va='top',
+                    fontsize=10)
+    
+    # Create a custom legend for continents
+    legend_elements = [plt.Line2D([0], [0], marker='o', color='w', 
+                                 markerfacecolor=color, markersize=10, 
+                                 label=continent)
+                      for continent, color in continent_colors.items()]
+    plt.legend(handles=legend_elements, loc='upper center', bbox_to_anchor=(0.5, 1.15),
+               ncol=5, title="Continents")
+    
+    # Remove axes but keep the frame
+    plt.yticks([])
+    plt.xticks([])
+    plt.ylim(-1, 1)
+    plt.xlim(-0.5, len(years) - 0.5)
+    
+    # Add a horizontal line for timeline
+    plt.axhline(y=0, color='gray', linestyle='-', alpha=0.7, zorder=1)
+    
+    # Add title
+    plt.title('Quark Matter Conference Venues (2011-2025)', fontsize=14, pad=30)
+    
+    # Adjust layout and save
+    plt.tight_layout()
+    save_path = os.path.join(figures_dir, 'conference_venues.pdf')
+    plt.savefig(save_path, format='pdf')
+    plt.close()
+    print(f"Conference venue plot saved to {save_path}")
+
 def fetch_and_analyze_conferences():
     print("=== FETCHING AND PROCESSING CONFERENCES ===")
     try:
@@ -1377,6 +1868,9 @@ if __name__ == "__main__":
         
         # Create country and institute plots
         create_country_institute_plots(conference_data)
+        
+        # Create venue plot
+        create_venue_plot(conference_data)
                 
     except FileNotFoundError:
         print("Error: 'listofQMindigo' file not found")

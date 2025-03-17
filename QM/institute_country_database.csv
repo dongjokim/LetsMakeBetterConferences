@@ -1,0 +1,338 @@
+# Institute to Country mapping database
+# Format: Institute,Country
+CERN,Switzerland
+BNL,USA
+FNAL,USA
+DESY,Germany
+KEK,Japan
+IHEP,China
+JINR,Russia
+RAL,UK
+INFN,Italy
+CEA,France
+GSI,Germany
+TRIUMF,Canada
+SLAC,USA
+LANL,USA
+ORNL,USA
+PSI,Switzerland
+RIKEN,Japan
+AGH UST Krakow,Poland
+AGH Univ. of Science amp; Technology, Krakow,Poland
+AGH Univ. of Science and Technology, Krakow,Poland
+AGH Univ. of Science and Technology, Krakow (PL),Poland
+AGH University of Krakow,Poland
+AGH University of Krakow (PL),Poland
+AGH University of Science and Technology,Poland
+AGH University of Science and Technology, Krakow,Poland
+AGH University of Science and Technology, Poland,Poland
+AGH Univesity of Science and Technology (PL),Poland
+Abilene Christian University,USA
+Acad. of Sciences of the Czech Rep. (CZ),Czech Republic
+Academia Sinica,Taiwan
+Akita International University,Japan
+Augustana College,USA
+B,Unknown
+BROOKHAVEN NATIONAL LABORATORY,USA
+BUW,Germany
+Baruch College,USA
+Baruch College (City University of New York),USA
+Ben Gurion University of the Negev,Israel
+Ben-Gurion University of the Negev (IL),Israel
+Bergische Universität Wuppertal,Germany
+Bhabha Atomic Research Centre (IN),India
+Bielefeld University,Germany
+Bogolubov Institute for Theoretical Physics,Ukraine
+Bogolyubov Institute for Theoretical Physics,Ukraine
+Brookhaven,USA
+Brookhaven National Lab,USA
+Brookhaven National Lab.,USA
+Brookhaven National Laboratory,USA
+Brookhaven National Laboratory (US),USA
+Brookhaven National Laboratory and University of Bielefeld,USA
+Brookhaven Nationanl Laboratory,USA
+Brookhaven national laboratory,USA
+CCNU,China
+CCNU Wuhan,China
+CCNU, Wuhan & LPSC, Grenoble,China
+CNRS,France
+CPHT - Ecole Polytechnique,France
+CUHK-SZ,China
+CUHK-Shenzhen,China
+Center for Computational Sciences, University of Tsukuba,Japan
+Center for Frontiers in Nuclear Science, Stony Brook University,USA
+Centre National de la Recherche Scientifique (FR),France
+Centre national de la recherche scientifique,France
+Centro Multidisciplinar de Astrofisica/BITP,Portugal
+Centro Studi e ricerche "Enrico Fermi" - Rome (Italy),Italy
+Charles University,Czech Republic
+Charles University (CZ),Czech Republic
+China Institute of Atomic Energy (CN),China
+China University of Geosciences,China
+Chonnam National University (KR),South Korea
+Columbia University,USA
+Columbia University (US),USA
+Columbia University and Charles University,USA
+Columbia University, New York, USA,USA
+Comenius University (SK),Slovakia
+Creighton University (US),USA
+Czech Academy of Sciences (CZ),Czech Republic
+Czech Technical University in Prague (CZ),Czech Republic
+Czech Technical University (CZ),Czech Republic
+Czech Technical University in Prague,Czech Republic
+D,Unknown
+Dalian University of Technology,China
+Department of Atomic Energy (IN),India
+Department of Physics and Astronomy-College of Science-Wayne Sta,USA
+Department of Physics and Technology,Unknown
+Department of Physics-Ohio State University,USA
+Department of Physics-University of Jyvaskyla,Finland
+Duke Physics,USA
+Duke University,USA
+Duke university,USA
+ECT*,Italy
+ECU,USA
+EWHA Womens University, South Korea,South Korea
+Eberhard Karls Universität Tübingen (DE),Germany
+Ecole Polytechnique (FR),France
+Ecole Polytechnique, CPHT,France
+Engin. & Phys. Sci. Research Coun. (GB),UK
+Eotvos University,Hungary
+Eötvös University,Hungary
+F,Unknown
+FBK - Fondazione Bruno Kessler (IT),Italy
+FIAS,Germany
+FIAS & Uni of Wroclaw,Germany
+FIAS Frankfurt,Germany
+FIAS, Goethe-University Frankfurt am Main,Germany
+FNSPE CTU in Prague,Czech Republic
+Federico Santa Maria Technical University (CL),Chile
+Florda State University,USA
+Florence University,Italy
+Florida State University,USA
+Frankfurt Institute for Advanced Studies,Germany
+Frankfurt Institute for Advanced Studies (FIAS),Germany
+Frankfurt Institute for Advanced Studies, Goethe University,Germany
+Frankfurt Institute for Advanced Studies, Goethe-University Frankfurt,Germany
+Frankfurt Institute of Advanced Studies,Germany
+Frankfurt University,Germany
+Fudan University,China
+Fudan University (CN),China
+GU Frankfurt,Germany
+Georgia State University,USA
+Gettysburg College,USA
+Giessen University,Germany
+Goethe,Germany
+Goethe University / EMMI,Germany
+Goethe University Frankfurt,Germany
+Goethe University Frankfurt (DE),Germany
+Goethe University Frankfurt and Frankfurt Institute for Advanced Studies (FIAS),Germany
+Goethe University, ITP,Germany
+Goethe Universität,Germany
+Goethe-Universität Frankfurt,Germany
+HADES,Germany
+Harvard,USA
+Heidelberg University,Germany
+Heidelberg University (DE),Germany
+Heidelberg university(DE),Germany
+Helsinki Institute of Physics,Finland
+Helsinki Institute of Physics (FI),Finland
+Henryk Niewodniczanski Inst. Nucl. Physics, PAN,Poland
+Hiroshima Univ,Japan
+Hiroshima Univ., Nagoya Univ., Kobayashi-Maskawa Institute,Japan
+Hiroshima University,Japan
+Hiroshima University (JP),Japan
+Huazhong Normal University,China
+Hunan University,China
+Hungarian Academy of Sciences (HU),Hungary
+Huzhou University,China
+I,Unknown
+ICREA & U. Barcelona,Spain
+IFIN-HH Bucharest (RO),Romania
+IFJ PAN,Poland
+IFJ PAN Krakow/ Rzeszow University,Poland
+IFJ PAS,Poland
+IFT UAM/CSIC,Spain
+IGFAE, USC,Spain
+IGFAE-USC,Spain
+IISER Berhampur,India
+IISER Tirupati,India
+IISER,Berhampur,India
+IIT- Indian Institute of Technology (IN),India
+IKF, Uni-Frankfurt,Germany
+IKP Muenster,Germany
+IMPCAS/Texas A&M University,China
+INT,USA
+INT, University of Washington,USA
+IOPP,China
+IPHC, CNRS-IN2P3,France
+IPNO, Université Paris-Sud 11,France
+IPhT,France
+IPhT Saclay,France
+IPhT-Saclay,France
+ISU,USA
+ITP, University of Frankfurt am Main,Germany
+Illinois at Urbana,USA
+Indian Institute of Science Education and Research (IISER) Tirupati,India
+Indian Institute of Technology Indore (IN),India
+Indian Institute of Technology Gandhinagar,India
+Indian Institute of Technology Madras (IN),India
+Indiana University,USA
+Inha University (KR),South Korea
+Institut Pluridisciplinaire Hubert Curien (FR),France
+Institut fuer Kernphysik - Johann-Wolfgang-Goethe Univ.,Germany
+Institut fuer Kernphysik-Johann-Wolfgang-Goethe Univ.,Germany
+Institut fur Theoretische Physik, Goethe University, and Frankfurt Institute for Advanced Studies (FIAS), 60438 Frankfurt am Main, Germany,Germany
+Institut für Theoretische Physik, Goethe-Universität,Germany
+Institut für Theoretische Physik, Goethe-Universität Frankfurt,Germany
+Institute for Nuclear Theory, University of Washington,USA
+Institute for Theoretical Physics (ITP), Frankfurt am Main,Germany
+Institute for Theoretical Physics, Frankfurt, Germany,Germany
+Institute for Theoretical Physics, Goethe University, Max-von-Laue-Strasse 1, 60438 Frankfurt am Main, Germany; Frankfurt Institute for Advanced Studies, Ruth-Moufang-Strasse 1, 60438 Frankfurt am Main, Germany,Germany
+Institute of Modern Physics Chinese Academy of Sciences,China
+Institute of Modern Physics, Chinese Academy of Sciences,China
+Institute of Modern Physics, Fudan University, Shanghai, China,China
+Institute of Nuclear Physics PAN,Poland
+Institute of Nuclear Physics Polish Academy of Sciences,Poland
+Institute of Nuclear Physics Polish Academy of Sciences (PL),Poland
+Institute of Nuclear Physics, Polish Academy of Sciences,Poland
+Institute of Physics - University of Tsukuba,Japan
+Institute of Physics Belgrade,Serbia
+Institute of Physics Belgrade, University of Belgrade,Serbia
+Institute of Space Science (RO),Romania
+Institute of modern physics, Chinese Academy of Sciencessti,China
+Institute of nuclear Physics, Krakow,Poland
+Instituto Galego de Física de Altas Enerxías (IGFAE),Spain
+Instituto Galego de Física de Altas Enerxías - Universidade de Santiago de Compostela,Spain
+Instituto Superior Tecnico (PT),Portugal
+Instituto de Ciencias Nucleares, Universidad Nacional Autonoma de Mexico,Mexico
+Instituto de Fisica Gleb Wataghin (IFGW) - Universidade Estadual de Campinas,Brazil
+Instituto de Fisica Teorica (IFT)-Universidade Estadual Paulista,Brazil
+Instituto de Fisica-Universidade de Sao Paulo,Brazil
+Instituto de F´ısica, Universidade de S˜ao Paulo,Brazil
+Iowa State University,USA
+Iowa State University (US),USA
+J. W. Goethe Universität,Germany
+JLU Giessen,Germany
+Jagiellonian University (PL),Poland
+Japan Atomic Energy Agency,Japan
+Japan/Yukawa Institute,Japan
+Johann Wolfgang Goethe-Universität,Germany
+Johann Wolfgang Goethe-Universität Frankfurt am Main,Germany
+Johann-Wolfgang-Goethe Univ.,Germany
+Johann-Wolfgang-Goethe Univ. (DE),Germany
+Johannes Gutenberg Universitaet Mainz (DE),Germany
+Joint Inst. for Nuclear Research (RU),Russia
+Joint Institute for Nuclear Research (RU),Russia
+Joint Institute for Nuclear Research,Russia
+Joint Institute for Nuclear Research, Dubna, Russia,Russia
+Justus Liebig University Giessen,Germany
+KFKI Research Institute for Particle and Nuclear Physics of the Hungarian Academy of Sciences,Hungary
+KFKI Research Institute for Particle and Nuclear Physics, Budapest, Hungary,Hungary
+KIT - Karlsruhe Institute of Technology (DE),Germany
+Karl-Franzens Universität Graz,Austria
+Keio University,Japan
+Kent State University,USA
+Kent State University, USA,USA
+Kent State University/Lawrence Berkeley National Laboratory,USA
+Kent State Universtity,USA
+Kobayashi-Maskawa Institute for the Origin of Particles and the Universe (KMI) and Department of Physics, Nagoya University,Japan
+Korea University (KR),South Korea
+Kyoto Univ.,Japan
+Kyoto University,Japan
+L,Unknown
+LBL,CCNU,USA
+LIP (PT),Portugal
+LIP - Lisboa / ULisboa - IST,Portugal
+LIP, Lisbon,Portugal
+LIP/IST,Portugal
+LLNL,USA
+LLNL and UC Davis,USA
+LLR - Ecole Polytechnique, IN2P3-CNRS,France
+LLR, École Polytechnique (FR),France
+LPSC - Grenoble,France
+LPTHE , UPMC Univ. Paris 6,France
+Laboratoire de Physique Corpusculaire, Clermont-Ferrand,France
+Laboratoire de Physique Subatomique et des Technologies Associe,France
+Laboratoire de Physique Subatomique et des Technologies Associees,France
+Laboratoire de l'Accelerateur Lineaire (FR),France
+Landau Institute,Russia
+Lawrence Berkeley National Lab,USA
+Lawrence Berkeley National Lab. (US),USA
+Lawrence Berkeley National Laboratory,USA
+Lawrence Livermore Nat. Laboratory (US),USA
+Lawrence Livermore National Laboratory,USA
+Lawrence Technological University,USA
+Lehigh University,USA
+Los Alamos National Lab,USA
+Los Alamos National Laboratory,USA
+Los Alamos National Laboratory (US),USA
+Los Alamos National Laboratory, T-2,USA
+Lund University,Sweden
+Lund University (SE),Sweden
+MIT,USA
+Massachusetts Inst. of Technology (MIT),USA
+Massachusetts Inst. of Technology (MIT) Heacy Ion group (CMS),USA
+Massachusetts Inst. of Technology (US),USA
+Massachusetts Institute of Technology,USA
+Max Planck Institut,Germany
+McGill,Canada
+McGill University,Canada
+Michigan State University,USA
+N,Unknown
+NIKHEF,Netherlands
+NIKHEF (NL),Netherlands
+NIKHEF - Utrecht University,Netherlands
+NIKHEF and University of Utrecht (NL),Netherlands
+NISER, Jatni, India,India
+NRC Kurchatov Institute PNPI (RU),Russia
+Nagoya University,Japan
+Nanjing University of Science & Technology,China
+Nara Women's University (JP),Japan
+National Center for Nuclear Research,Poland
+National Cheng Kung University (TW),Taiwan
+National Institute of Science Education and Research (IN),India
+National Institute of Science Education and Research (NISER) (IN),India
+National Institute of Science Education and Research,India
+National Institute of Science Education and Research ,India
+National Institute of Science Education and Research (NISER), INDIA,India
+National Institute of Science Education and Research, India,India
+National Institution of Science Education and Research,India
+National Nuclear Research Center (AZ),Azerbaijan
+National Research Centre Kurchatov Institute (RU),Russia
+National Research Nuclear University MEPhI (RU),Russia
+Niels Bohr Institute (DK),Denmark
+Niels Bohr Institute, University of Copenhagen, Denmark,Denmark
+Nikhef National institute for subatomic physics (NL),Netherlands
+Nikhef, Amsterdam,The Netherlands,Netherlands
+Nikhef/VU Amsterdam,Netherlands
+North Carolina State University,USA
+North Caroline State University,USA
+Northwestern University / Argonne National Laboratory,USA
+Nuclear Physics Institute,Czech Republic
+ODU/JLab,USA
+Oak Ridge National Laboratory - (US),USA
+Ohio State University,USA
+Ohio State University (US),USA
+Ohio University (US),USA
+Osaka University,Japan
+PHENIX Collaboration,USA
+PMF,Croatia
+Peking University,China
+Penn State,USA
+Penn State University,USA
+Pennsylvania State University (US),USA
+Peter the Great Saint-Petersburg Polytechnic University,Russia
+Petersburg Nuclear Physics Institut (RU),Russia
+PhD student,Unknown
+Physics Department University of ROMA TRE - Rome -Italy,Italy
+Physics Department-University of Illinois at Chicago,USA
+Physics Dept., Pupin Physics Lab.-Columbia University-Unknown,USA
+Physics department of UC Berkeley,USA
+Polish Academy of Sciences (PL),Poland
+Politecnico di Torino (IT),Italy
+Purdue University,USA
+Purdue University (US),USA
+Pusan National University (KR),South Korea
+Pusan National University (ROK),South Korea
+R,Unknown

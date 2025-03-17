@@ -1,0 +1,16 @@
+# Remaining institutes without country mapping
+# Format: Institute,Country
+B,
+D,
+F,
+I,
+L,
+N,
+PhD student,
+R,
+U,
+Unknown,
+Unknown-Unknown-Unknown,
+V,
+W,
+l,
