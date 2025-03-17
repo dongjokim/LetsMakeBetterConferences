@@ -367,12 +367,98 @@ def fetch_and_process_contributions(indico_id, year):
         plenary_talks = []
         parallel_talks = []
         poster_talks = []
+        flash_talks = []
         other_talks = []
+        unknown_plenary = []
+        unknown_parallel = []
         
-        total = len(contributions)
+        # Common keywords for all years
+        sunday_keywords = ['sunday', 'Sunday']
         
-        # Special handling for 2025
-        if year == '2025':
+        # Manual corrections for 2011
+        manual_corrections_2011 = {
+            'Satow, Daisuke': {'Institute': 'RIKEN', 'Country': 'Japan'}
+        }
+        
+        if year == '2011':
+            print(f"\nProcessing contributions for QM2011...")
+            
+            # Define other sessions for 2011
+            other_sessions = ['Famous plot session']
+            
+            for i, contribution in enumerate(contributions, 1):
+                title = contribution.get('title', '')
+                contrib_type = contribution.get('type', '')
+                track = contribution.get('track', '')
+                
+                # Extract speaker information
+                speakers = (
+                    contribution.get('speakers', []) or 
+                    contribution.get('person_links', []) or 
+                    contribution.get('primary_authors', []) or 
+                    contribution.get('coauthors', [])
+                )
+                
+                if not speakers and contribution.get('primaryauthors'):
+                    speakers = contribution['primaryauthors']
+                
+                name, affiliation, country = extract_speaker_info(speakers)
+                
+                # Apply manual corrections for 2011
+                if year == '2011' and name in manual_corrections_2011:
+                    correction = manual_corrections_2011[name]
+                    affiliation = correction['Institute']
+                    country = correction['Country']
+                
+                # Common check for Sunday sessions first
+                if any(sunday in str(title) for sunday in sunday_keywords) or \
+                   any(sunday in str(track) for sunday in sunday_keywords):
+                    session_type = 'other'
+                # Then 2011-specific categorization
+                elif track in other_sessions:
+                    session_type = 'other'
+                elif contrib_type == 'Poster':
+                    session_type = 'poster'
+                elif contrib_type == 'Plenary':
+                    session_type = 'plenary'
+                elif contrib_type == 'Parallel':
+                    session_type = 'parallel'
+                elif contrib_type == 'Flash':
+                    session_type = 'flash'
+                elif 'plenary' in str(track).lower():
+                    session_type = 'unknown_plenary'
+                elif track:
+                    session_type = 'unknown_parallel'
+                else:
+                    session_type = 'unknown_parallel'
+                
+                talk_data = {
+                    'Session': track,
+                    'Type': session_type,
+                    'Title': title,
+                    'Speaker': name,
+                    'Institute': affiliation,
+                    'Country': country,
+                    'Raw_Speaker_Data': speakers[0] if speakers else None
+                }
+                
+                all_talks.append(talk_data)
+                if session_type == "plenary":
+                    plenary_talks.append(talk_data)
+                elif session_type == "parallel":
+                    parallel_talks.append(talk_data)
+                elif session_type == "poster":
+                    poster_talks.append(talk_data)
+                elif session_type == "flash":
+                    flash_talks.append(talk_data)
+                elif session_type == "other":
+                    other_talks.append(talk_data)
+                elif session_type == "unknown_plenary":
+                    unknown_plenary.append(talk_data)
+                elif session_type == "unknown_parallel":
+                    unknown_parallel.append(talk_data)
+        
+        elif year == '2025':
             # Define session categories
             other_sessions = ['Early Career Researcher Day']
             
@@ -382,8 +468,11 @@ def fetch_and_process_contributions(indico_id, year):
                 contrib_type = str(contribution.get('type', '')).lower()
                 session_str = str(session)
                 
-                # Determine session type for 2025
-                if 'poster' in session_str.lower() or 'poster' in contrib_type:
+                # Add Sunday check before other categorization
+                if any(sunday in str(title) for sunday in sunday_keywords) or \
+                   any(sunday in str(session) for sunday in sunday_keywords):
+                    session_type = 'other'
+                elif 'poster' in session_str.lower() or 'poster' in contrib_type:
                     session_type = 'poster'
                 elif any(os in session_str for os in other_sessions):
                     session_type = 'other'
@@ -417,65 +506,18 @@ def fetch_and_process_contributions(indico_id, year):
                 elif session_type == "other":
                     other_talks.append(talk_data)
         
-        elif year == '2011':
-            print(f"\nProcessing {total} contributions for QM2011...")
-            
-            for i, contribution in enumerate(contributions, 1):
-                if i % 50 == 0:
-                    print(f"Processing contribution {i}/{total}")
-                
-                title = contribution.get('title', '')
-                contrib_type = contribution.get('type', '')
-                track = contribution.get('track', '')
-                
-                # Extract speaker information
-                speakers = (contribution.get('speakers', []) or 
-                          contribution.get('person_links', []) or 
-                          contribution.get('primary_authors', []))
-                
-                name, affiliation, country = extract_speaker_info(speakers)
-                
-                # For 2011, use exact type values
-                if contrib_type == 'Poster':
-                    session_type = 'poster'
-                elif contrib_type == 'Plenary':
-                    session_type = 'plenary'
-                    # Print plenary talk details immediately
-                    print(f"\nPlenary Talk Found:")
-                    print(f"Title: {title}")
-                    print(f"Speaker: {name}")
-                    print(f"Affiliation: {affiliation}")
-                    print(f"Track: {track}")
-                    print("-" * 80)
-                elif contrib_type == 'Parallel':
-                    session_type = 'parallel'
-                else:
-                    session_type = 'parallel'  # default
-                
-                talk_data = {
-                    'Session': track,
-                    'Type': session_type,
-                    'Title': title,
-                    'Speaker': name,
-                    'Institute': affiliation,
-                    'Country': country,
-                    'Raw_Speaker_Data': speakers[0] if speakers else None
-                }
-                
-                all_talks.append(talk_data)
-                if session_type == "plenary":
-                    plenary_talks.append(talk_data)
-                elif session_type == "parallel":
-                    parallel_talks.append(talk_data)
-                elif session_type == "poster":
-                    poster_talks.append(talk_data)
-        
         else:
             # Normal processing for other years
             for contribution in contributions:
+                # Add Sunday check before normal categorization
                 title = contribution.get('title', '')
                 session = contribution.get('session', '')
-                session_type = categorize_session(session, title, year)
+                
+                if any(sunday in str(title) for sunday in sunday_keywords) or \
+                   any(sunday in str(session) for sunday in sunday_keywords):
+                    session_type = 'other'
+                else:
+                    session_type = categorize_session(session, title, year)
                 
                 # Extract speaker information
                 speakers = (contribution.get('speakers', []) or 
@@ -505,20 +547,74 @@ def fetch_and_process_contributions(indico_id, year):
                 elif session_type == "poster":
                     poster_talks.append(talk_data)
         
-        if year == '2025':
-            print(f"\nFinished processing QM2025:")
-            print(f"Total: {len(all_talks)}")
-            print(f"Plenary: {len(plenary_talks)}")
-            print(f"Parallel: {len(parallel_talks)}")
-            print(f"Poster: {len(poster_talks)}")
+        # Calculate totals and unknown affiliations for each category
+        total_main = len(plenary_talks) + len(parallel_talks) + len(poster_talks) + len(flash_talks)
+        
+        unknown_plenary_aff = sum(1 for talk in plenary_talks if not talk['Institute'])
+        unknown_parallel_aff = sum(1 for talk in parallel_talks if not talk['Institute'])
+        unknown_poster_aff = sum(1 for talk in poster_talks if not talk['Institute'])
+        unknown_flash_aff = sum(1 for talk in flash_talks if not talk['Institute'])
+        total_unknown_aff = unknown_plenary_aff + unknown_parallel_aff + unknown_poster_aff + unknown_flash_aff
+        
+        if year == '2011':
+            print(f"\nFinished processing QM2011:")
+            print(f"Total (main categories): {total_main}")
+            print(f"\nDetailed breakdown:")
+            print(f"Plenary: {len(plenary_talks)} (Unknown aff: {unknown_plenary_aff})")
+            print(f"Parallel: {len(parallel_talks)} (Unknown aff: {unknown_parallel_aff})")
+            print(f"Poster: {len(poster_talks)} (Unknown aff: {unknown_poster_aff})")
+            print(f"Flash: {len(flash_talks)} (Unknown aff: {unknown_flash_aff})")
+            print(f"\nTotal unknown affiliations: {total_unknown_aff}")
+            
+            # Print details of unknown affiliations
+            print("\nDetails of unknown affiliations:")
+            
+            if unknown_plenary_aff > 0:
+                print("\nPlenary talks with unknown affiliations:")
+                for talk in plenary_talks:
+                    if not talk['Institute']:
+                        print(f"- {talk['Title']} (Speaker: {talk['Speaker']})")
+            
+            if unknown_parallel_aff > 0:
+                print("\nParallel talks with unknown affiliations:")
+                for talk in parallel_talks:
+                    if not talk['Institute']:
+                        print(f"- {talk['Title']} (Speaker: {talk['Speaker']})")
+            
+            if unknown_poster_aff > 0:
+                print("\nPoster talks with unknown affiliations:")
+                for talk in poster_talks:
+                    if not talk['Institute']:
+                        print(f"- {talk['Title']} (Speaker: {talk['Speaker']})")
+            
+            if unknown_flash_aff > 0:
+                print("\nFlash talks with unknown affiliations:")
+                for talk in flash_talks:
+                    if not talk['Institute']:
+                        print(f"- {talk['Title']} (Speaker: {talk['Speaker']})")
+            
+            print(f"\nOther categories (not in total):")
             print(f"Other: {len(other_talks)}")
+            print(f"Unknown Plenary: {len(unknown_plenary)}")
+            print(f"Unknown Parallel: {len(unknown_parallel)}")
         
         return {
             'all_talks': all_talks,
             'plenary_talks': plenary_talks,
             'parallel_talks': parallel_talks,
             'poster_talks': poster_talks,
-            'other_talks': other_talks
+            'flash_talks': flash_talks,
+            'other_talks': other_talks,
+            'unknown_plenary': unknown_plenary,
+            'unknown_parallel': unknown_parallel,
+            'total_main': total_main,
+            'unknown_affiliations': {
+                'plenary': unknown_plenary_aff,
+                'parallel': unknown_parallel_aff,
+                'poster': unknown_poster_aff,
+                'flash': unknown_flash_aff,
+                'total': total_unknown_aff
+            }
         }
         
     except Exception as e:
