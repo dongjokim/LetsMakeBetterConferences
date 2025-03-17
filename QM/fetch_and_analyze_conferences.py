@@ -371,6 +371,7 @@ def fetch_and_process_contributions(indico_id, year):
         total = len(contributions)
         if year == '2011':
             print(f"\nProcessing {total} contributions for QM2011...")
+            
             for i, contribution in enumerate(contributions, 1):
                 if i % 50 == 0:
                     print(f"Processing contribution {i}/{total}")
@@ -379,25 +380,29 @@ def fetch_and_process_contributions(indico_id, year):
                 contrib_type = contribution.get('type', '')
                 track = contribution.get('track', '')
                 
-                # For 2011, use exact type values
-                if contrib_type == 'Poster':
-                    session_type = 'poster'
-                elif contrib_type == 'Plenary':
-                    session_type = 'plenary'
-                elif contrib_type == 'Parallel':
-                    session_type = 'parallel'
-                else:
-                    # If type doesn't match any known value, print for debugging
-                    if i <= 5:
-                        print(f"Unknown type: {contrib_type}")
-                    session_type = 'parallel'  # default
-                
                 # Extract speaker information
                 speakers = (contribution.get('speakers', []) or 
                           contribution.get('person_links', []) or 
                           contribution.get('primary_authors', []))
                 
                 name, affiliation, country = extract_speaker_info(speakers)
+                
+                # For 2011, use exact type values
+                if contrib_type == 'Poster':
+                    session_type = 'poster'
+                elif contrib_type == 'Plenary':
+                    session_type = 'plenary'
+                    # Print plenary talk details immediately
+                    print(f"\nPlenary Talk Found:")
+                    print(f"Title: {title}")
+                    print(f"Speaker: {name}")
+                    print(f"Affiliation: {affiliation}")
+                    print(f"Track: {track}")
+                    print("-" * 80)
+                elif contrib_type == 'Parallel':
+                    session_type = 'parallel'
+                else:
+                    session_type = 'parallel'  # default
                 
                 talk_data = {
                     'Session': track,
@@ -416,12 +421,6 @@ def fetch_and_process_contributions(indico_id, year):
                     parallel_talks.append(talk_data)
                 elif session_type == "poster":
                     poster_talks.append(talk_data)
-                
-                # Debug print for first few contributions
-                if i <= 5:
-                    print(f"\nContribution {i}:")
-                    print(f"Type: {contrib_type}")
-                    print(f"Categorized as: {session_type}")
         
         else:
             # Normal processing for other years
@@ -464,6 +463,12 @@ def fetch_and_process_contributions(indico_id, year):
             print(f"Plenary: {len(plenary_talks)}")
             print(f"Parallel: {len(parallel_talks)}")
             print(f"Poster: {len(poster_talks)}")
+            
+            print("\nSummary of Plenary Talks:")
+            for i, talk in enumerate(plenary_talks, 1):
+                print(f"\n{i}. {talk['Title']}")
+                print(f"   Speaker: {talk['Speaker']}")
+                print(f"   Track: {talk['Session']}")
         
         return {
             'all_talks': all_talks,
