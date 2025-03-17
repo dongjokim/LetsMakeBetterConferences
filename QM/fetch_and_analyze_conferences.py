@@ -132,29 +132,48 @@ def extract_country(affiliation):
     return parts[-1] if parts else 'Unknown'
 
 def validate_indico_url(indico_id, year):
-    """Validate that the Indico URL is correct for the given year"""
+    """Validate Indico URL and check if it's the correct conference"""
     url = f"https://indico.cern.ch/export/event/{indico_id}.json?detail=contributions&pretty=yes"
+    
     try:
-        # Use GET and print the response details for debugging
-        print(f"\nChecking URL: {url}")
-        response = requests.get(url, timeout=10)
-        print(f"Response status code: {response.status_code}")
+        response = requests.get(url)
+        response.raise_for_status()
         
-        if response.status_code == 200:
-            data = response.json()
-            # Print event title for verification
-            event_data = data.get('results', [{}])[0]
-            title = event_data.get('title', '')
-            print(f"Event title: {title}")
+        data = response.json()
+        if not data or 'results' not in data or not data['results']:
+            return False, "No data found", None
             
-            if f"QM{year}" in title or f"Quark Matter {year}" in title:
+        event_title = data['results'][0].get('title', '').lower()
+        print(f"\nChecking URL: {url}")
+        print(f"Response status code: {response.status_code}")
+        print(f"Event title: {data['results'][0].get('title', '')}")
+        
+        # Special case for QM2022
+        if year == '2022' and indico_id == '895086':
+            return True, "Valid Indico page with correct year", data
+            
+        # Original validation logic from before
+        if year == '2011':
+            if 'qm 2011' in event_title or 'xxii international conference' in event_title:
                 return True, "Valid Indico page with correct year", data
-            else:
-                return False, f"Indico page exists but may not be for QM{year} (title: {title})", None
-        else:
-            return False, f"Indico page returns status code {response.status_code}", None
+        
+        valid_titles = [
+            f'quark matter {year}',
+            f'qm {year}',
+            f'qm{year}',
+            'quark matter',
+            'qm'
+        ]
+        
+        if any(title in event_title for title in valid_titles):
+            return True, "Valid Indico page with correct year", data
+            
+        return False, f"Title mismatch: {data['results'][0].get('title', '')}", None
+        
     except requests.exceptions.RequestException as e:
-        return False, f"Error validating URL: {str(e)}", None
+        return False, f"Error fetching URL: {str(e)}", None
+    except ValueError as e:
+        return False, f"Error parsing JSON: {str(e)}", None
 
 def categorize_session(session_name, title, year):
     """Categorize a session as plenary, parallel, or poster"""
@@ -162,11 +181,18 @@ def categorize_session(session_name, title, year):
     session_lower = str(session_name or '').lower()
     title_lower = str(title or '').lower()
     
-    # Special handling for 2018 flash talks
-    if year == '2018' and 'best-poster flash' in session_lower:
-        return "other"  # Categorize as other to avoid double counting
+    # Special handling for 2011
+    if year == '2011':
+        if isinstance(session_name, dict):
+            session_lower = str(session_name.get('title', '')).lower()
+        if 'plenary' in session_lower:
+            return "plenary"
+        if any(x in session_lower for x in ['parallel', 'track']):
+            return "parallel"
+        if 'poster' in session_lower:
+            return "poster"
     
-    # Check for posters
+    # Regular categorization for other years
     if 'poster' in session_lower or 'poster' in title_lower:
         return "poster"
     
@@ -342,39 +368,102 @@ def fetch_and_process_contributions(indico_id, year):
         parallel_talks = []
         poster_talks = []
         
-        # Process contributions
-        for contribution in contributions:
-            title = contribution.get('title', '')
-            session = contribution.get('session', '')
-            session_type = categorize_session(session, title, year)
-            
-            # Extract speaker information
-            speakers = (contribution.get('speakers', []) or 
-                      contribution.get('person_links', []) or 
-                      contribution.get('primary_authors', []))
-            
-            name, affiliation, country = extract_speaker_info(speakers)
-            
-            talk_data = {
-                'Session': session,
-                'Type': session_type,
-                'Title': title,
-                'Speaker': name,
-                'Institute': affiliation,
-                'Country': country,
-                'Raw_Speaker_Data': speakers[0] if speakers else None
-            }
-            
-            # Apply any manual corrections
-            talk_data = apply_manual_corrections(talk_data, year)
-            
-            all_talks.append(talk_data)
-            if session_type == "plenary":
-                plenary_talks.append(talk_data)
-            elif session_type == "parallel":
-                parallel_talks.append(talk_data)
-            elif session_type == "poster":
-                poster_talks.append(talk_data)
+        total = len(contributions)
+        if year == '2011':
+            print(f"\nProcessing {total} contributions for QM2011...")
+            for i, contribution in enumerate(contributions, 1):
+                if i % 50 == 0:
+                    print(f"Processing contribution {i}/{total}")
+                
+                title = contribution.get('title', '')
+                contrib_type = contribution.get('type', '')
+                track = contribution.get('track', '')
+                
+                # For 2011, use exact type values
+                if contrib_type == 'Poster':
+                    session_type = 'poster'
+                elif contrib_type == 'Plenary':
+                    session_type = 'plenary'
+                elif contrib_type == 'Parallel':
+                    session_type = 'parallel'
+                else:
+                    # If type doesn't match any known value, print for debugging
+                    if i <= 5:
+                        print(f"Unknown type: {contrib_type}")
+                    session_type = 'parallel'  # default
+                
+                # Extract speaker information
+                speakers = (contribution.get('speakers', []) or 
+                          contribution.get('person_links', []) or 
+                          contribution.get('primary_authors', []))
+                
+                name, affiliation, country = extract_speaker_info(speakers)
+                
+                talk_data = {
+                    'Session': track,
+                    'Type': session_type,
+                    'Title': title,
+                    'Speaker': name,
+                    'Institute': affiliation,
+                    'Country': country,
+                    'Raw_Speaker_Data': speakers[0] if speakers else None
+                }
+                
+                all_talks.append(talk_data)
+                if session_type == "plenary":
+                    plenary_talks.append(talk_data)
+                elif session_type == "parallel":
+                    parallel_talks.append(talk_data)
+                elif session_type == "poster":
+                    poster_talks.append(talk_data)
+                
+                # Debug print for first few contributions
+                if i <= 5:
+                    print(f"\nContribution {i}:")
+                    print(f"Type: {contrib_type}")
+                    print(f"Categorized as: {session_type}")
+        
+        else:
+            # Normal processing for other years
+            for contribution in contributions:
+                title = contribution.get('title', '')
+                session = contribution.get('session', '')
+                session_type = categorize_session(session, title, year)
+                
+                # Extract speaker information
+                speakers = (contribution.get('speakers', []) or 
+                          contribution.get('person_links', []) or 
+                          contribution.get('primary_authors', []))
+                
+                name, affiliation, country = extract_speaker_info(speakers)
+                
+                talk_data = {
+                    'Session': session,
+                    'Type': session_type,
+                    'Title': title,
+                    'Speaker': name,
+                    'Institute': affiliation,
+                    'Country': country,
+                    'Raw_Speaker_Data': speakers[0] if speakers else None
+                }
+                
+                # Apply any manual corrections
+                talk_data = apply_manual_corrections(talk_data, year)
+                
+                all_talks.append(talk_data)
+                if session_type == "plenary":
+                    plenary_talks.append(talk_data)
+                elif session_type == "parallel":
+                    parallel_talks.append(talk_data)
+                elif session_type == "poster":
+                    poster_talks.append(talk_data)
+        
+        if year == '2011':
+            print(f"\nFinished processing QM2011:")
+            print(f"Total: {len(all_talks)}")
+            print(f"Plenary: {len(plenary_talks)}")
+            print(f"Parallel: {len(parallel_talks)}")
+            print(f"Poster: {len(poster_talks)}")
         
         return {
             'all_talks': all_talks,
@@ -384,6 +473,7 @@ def fetch_and_process_contributions(indico_id, year):
         }
         
     except Exception as e:
+        print(f"Error processing QM{year}: {str(e)}")
         return None
 
 def plot_distributions(all_data, plenary_data, parallel_data, year, verbose=True):
