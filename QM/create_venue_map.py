@@ -7,6 +7,29 @@ import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 from matplotlib.lines import Line2D
 from matplotlib.patches import Circle
+import matplotlib as mpl
+
+# Increase all font sizes by 30% - handling both numeric and string font sizes
+default_font_size = plt.rcParams.get('font.size', 10)
+if isinstance(default_font_size, str):
+    try:
+        default_font_size = float(default_font_size)
+    except ValueError:
+        default_font_size = 10
+
+# Set the base font size with 30% increase
+new_font_size = default_font_size * 1.3
+
+# Update all font-related parameters
+plt.rcParams.update({
+    'font.size': new_font_size,
+    'axes.titlesize': 'large',  # Use relative size names instead of multiplication
+    'axes.labelsize': 'medium',
+    'xtick.labelsize': 'medium',
+    'ytick.labelsize': 'medium',
+    'legend.fontsize': 'medium',
+    'figure.titlesize': 'x-large'
+})
 
 # Conference venues data
 venues = {
@@ -70,7 +93,7 @@ for i, (year, venue) in enumerate(sorted(venues.items())):
     
     # Set marker size based on continent (smaller for Europe)
     marker_size = 120 if venue['continent'] != 'Europe' else 100
-    font_size = 9 if venue['continent'] != 'Europe' else 8
+    font_size = 12 if venue['continent'] != 'Europe' else 10  # Increased by ~30%
     
     # Plot marker with number
     ax_map.scatter(plot_lon, plot_lat, s=marker_size, color=color, 
@@ -130,9 +153,9 @@ venue_legend = ax_map.legend(handles=venue_handles,
                            loc='center left', 
                            frameon=True,
                            framealpha=0.9,
-                           fontsize=9,
+                           fontsize=12,  # Increased by ~30%
                            title='Conference Venues',
-                           title_fontsize=12)
+                           title_fontsize=16)  # Increased by ~30%
 
 # Then the continent legend (positioned below the venue legend)
 ax_map.add_artist(venue_legend)  # Keep the first legend
@@ -140,17 +163,26 @@ continent_legend = ax_map.legend(handles=continent_handles,
                                loc='lower left', 
                                frameon=True,
                                framealpha=0.9,
-                               fontsize=10,
+                               fontsize=13,  # Increased by ~30%
                                title='Continents',
-                               title_fontsize=10)
+                               title_fontsize=13)  # Increased by ~30%
 
 # Add title to map
 ax_map.set_title('Geographical Distribution of Quark Matter Conference Venues (2011-2025)', 
-         fontsize=16, fontweight='bold')
+         fontsize=21, fontweight='bold')  # Increased by ~30%
 
-# Save the figure
-plt.savefig('figures/conference_venues.pdf', bbox_inches='tight')
+# Configure matplotlib for PDF output
+mpl.rcParams['pdf.fonttype'] = 42  # Ensure TrueType fonts are used in PDF
+mpl.rcParams['pdf.use14corefonts'] = True  # Use core fonts for increased compatibility
+
+# Save the figure - save PDF first to ensure it's created
+plt.savefig('figures/conference_venues.pdf', bbox_inches='tight', dpi=300)
+print("PDF version saved successfully")
+
+# Also save PNG version
 plt.savefig('figures/conference_venues.png', bbox_inches='tight', dpi=300)
+print("PNG version saved successfully")
+
 plt.close()
 
 print("Conference venue map created successfully!") 

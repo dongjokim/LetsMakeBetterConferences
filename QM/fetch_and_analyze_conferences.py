@@ -7,6 +7,31 @@ from collections import Counter
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import numpy as np
+import matplotlib.gridspec as gridspec
+from matplotlib.colors import LinearSegmentedColormap
+from wordcloud import WordCloud
+
+# Increase all font sizes by 30% - handling both numeric and string font sizes
+default_font_size = plt.rcParams.get('font.size', 10)
+if isinstance(default_font_size, str):
+    try:
+        default_font_size = float(default_font_size)
+    except ValueError:
+        default_font_size = 10
+
+# Set the base font size with 30% increase
+new_font_size = default_font_size * 1.3
+
+# Update all font-related parameters
+plt.rcParams.update({
+    'font.size': new_font_size,
+    'axes.titlesize': 'large',  # Use relative size names instead of multiplication
+    'axes.labelsize': 'medium',
+    'xtick.labelsize': 'medium',
+    'ytick.labelsize': 'medium',
+    'legend.fontsize': 'medium',
+    'figure.titlesize': 'x-large'
+})
 
 # Set font that supports CJK characters
 plt.rcParams['font.sans-serif'] = ['Arial Unicode MS', 'DejaVu Sans', 'Microsoft YaHei']
@@ -1106,95 +1131,166 @@ def print_summary(conferences):
         print(f"Error creating plot: {str(e)}")
 
 def create_keywords_plot(all_conference_data):
-    """Create plot of top keywords from all conferences"""
-    # Prepare data for the plot
-    years = []
-    top_keywords = []
-    top_counts = []
+    """Create a comprehensive visualization of keyword trends across conferences"""
+    import matplotlib.pyplot as plt
+    import numpy as np
+    import matplotlib.gridspec as gridspec
+    from matplotlib.colors import LinearSegmentedColormap
+    from wordcloud import WordCloud
+    import os
     
-    print("\nCreating plot of top keywords...")
+    # Create figures directory if it doesn't exist
+    os.makedirs('figures', exist_ok=True)
     
-    # Process each conference
-    for year, data in sorted(all_conference_data.items()):
-        location = data.get('location', '')
-        
-        # Get all talks from main categories
-        all_talks = (data.get('plenary_talks', []) + 
-                    data.get('parallel_talks', []) + 
-                    data.get('poster_talks', []) + 
-                    data.get('flash_talks', []))
-        
-        # Analyze keywords
-        keywords_count = {}
-        for talk in all_talks:
-            title = talk.get('Title', '')
-            if title:
-                keywords = extract_keywords(title)
-                for keyword in keywords:
-                    keywords_count[keyword] = keywords_count.get(keyword, 0) + 1
-        
-        # Get top 7 keywords
-        sorted_keywords = sorted(keywords_count.items(), key=lambda x: x[1], reverse=True)
-        if sorted_keywords:
-            print(f"QM{year} Top keywords: {', '.join([f'{k}({v})' for k, v in sorted_keywords[:7]])}")
-            
-            # Store data for plotting
-            years.append(year)
-            top7_keywords = [kw for kw, _ in sorted_keywords[:7]]
-            top7_counts = [count for _, count in sorted_keywords[:7]]
-            top_keywords.append(top7_keywords)
-            top_counts.append(top7_counts)
+    # Define important physics concepts to track over time
+    physics_concepts = {
+        'QGP & Plasma': ['qgp', 'plasma', 'quark gluon', 'quark-gluon'],
+        'Flow & Collectivity': ['flow', 'collective', 'hydro', 'viscosity', 'viscous'],
+        'Small Systems': ['small system', 'pp collision', 'p-p', 'p-pb', 'p-a'],
+        'Fluctuations': ['fluctuation', 'correlations', 'correlation'],
+        'Heavy Flavor': ['charm', 'bottom', 'heavy flavor', 'heavy quark', 'quarkonia', 'quarkonium', 'j/psi', 'jpsi', 'upsilon'],
+        'Jets & Energy Loss': ['jet', 'energy loss', 'quenching', 'high pt', 'high-pt'],
+        'Phase Diagram': ['phase', 'transition', 'critical point', 'qcd phase'],
+        'EM Probes': ['photon', 'dilepton', 'electromagnetic', 'em probe'],
+        'Initial State': ['initial state', 'glasma', 'cgc', 'color glass']
+    }
+
+    # Define facilities to track
+    facilities = {
+        'LHC': ['lhc', 'alice', 'cms', 'atlas'],
+        'RHIC': ['rhic', 'star', 'phenix', 'brahms', 'phobos'],
+        'Future': ['eic', 'nica', 'fair', 'j-parc', 'jparc']
+    }
     
-    try:
-        if years and top_keywords and top_counts:
-            # Create figures directory if it doesn't exist
-            figures_dir = 'figures'
-            os.makedirs(figures_dir, exist_ok=True)
+    # Function to count concept occurrences in titles
+    def count_concepts(titles, concept_dict):
+        counts = {concept: 0 for concept in concept_dict}
+        
+        for title in titles:
+            if not isinstance(title, str):
+                continue
+            title_lower = title.lower()
+            for concept, keywords in concept_dict.items():
+                if any(keyword in title_lower for keyword in keywords):
+                    counts[concept] += 1
+        
+        return counts
+    
+    # Prepare data for analysis
+    years = sorted(all_conference_data.keys())
+    concept_trends = {concept: [] for concept in physics_concepts}
+    facility_trends = {facility: [] for facility in facilities}
+    
+    # Collect all titles for each year
+    all_titles_by_year = {}
+    for year in years:
+        if year in all_conference_data:
+            all_talks = all_conference_data[year]['all_talks']
+            titles = [talk.get('Title', '') for talk in all_talks if talk.get('Title')]
+            all_titles_by_year[year] = titles
             
-            # Create the plot - make it wider for more keywords
-            plt.figure(figsize=(18, 10))
-            x = np.arange(len(years))
-            width = 0.12  # Narrower bars to fit 7 per year
+            # Count physics concepts
+            concept_counts = count_concepts(titles, physics_concepts)
+            for concept, count in concept_counts.items():
+                concept_trends[concept].append(count / len(titles) * 100 if titles else 0)
+                
+            # Count facility mentions
+            facility_counts = count_concepts(titles, facilities)
+            for facility, count in facility_counts.items():
+                facility_trends[facility].append(count / len(titles) * 100 if titles else 0)
+    
+    # Create a figure with two subplots
+    fig = plt.figure(figsize=(15, 10))
+    gs = gridspec.GridSpec(2, 1, height_ratios=[2, 1])
+    
+    # Physics concepts subplot
+    ax1 = plt.subplot(gs[0])
+    for concept, percentages in concept_trends.items():
+        ax1.plot(years, percentages, marker='o', linewidth=2, label=concept)
+    
+    ax1.set_title('Evolution of Physics Concepts in Quark Matter Conferences', fontsize=14)
+    ax1.set_ylabel('Percentage of Presentations (%)', fontsize=12)
+    ax1.grid(True, linestyle='--', alpha=0.7)
+    ax1.legend(loc='upper left', bbox_to_anchor=(1, 1))
+    
+    # Facilities subplot
+    ax2 = plt.subplot(gs[1])
+    for facility, percentages in facility_trends.items():
+        ax2.plot(years, percentages, marker='s', linewidth=2, label=facility)
+    
+    ax2.set_title('Mentions of Experimental Facilities', fontsize=14)
+    ax2.set_xlabel('Conference Year', fontsize=12)
+    ax2.set_ylabel('Percentage of Presentations (%)', fontsize=12)
+    ax2.grid(True, linestyle='--', alpha=0.7)
+    ax2.legend(loc='upper left', bbox_to_anchor=(1, 0.5))
+    
+    plt.tight_layout()
+    plt.savefig('figures/keyword_trends.pdf', bbox_inches='tight')
+    plt.savefig('figures/keyword_trends.png', dpi=300, bbox_inches='tight')
+    
+    # Common stopwords to remove
+    stopwords = set(['and', 'the', 'in', 'of', 'for', 'on', 'with', 'at', 'from', 'by', 
+                    'to', 'a', 'an', 'is', 'are', 'was', 'were', 'be', 'been', 'being',
+                    'have', 'has', 'had', 'do', 'does', 'did', 'but', 'or', 'as', 'if',
+                    'then', 'else', 'when', 'up', 'down', 'conference', 'study', 'analysis',
+                    'measurement', 'results', 'data', 'using', 'via', 'new', 'recent',
+                    'quark', 'matter', 'qm', 'physics', 'collision', 'collisions', 'ion', 'ions',
+                    'heavy', 'experiment', 'experimental', 'theory', 'theoretical', 'model', 'models'])
+    
+    # Combine both visualizations into one comprehensive figure
+    fig = plt.figure(figsize=(20, 15))
+    gs = gridspec.GridSpec(3, 3)
+    
+    # Top row: Trend lines for physics concepts and facilities
+    ax_concepts = plt.subplot(gs[0, :2])
+    for concept, percentages in concept_trends.items():
+        ax_concepts.plot(years, percentages, marker='o', linewidth=2, label=concept)
+    ax_concepts.set_title('Evolution of Physics Concepts', fontsize=14)
+    ax_concepts.set_ylabel('Percentage of Presentations (%)', fontsize=12)
+    ax_concepts.grid(True, linestyle='--', alpha=0.7)
+    ax_concepts.legend(loc='upper left', bbox_to_anchor=(1, 1))
+    
+    ax_facilities = plt.subplot(gs[0, 2])
+    for facility, percentages in facility_trends.items():
+        ax_facilities.plot(years, percentages, marker='s', linewidth=2, label=facility)
+    ax_facilities.set_title('Experimental Facilities', fontsize=14)
+    ax_facilities.grid(True, linestyle='--', alpha=0.7)
+    ax_facilities.legend()
+    
+    # Custom colormap for word clouds
+    colors = [(0.8, 0.3, 0.3), (0.3, 0.3, 0.8), (0.3, 0.8, 0.3)]
+    cmap = LinearSegmentedColormap.from_list('custom_cmap', colors, N=100)
+    
+    # Bottom two rows: Word clouds for each year
+    row_col_positions = [(1, 0), (1, 1), (1, 2), (2, 0), (2, 1), (2, 2)]
+    
+    for i, year in enumerate(years):
+        if i >= len(row_col_positions):
+            break  # Skip if we run out of positions
             
-            # Plot bars for each keyword position
-            colors = plt.cm.tab10(np.linspace(0, 1, 7))
-            for i in range(7):
-                counts = [counts[i] if i < len(counts) else 0 for counts in top_counts]
-                plt.bar(x + i*width - 0.36, counts, width, 
-                       label=f'#{i+1} keyword',
-                       alpha=0.8,
-                       color=colors[i])
+        row, col = row_col_positions[i]
+        if year in all_titles_by_year:
+            ax = plt.subplot(gs[row, col])
+            titles = all_titles_by_year[year]
             
-            # Customize the plot
-            plt.xlabel('Conference Year', fontsize=12)
-            plt.ylabel('Keyword Count', fontsize=12)
-            plt.title('Top 7 Keywords Usage in QM Conferences', fontsize=14)
-            plt.xticks(x, years, fontsize=10)
-            plt.yticks(fontsize=10)
-            plt.legend(fontsize=10)
-            plt.grid(axis='y', linestyle='--', alpha=0.7)
-            
-            # Add keyword labels on top of bars
-            for i in range(len(years)):
-                for j in range(7):
-                    if j < len(top_keywords[i]):
-                        plt.text(i + j*width - 0.36, top_counts[i][j] + 1, 
-                                top_keywords[i][j],
-                                ha='center', va='bottom',
-                                fontsize=9,
-                                rotation=45)
-            
-            # Adjust layout and save as PDF
-            plt.tight_layout()
-            save_path = os.path.join(figures_dir, 'top_keywords.pdf')
-            print(f"Saving plot to {save_path}")
-            plt.savefig(save_path, format='pdf')
-            plt.close()
-            print("Plot saved successfully")
-        else:
-            print("Not enough data to create plot")
-    except Exception as e:
-        print(f"Error creating plot: {str(e)}")
+            if titles:
+                # Generate word cloud
+                wordcloud = WordCloud(width=800, height=400, 
+                                     background_color='white',
+                                     colormap=cmap,
+                                     stopwords=stopwords,
+                                     max_words=30,
+                                     contour_width=1, contour_color='black').generate(' '.join(titles))
+                
+                ax.imshow(wordcloud, interpolation='bilinear')
+                ax.set_title(f'QM{year}', fontsize=14)
+                ax.axis('off')
+    
+    plt.tight_layout()
+    plt.savefig('figures/QM_keyword_analysis.pdf', bbox_inches='tight')
+    plt.savefig('figures/QM_keyword_analysis.png', dpi=300, bbox_inches='tight')
+    
+    print("Keyword analysis completed and visualizations saved.")
 
 def create_country_institute_plots(all_conference_data):
     """Create plots showing distribution of talks by country and institute"""
