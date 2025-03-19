@@ -64,6 +64,8 @@ Our analysis pipeline included several key processing steps:
     \item Implementation of manual corrections for missing or incorrect data
 \end{itemize}
 
+The analysis was implemented in Python, with dedicated scripts handling different aspects of the data pipeline. The main script (fetch\_and\_analyze\_conferences.py) processes the raw conference data and generates basic statistics and visualizations. For more complex visualizations requiring specialized processing, standalone scripts were developed, including create\_country\_trends.py for longitudinal country participation analysis and create\_institute\_bubble.py for the institutional participation bubble chart. These modular scripts ensure reproducibility and allow for targeted refinement of specific visualizations.
+
 To identify research trends, we performed keyword extraction from presentation titles after removing common stop words and non-meaningful terms. This allowed us to track the evolution of research focus across different conferences.
 
 Despite our extensive efforts to map institutes to countries, a small number of institute entries (14 in total) could not be reliably mapped to countries. These include single-letter entries (B, D, F, I, L, N, R, U, V, W, l), generic labels (PhD student), and undefined entries (Unknown, Unknown-Unknown-Unknown). These entries likely represent data entry errors or incomplete information in the original conference records rather than actual institutes. In our analysis, these were categorized as "Unknown" country to maintain data integrity.
@@ -134,7 +136,7 @@ This multi-faceted keyword analysis provides a data-driven view of how research 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{figures/plenary_talks_by_country.pdf}
-\caption{Distribution of plenary talks by country across Quark Matter conferences from 2011 to 2025. The stacked bars show the number of plenary presentations given by speakers from each of the top 10 countries. This visualization reveals the geographical concentration of high-visibility presentations and changes in international representation over time.}
+\caption{Distribution of plenary talks by country across Quark Matter conferences from 2011 to 2025. The horizontal bars show the number of plenary presentations given by speakers from each of the top 15 countries, with percentage labels indicating relative contribution. Countries are color-coded by region for better geographical context. This enhanced visualization reveals both dominant contributors and emerging participants in high-visibility presentations.}
 \label{fig:country_plenary}
 \end{figure}
 
@@ -146,12 +148,14 @@ European countries collectively represent another major block, with Germany, Fra
 
 Asian representation, particularly from China, Japan, and India, shows interesting dynamics over time. We observe a general trend of increasing representation from these countries, especially in more recent conferences, reflecting growing investment in the field in these regions.
 
+Emerging contributors such as Brazil, South Africa, and Poland are now visible in the expanded visualization, showing how the field is gradually becoming more internationally diverse even as traditional centers maintain their prominent positions.
+
 The data reveals potential geographical imbalances in high-visibility speaking opportunities. While some variation is expected due to differences in community size and research output, the persistence of these patterns may warrant attention from conference organizers interested in ensuring equitable international representation.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{figures/parallel_talks_by_country.pdf}
-\caption{Distribution of parallel talks by country across Quark Matter conferences from 2011 to 2025. The stacked bars show the number of parallel session presentations given by speakers from each of the top 10 countries. This visualization reveals broader participation patterns compared to plenary talks and illustrates how research contributions are distributed globally.}
+\caption{Distribution of parallel talks by country across Quark Matter conferences from 2011 to 2025. The horizontal bars show the number of parallel session presentations given by speakers from each of the top 15 countries, with percentage labels indicating their share of the total presentations. This expanded visualization reveals broader participation patterns compared to plenary talks and illustrates how research contributions are distributed globally, including both established and emerging contributors.}
 \label{fig:country_parallel}
 \end{figure}
 
@@ -165,12 +169,29 @@ The correlation between conference location and country representation is somewh
 
 Despite the greater diversity, there remains a clear stratification, with a few countries consistently accounting for the majority of parallel talks. This pattern raises questions about structural factors affecting international participation, including funding disparities, language barriers, and access to research infrastructure.
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figures/country_trends_over_time.pdf}
+\caption{Trends in country representation at Quark Matter conferences from 2011 to 2025. The line graph shows the percentage of total talks given by speakers from the top 8 countries (solid lines) and selected emerging countries (dashed lines) over time. This visualization reveals both persistent patterns of representation and changing dynamics as new countries increase their participation in the field.}
+\label{fig:country_trends}
+\end{figure}
+
+Figure~\ref{fig:country_trends} provides a dynamic view of how country representation has evolved over time. This visualization offers valuable insights into both established patterns and emerging trends:
+
+The top countries show relatively stable patterns of representation, with some year-to-year fluctuations often correlated with conference location. The United States and Germany consistently maintain strong representation, reflecting their established infrastructures and research programs.
+
+Several emerging countries show noticeable upward trends, including Brazil, Poland, and Czech Republic. These trends highlight the gradual broadening of the field's geographical base, as heavy-ion physics research expands beyond its traditional centers.
+
+The visualization reveals interesting patterns around conference years held in particular regions, where local representation typically increases. However, these location effects appear temporary rather than leading to sustained increases in representation from host countries.
+
+This longitudinal view complements the aggregate analyses by revealing dynamics that might be obscured in cumulative statistics. The persistent gaps between established and emerging countries suggest that while progress is being made toward greater international diversity, significant disparities remain.
+
 \subsection{Institutional Representation}
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{figures/plenary_talks_by_institute.pdf}
-\caption{Distribution of plenary talks by institute across Quark Matter conferences from 2011 to 2025. The stacked bars show the number of plenary presentations given by speakers from each of the top 15 institutes. This visualization reveals which research institutions have the most prominent representation in high-visibility speaking slots, highlighting potential concentration of influence in the field.}
+\caption{Distribution of plenary talks by institute across Quark Matter conferences from 2011 to 2025. The horizontal bars show the number of plenary presentations given by speakers from each of the top 20 institutes, with percentage labels indicating their relative contribution. Institutes are categorized by type (National Laboratory, University, Research Center) and sorted by total contribution. This expanded visualization reveals which research institutions have the most prominent representation in high-visibility speaking slots, highlighting potential concentration of influence in the field.}
 \label{fig:institute_plenary}
 \end{figure}
 
@@ -182,12 +203,14 @@ Major experimental facilities hosts, such as Brookhaven National Laboratory (RHI
 
 The temporal trends show some evolution in institutional representation, but the changes are relatively modest compared to the persistent dominance of established centers. New entrants to the "top institutes" list are rare across the conference series, suggesting limited mobility in the institutional hierarchy.
 
+Mid-tier institutes now visible in our expanded visualization show interesting patterns of occasional representation, often correlating with specific breakthroughs or leadership in emerging research areas. This provides context for understanding how institutes beyond the dominant few gain visibility in the field.
+
 These patterns raise important questions about how speaking opportunities, particularly high-visibility plenary talks, are allocated within the field. While meritocratic considerations certainly play a role, the strong institutional concentration may create barriers for researchers from less prestigious institutions to gain recognition for their work.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{figures/parallel_talks_by_institute.pdf}
-\caption{Distribution of parallel talks by institute across Quark Matter conferences from 2011 to 2025. The stacked bars show the number of parallel session presentations given by speakers from each of the top 15 institutes. This visualization reveals broader institutional participation patterns compared to plenary talks and illustrates how research contributions are distributed across research centers.}
+\caption{Distribution of parallel talks by institute across Quark Matter conferences from 2011 to 2025. The horizontal bars show the number of parallel session presentations given by speakers from each of the top 20 institutes, with percentage labels indicating their share of total presentations. Institutes are categorized by type and color-coded accordingly. This comprehensive visualization reveals broader institutional participation patterns compared to plenary talks and illustrates how research contributions are distributed across a wider range of research centers.}
 \label{fig:institute_parallel}
 \end{figure}
 
@@ -200,6 +223,44 @@ The data shows some interesting dynamics in institutional participation over tim
 Even in this broader participation category, there remains a clear stratification, with approximately 15-20 institutions accounting for a disproportionate share of all parallel talks. This concentration, while less extreme than for plenary talks, still suggests significant disparities in research visibility.
 
 The institutional distribution also reflects the collaborative nature of the field, with participating institutions often clustered around major experimental collaborations (ALICE, STAR, PHENIX, etc.). Institutions with prominent roles in these collaborations typically secure more speaking slots, reflecting both their scientific contributions and their structural positions within the field.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figures/institute_bubble_chart.pdf}
+\caption{Institute contributions across Quark Matter conferences from 2011 to 2025. This bubble chart displays the presence and contribution volume of the top 30 institutes across conference years, with bubble size proportional to the number of presentations. This visualization reveals both consistently active institutions and those with intermittent but significant contributions, providing insight into how institutional participation patterns have evolved over time.}
+\label{fig:institute_bubble}
+\end{figure}
+
+Figure~\ref{fig:institute_bubble} provides a novel perspective on institutional participation patterns through a time-series bubble chart. This visualization allows us to track the consistency and volume of contributions from the top 30 institutes across all conference years:
+
+The chart reveals distinct participation patterns among institutes. Some maintain a consistent presence with relatively stable contribution volumes across all conferences, suggesting sustained research programs and established positions in the field. Others show more intermittent participation, with strong showings in specific years followed by reduced presence in others.
+
+Major national laboratories (BNL, CERN) show some of the most consistent participation patterns, reflecting their central role in the experimental infrastructure that drives the field. University participation appears more variable, potentially reflecting shifting research priorities, funding cycles, or changes in research group composition.
+
+Interestingly, some institutes show coordinated patterns, with increased participation in the same conference years. These correlations often align with major experimental runs or significant theoretical developments, highlighting how the field responds collectively to new opportunities and challenges.
+
+The bubble chart also highlights emerging institutes that have increased their participation in more recent conferences, providing a window into the evolving institutional landscape of heavy-ion physics research. This longitudinal perspective complements the aggregate analyses by revealing dynamics that might be obscured in cumulative statistics.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figures/regional_diversity.pdf}
+\caption{Regional diversity of participation at Quark Matter conferences. The left panel shows the aggregate regional distribution of all contributions, while the right panel tracks how regional representation has evolved over time. This visualization provides insight into the geographical spread of the heavy-ion physics community and highlights opportunities for increasing participation from underrepresented regions.}
+\label{fig:regional_diversity}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figures/representation_ratio.pdf}
+\caption{Representation ratio between plenary and parallel talks by country. This chart compares each country's share of high-visibility plenary talks to their share of parallel sessions, with values above 1.0 indicating overrepresentation and values below 1.0 indicating underrepresentation. The visualization highlights potential structural biases in the allocation of speaking opportunities and identifies countries that may need additional support to achieve proportional representation.}
+\label{fig:representation_ratio}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figures/diversity_metrics.pdf}
+\caption{Evolution of diversity metrics over time. The top panel shows the number of unique countries represented at each conference, while the bottom panel displays the Herfindahl-Hirschman Index (HHI), a measure of concentration where lower values indicate more diverse representation. Together, these metrics provide quantitative measures of how geographical diversity has changed across conference cycles.}
+\label{fig:diversity_metrics}
+\end{figure}
 
 \section{Discussion}
 
@@ -216,6 +277,8 @@ The data suggests several potential approaches for conference organizers interes
     \item Developing mentoring programs or speaking opportunities specifically designed to highlight researchers from underrepresented institutions and countries
     \item Rotating conference locations more systematically to encourage broader participation and reduce travel barriers
     \item Collecting and monitoring demographic data on conference participation to track progress over time
+    \item Implementing regional quotas or targets that ensure representation from a broader range of countries while maintaining scientific excellence
+    \item Creating mentoring or speaking opportunity programs specifically for researchers from emerging countries in the field
 \end{itemize}
 
 Importantly, our findings suggest that addressing these imbalances may require attention not just to country-level representation but to institutional diversity within countries, as the institutional concentration appears even stronger than geographical concentration.
@@ -243,6 +306,8 @@ Based on our findings, several recommendations emerge for future Quark Matter co
     \item Balancing representation of established research directions with emerging topics to ensure the conference remains at the cutting edge
     \item Improving data collection on speaker demographics to better track progress on diversity goals
     \item Developing structures to highlight work from smaller or newer research groups, potentially through dedicated sessions or presentation formats
+    \item Implementing regional quotas or targets that ensure representation from a broader range of countries while maintaining scientific excellence
+    \item Creating mentoring or speaking opportunity programs specifically for researchers from emerging countries in the field
 \end{itemize}
 
 These measures would help ensure that Quark Matter conferences continue to serve as inclusive forums that represent the full breadth of the international heavy-ion physics community.

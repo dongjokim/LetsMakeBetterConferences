@@ -10,6 +10,7 @@ import numpy as np
 import matplotlib.gridspec as gridspec
 from matplotlib.colors import LinearSegmentedColormap
 from wordcloud import WordCloud
+import pandas as pd
 
 # Increase all font sizes by 30% - handling both numeric and string font sizes
 default_font_size = plt.rcParams.get('font.size', 10)
@@ -1751,98 +1752,960 @@ def create_institute_plot(years, plenary_data, parallel_data, figures_dir):
     plt.savefig(os.path.join(figures_dir, 'parallel_talks_by_institute.pdf'), format='pdf')
     plt.close()
 
-def create_venue_plot(all_conference_data):
-    """Create a plot showing conference venues over time"""
-    print("\nCreating conference venue plot...")
+
+def plot_talks_by_country(contributions, title, filename, top_n=15, show_others=True, 
+                          color_palette="viridis", by_region=False, include_percentages=True):
+    """
+    Enhanced plot of talks by country with more countries, improved styling, and optional grouping by region.
     
-    # Create figures directory if it doesn't exist
+    Parameters:
+    - contributions: DataFrame containing contribution data
+    - title: Plot title
+    - filename: Output filename
+    - top_n: Number of top countries to show individually (increased from 10 to 15)
+    - show_others: Whether to aggregate remaining countries as "Others"
+    - color_palette: Matplotlib colormap name for the bars
+    - by_region: If True, organize countries by geographical region
+    - include_percentages: If True, add percentage labels to bars
+    """
+    # Count contributions by country
+    country_counts = contributions['country'].value_counts()
+    total_talks = len(contributions)
+    
+    # Define regions for organizing countries if needed
+    regions = {
+        'North America': ['USA', 'Canada', 'Mexico'],
+        'Europe': ['Germany', 'UK', 'France', 'Italy', 'Poland', 'Switzerland', 'Netherlands', 
+                  'Czech Republic', 'Spain', 'Belgium', 'Sweden', 'Finland', 'Denmark', 'Norway', 
+                  'Austria', 'Hungary', 'Romania', 'Portugal', 'Greece', 'Ireland'],
+        'Asia': ['China', 'Japan', 'Korea', 'India', 'Israel', 'Turkey', 'Taiwan', 'Singapore', 
+                'Vietnam', 'Thailand', 'Malaysia', 'Indonesia'],
+        'Other': ['Brazil', 'Australia', 'South Africa', 'Argentina', 'Chile', 'Egypt', 
+                 'New Zealand', 'Russia', 'Ukraine', 'Belarus']
+    }
+    
+    # Setup the plot with larger figure size
+    plt.figure(figsize=(12, 8))
+    
+    if by_region:
+        # Group countries by region
+        region_data = {}
+        for region, countries in regions.items():
+            region_data[region] = country_counts[country_counts.index.isin(countries)].sum()
+        
+        # Create a stacked bar chart by region
+        # Implementation details would go here
+        pass
+    else:
+        # Get top N countries and calculate percentages
+        top_countries = country_counts.head(top_n)
+        top_percentages = (top_countries / total_talks * 100).round(1)
+        
+        # If showing others, calculate their aggregate
+        if show_others and len(country_counts) > top_n:
+            others_count = country_counts.iloc[top_n:].sum()
+            top_countries = top_countries.append(pd.Series([others_count], index=['Others']))
+            top_percentages = top_percentages.append(pd.Series([others_count / total_talks * 100], index=['Others']))
+        
+        # Create color map - using a perceptually uniform colormap
+        cmap = plt.cm.get_cmap(color_palette, len(top_countries))
+        colors = [cmap(i) for i in range(len(top_countries))]
+        
+        # Create horizontal bar chart for better readability
+        bars = plt.barh(top_countries.index[::-1], top_countries.values[::-1], color=colors[::-1])
+        
+        # Add percentage labels if requested
+        if include_percentages:
+            for i, (bar, percentage) in enumerate(zip(bars, top_percentages.values[::-1])):
+                plt.text(bar.get_width() + 1, bar.get_y() + bar.get_height()/2, 
+                         f'{percentage:.1f}%', va='center', fontsize=9)
+    
+    # Enhanced styling
+    plt.xlabel('Number of Talks', fontsize=12)
+    plt.ylabel('Country', fontsize=12)
+    plt.title(title, fontsize=14, fontweight='bold')
+    plt.grid(axis='x', linestyle='--', alpha=0.7)
+    plt.tight_layout()
+    
+    # Add regional color coding in legend if not grouped by region
+    if not by_region:
+        from matplotlib.patches import Patch
+        legend_elements = []
+        for region, countries in regions.items():
+            countries_in_plot = [c for c in countries if c in top_countries.index]
+            if countries_in_plot:
+                legend_elements.append(Patch(facecolor=cmap(0.5), edgecolor='black', 
+                                            label=f'{region} ({len(countries_in_plot)} countries)'))
+        
+        if legend_elements:
+            plt.legend(handles=legend_elements, loc='lower right', title='Regions')
+    
+    # Ensure we save to figures directory
     figures_dir = 'figures'
     os.makedirs(figures_dir, exist_ok=True)
+    save_path = os.path.join(figures_dir, os.path.basename(filename))
     
-    # Gather venue data
-    years = []
-    venues = []
-    countries = []
-    continents = {
-        'USA': 'North America',
-        'China': 'Asia',
-        'Italy': 'Europe',
-        'Germany': 'Europe',
-        'Japan': 'Asia',
-        'Netherlands': 'Europe',
-        'France': 'Europe',
-        'Poland': 'Europe',
-        'Denmark': 'Europe',
-        'Canada': 'North America',
-        'India': 'Asia',
-        'South Korea': 'Asia',
-        'Australia': 'Oceania'
-    }
-    continent_colors = {
-        'North America': '#1f77b4',  # blue
-        'Europe': '#ff7f0e',        # orange
-        'Asia': '#2ca02c',          # green
-        'Oceania': '#d62728',       # red
-        'Other': '#9467bd'          # purple
-    }
-    
-    for year, data in sorted(all_conference_data.items()):
-        years.append(year)
-        location = data.get('location', '')
-        venues.append(location)
-        
-        # Extract country from location (assuming format "City, Country")
-        if ',' in location:
-            country = location.split(',')[-1].strip()
-        else:
-            country = location  # Use full location if no comma
-        countries.append(country)
-    
-    # Create the venue plot
-    plt.figure(figsize=(12, 6))
-    
-    # Plot points
-    for i, (year, venue, country) in enumerate(zip(years, venues, countries)):
-        continent = continents.get(country, 'Other')
-        color = continent_colors.get(continent, '#9467bd')
-        plt.scatter(i, 0, s=200, color=color, edgecolor='black', zorder=3)
-        
-        # Add venue labels
-        plt.annotate(venue, xy=(i, 0), xytext=(0, 20),
-                    textcoords='offset points', ha='center', va='bottom',
-                    fontsize=10, fontweight='bold')
-        
-        # Add year labels
-        plt.annotate(f"QM{year}", xy=(i, 0), xytext=(0, -20),
-                    textcoords='offset points', ha='center', va='top',
-                    fontsize=10)
-    
-    # Create a custom legend for continents
-    legend_elements = [plt.Line2D([0], [0], marker='o', color='w', 
-                                 markerfacecolor=color, markersize=10, 
-                                 label=continent)
-                      for continent, color in continent_colors.items()]
-    plt.legend(handles=legend_elements, loc='upper center', bbox_to_anchor=(0.5, 1.15),
-               ncol=5, title="Continents")
-    
-    # Remove axes but keep the frame
-    plt.yticks([])
-    plt.xticks([])
-    plt.ylim(-1, 1)
-    plt.xlim(-0.5, len(years) - 0.5)
-    
-    # Add a horizontal line for timeline
-    plt.axhline(y=0, color='gray', linestyle='-', alpha=0.7, zorder=1)
-    
-    # Add title
-    plt.title('Quark Matter Conference Venues (2011-2025)', fontsize=14, pad=30)
-    
-    # Adjust layout and save
-    plt.tight_layout()
-    save_path = os.path.join(figures_dir, 'conference_venues.pdf')
-    plt.savefig(save_path, format='pdf')
+    # Save the figure to figures directory
+    plt.savefig(save_path, dpi=300, bbox_inches='tight')
     plt.close()
-    print(f"Conference venue plot saved to {save_path}")
+    print(f"Saved {title} to {save_path}")
+
+def plot_talks_by_institute(contributions, title, filename, top_n=20, show_others=True,
+                           color_palette="viridis", include_percentages=True):
+    """
+    Enhanced plot of talks by institute with more institutes and improved styling.
+    
+    Parameters:
+    - contributions: DataFrame containing contribution data
+    - title: Plot title
+    - filename: Output filename
+    - top_n: Number of top institutes to show individually (increased from 10 to 20)
+    - show_others: Whether to aggregate remaining institutes as "Others"
+    - color_palette: Matplotlib colormap name for the bars
+    - include_percentages: If True, add percentage labels to bars
+    """
+    # Count contributions by institute
+    institute_counts = contributions['institute'].value_counts()
+    total_talks = len(contributions)
+    
+    # Get top N institutes and calculate percentages
+    top_institutes = institute_counts.head(top_n)
+    top_percentages = (top_institutes / total_talks * 100).round(1)
+    
+    # If showing others, calculate their aggregate
+    if show_others and len(institute_counts) > top_n:
+        others_count = institute_counts.iloc[top_n:].sum()
+        top_institutes = top_institutes.append(pd.Series([others_count], index=['Others']))
+        top_percentages = top_percentages.append(pd.Series([others_count / total_talks * 100], index=['Others']))
+    
+    # Setup the plot with larger figure size for more institutes
+    plt.figure(figsize=(14, 10))
+    
+    # Create color map - using a perceptually uniform colormap
+    cmap = plt.cm.get_cmap(color_palette, len(top_institutes))
+    colors = [cmap(i) for i in range(len(top_institutes))]
+    
+    # Create horizontal bar chart for better readability of institute names
+    bars = plt.barh(top_institutes.index[::-1], top_institutes.values[::-1], color=colors[::-1])
+    
+    # Add percentage labels
+    for i, (bar, percentage) in enumerate(zip(bars, top_percentages.values[::-1])):
+        plt.text(bar.get_width() + 1, bar.get_y() + bar.get_height()/2, 
+                 f'{percentage:.1f}%', va='center', fontsize=9)
+    
+    # Categorize institutes by type and show in the legend
+    institute_types = {
+        'National Laboratory': ['BNL', 'CERN', 'LBNL', 'ORNL', 'LANL', 'ANL', 'FNAL', 'JLAB', 'JINR'],
+        'University': ['University', 'College', 'School', 'Institut', 'Universidad'],
+        'Research Center': ['Institute', 'Center', 'Centre', 'Laboratory']
+    }
+    
+    # Create custom legend for institute types
+    from matplotlib.patches import Patch
+    legend_elements = []
+    for inst_type, keywords in institute_types.items():
+        matching_institutes = [i for i in top_institutes.index 
+                              if any(kw in i for kw in keywords) and i != 'Others']
+        if matching_institutes:
+            legend_elements.append(Patch(facecolor=cmap(0.5), edgecolor='black', 
+                                        label=f'{inst_type} ({len(matching_institutes)})'))
+    
+    if legend_elements:
+        plt.legend(handles=legend_elements, loc='lower right', title='Institute Types')
+    
+    # Enhanced styling
+    plt.xlabel('Number of Talks', fontsize=12)
+    plt.ylabel('Institute', fontsize=12)
+    plt.title(title, fontsize=14, fontweight='bold')
+    plt.grid(axis='x', linestyle='--', alpha=0.7)
+    plt.tight_layout()
+    
+    # Ensure we save to figures directory
+    figures_dir = 'figures'
+    os.makedirs(figures_dir, exist_ok=True)
+    save_path = os.path.join(figures_dir, os.path.basename(filename))
+    
+    # Save the figure to figures directory
+    plt.savefig(save_path, dpi=300, bbox_inches='tight')
+    plt.close()
+    print(f"Saved {title} to {save_path}")
+
+def create_country_trend_plot(all_contributions_by_year, filename):
+    """
+    Create a line plot showing trends in country representation over time.
+    
+    Parameters:
+    - all_contributions: Dictionary with year keys and contribution DataFrames as values
+    - filename: Output filename
+    """
+    plt.figure(figsize=(14, 8))
+    
+    # Get all years and top countries across all conferences
+    years = sorted(all_contributions_by_year.keys())
+    all_country_counts = {}
+    
+    for year, contributions in all_contributions_by_year.items():
+        country_counts = contributions['country'].value_counts()
+        all_country_counts[year] = country_counts
+    
+    # Identify top 8 countries across all years
+    top_countries = pd.concat(all_country_counts.values()).groupby(level=0).sum().nlargest(8).index
+    
+    # Plot trend for each top country
+    cmap = plt.cm.get_cmap('tab10', len(top_countries))
+    for i, country in enumerate(top_countries):
+        percentages = []
+        for year in years:
+            counts = all_country_counts[year]
+            total = len(all_contributions_by_year[year])
+            percentage = counts.get(country, 0) / total * 100 if total > 0 else 0
+            percentages.append(percentage)
+        
+        plt.plot(years, percentages, 'o-', label=country, color=cmap(i), linewidth=2, markersize=8)
+    
+    # Add emerging countries with interesting trends (showing growth)
+    emerging_countries = ['Brazil', 'South Africa', 'Poland', 'Czech Republic']
+    emerging_cmap = plt.cm.get_cmap('Paired', len(emerging_countries))
+    
+    for i, country in enumerate(emerging_countries):
+        if country not in top_countries:  # Only add if not already in top countries
+            percentages = []
+            for year in years:
+                counts = all_country_counts[year]
+                total = len(all_contributions_by_year[year])
+                percentage = counts.get(country, 0) / total * 100 if total > 0 else 0
+                percentages.append(percentage)
+            
+            plt.plot(years, percentages, 's--', label=f"{country} (emerging)", 
+                     color=emerging_cmap(i), linewidth=1.5, markersize=6)
+    
+    # Enhanced styling
+    plt.xlabel('Conference Year', fontsize=12)
+    plt.ylabel('Percentage of Total Talks (%)', fontsize=12)
+    plt.title('Trends in Country Representation at Quark Matter Conferences', 
+              fontsize=14, fontweight='bold')
+    plt.grid(linestyle='--', alpha=0.7)
+    plt.legend(title='Countries', bbox_to_anchor=(1.05, 1), loc='upper left')
+    plt.tight_layout()
+    
+    # Ensure we save to figures directory
+    figures_dir = 'figures'
+    os.makedirs(figures_dir, exist_ok=True)
+    save_path = os.path.join(figures_dir, os.path.basename(filename))
+    
+    # Save the figure to figures directory
+    plt.savefig(save_path, dpi=300, bbox_inches='tight')
+    plt.close()
+    print(f"Saved country trends plot to {save_path}")
+
+def create_institute_bubble_chart(all_contributions_by_year, filename):
+    """
+    Create a bubble chart showing institute participation across conferences.
+    
+    Parameters:
+    - all_contributions_by_year: Dictionary with years as keys and lists of contributions as values
+    - filename: Output filename for the chart
+    """
+    print("\nCreating institute bubble chart...")
+    
+    # Ensure figures directory exists
+    figures_dir = 'figures'
+    os.makedirs(figures_dir, exist_ok=True)
+    save_path = os.path.join(figures_dir, os.path.basename(filename))
+    
+    try:
+        # Extract years and sort them
+        years = sorted(all_contributions_by_year.keys())
+        
+        # Count institute appearances by year
+        institute_by_year = {}
+        for year in years:
+            contributions = all_contributions_by_year[year]
+            # Create a pandas Series with institute counts
+            if isinstance(contributions, pd.DataFrame):
+                institute_counts = contributions['institute'].value_counts()
+            else:
+                # If it's a list of dictionaries, convert to DataFrame first
+                contributions_df = pd.DataFrame(contributions)
+                institute_counts = contributions_df['institute'].value_counts() if 'institute' in contributions_df.columns else pd.Series()
+            
+            institute_by_year[year] = institute_counts
+        
+        # Find institutes that appear frequently
+        all_institutes = set()
+        for year in years:
+            all_institutes.update(institute_by_year[year].index)
+        
+        # Count total contributions by institute
+        institute_totals = {}
+        for institute in all_institutes:
+            total = sum(institute_by_year[year].get(institute, 0) for year in years)
+            institute_totals[institute] = total
+        
+        # Select top 30 institutes by total contributions
+        top_institutes = sorted(institute_totals.items(), key=lambda x: x[1], reverse=True)[:30]
+        top_institute_names = [i[0] for i in top_institutes]
+        
+        print(f"Selected top {len(top_institute_names)} institutes for bubble chart")
+        
+        # Create a bubble chart
+        plt.figure(figsize=(15, 10))
+        
+        # Set up a grid for the institutes (rows) and years (columns)
+        num_institutes = len(top_institute_names)
+        num_years = len(years)
+        
+        # Create normalized colormap for bubble sizes
+        sizes = []
+        for year in years:
+            for institute in top_institute_names:
+                count = institute_by_year[year].get(institute, 0)
+                if count > 0:
+                    sizes.append(count)
+        
+        max_size = max(sizes) if sizes else 1
+        print(f"Maximum contributions from a single institute in one year: {max_size}")
+        
+        # Plot the bubbles
+        for i, institute in enumerate(top_institute_names):
+            for j, year in enumerate(years):
+                count = institute_by_year[year].get(institute, 0)
+                if count > 0:
+                    size = (count / max_size) * 300  # Scale bubble size
+                    plt.scatter(j, num_institutes - i - 1, s=size, alpha=0.7, 
+                               edgecolor='black', linewidth=0.5)
+                    if count > max_size * 0.3:  # Only show count for larger bubbles
+                        plt.text(j, num_institutes - i - 1, str(count), 
+                                 ha='center', va='center', fontsize=8)
+        
+        # Enhanced styling
+        plt.xticks(range(num_years), years, rotation=45)
+        plt.yticks(range(num_institutes), top_institute_names[::-1])
+        plt.grid(linestyle='--', alpha=0.3)
+        plt.title('Institute Contributions Across Quark Matter Conferences',
+                  fontsize=14, fontweight='bold')
+        plt.xlabel('Conference Year', fontsize=12)
+        plt.tight_layout()
+        
+        # Add bubble size legend
+        for size in [1, 5, 10, 20]:
+            if size <= max_size:
+                scaled_size = (size / max_size) * 300
+                plt.scatter([], [], s=scaled_size, alpha=0.7, edgecolor='black', 
+                           linewidth=0.5, label=f'{size} talks')
+        plt.legend(title='Contribution Count', loc='upper right', scatterpoints=1)
+        
+        # Save the figure
+        plt.savefig(save_path, dpi=300, bbox_inches='tight')
+        plt.close()
+        print(f"Institute bubble chart saved to {save_path}")
+        
+    except Exception as e:
+        print(f"Error creating institute bubble chart: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        # Create a simple error plot so at least something is generated
+        plt.figure(figsize=(10, 6))
+        plt.text(0.5, 0.5, f"Error creating institute bubble chart:\n{str(e)}", 
+                 horizontalalignment='center', verticalalignment='center', fontsize=12)
+        plt.axis('off')
+        plt.savefig(save_path, dpi=300)
+        plt.close()
+
+def create_country_trends_plot(years, plenary_data, parallel_data, figures_dir):
+    """Create plots showing country representation trends over time"""
+    print("\nCreating country trends plot...")
+    save_path = os.path.join(figures_dir, "country_trends_over_time.pdf")
+    
+    try:
+        # Combine plenary and parallel data for total counts
+        all_contributions_by_year = {}
+        country_data = {}
+        
+        for year in years:
+            # Get plenary and parallel counts for this year
+            plenary_counts = plenary_data.get(year, {})
+            parallel_counts = parallel_data.get(year, {})
+            
+            # Count total talks for this year
+            total_talks = sum(plenary_counts.values()) + sum(parallel_counts.values())
+            
+            # Combine counts from plenary and parallel
+            combined_counts = {}
+            for country, count in plenary_counts.items():
+                combined_counts[country] = combined_counts.get(country, 0) + count
+                
+            for country, count in parallel_counts.items():
+                combined_counts[country] = combined_counts.get(country, 0) + count
+            
+            # Calculate percentages
+            country_percentages = {}
+            for country, count in combined_counts.items():
+                percentage = (count / total_talks * 100) if total_talks > 0 else 0
+                country_percentages[country] = round(percentage, 1)
+            
+            country_data[year] = country_percentages
+            
+            # Store talks for potential future use
+            all_contributions_by_year[year] = total_talks
+            
+            print(f"  Year {year}: Found {len(combined_counts)} unique countries")
+        
+        # Find all unique countries across all years
+        all_countries = set()
+        for year in years:
+            all_countries.update(country_data[year].keys())
+        
+        print(f"Found {len(all_countries)} unique countries across all years")
+        
+        # Count total contributions by country
+        country_totals = {}
+        for country in all_countries:
+            total = sum(country_data[year].get(country, 0) * all_contributions_by_year[year] / 100 
+                      for year in years)
+            country_totals[country] = total
+        
+        # Select top 8 countries by total contributions for main lines
+        top_countries = sorted(country_totals.items(), key=lambda x: x[1], reverse=True)[:8]
+        top_country_names = [c[0] for c in top_countries]
+        
+        # Select emerging countries for dashed lines (countries ranked 9-15)
+        emerging_countries = sorted(country_totals.items(), key=lambda x: x[1], reverse=True)[8:15]
+        emerging_country_names = [c[0] for c in emerging_countries]
+        
+        print(f"Selected top {len(top_country_names)} countries for main trend lines")
+        print(f"Selected {len(emerging_country_names)} emerging countries for dashed trend lines")
+        
+        # Create the plot
+        plt.figure(figsize=(12, 8))
+        
+        # Create colormap for top countries
+        colors = plt.cm.tab10(np.linspace(0, 1, len(top_country_names)))
+        
+        # Plot the trends for top countries
+        for i, country in enumerate(top_country_names):
+            country_percentages = [country_data[year].get(country, 0) for year in years]
+            plt.plot(years, country_percentages, marker='o', linewidth=2, color=colors[i], label=country)
+        
+        # Plot the trends for emerging countries with dashed lines
+        colors_emerging = plt.cm.Set2(np.linspace(0, 1, len(emerging_country_names)))
+        for i, country in enumerate(emerging_country_names):
+            country_percentages = [country_data[year].get(country, 0) for year in years]
+            plt.plot(years, country_percentages, marker='s', linewidth=1.5, 
+                    linestyle='--', color=colors_emerging[i], label=country)
+        
+        # Add styling
+        plt.title('Country Representation Trends Over Time', fontsize=14, fontweight='bold')
+        plt.xlabel('Conference Year', fontsize=12)
+        plt.ylabel('Percentage of Contributions', fontsize=12)
+        plt.grid(True, linestyle='--', alpha=0.7)
+        plt.legend(title='Countries', bbox_to_anchor=(1.05, 1), loc='upper left')
+        
+        # Adjust spacing for the legend
+        plt.tight_layout()
+        
+        # Save the figure
+        plt.savefig(save_path, dpi=300, bbox_inches='tight')
+        plt.close()
+        print(f"Country trends chart saved to {save_path}")
+        
+    except Exception as e:
+        print(f"Error creating country trends chart: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        # Create a simple error plot so at least something is generated
+        plt.figure(figsize=(10, 6))
+        plt.text(0.5, 0.5, f"Error creating country trends chart:\n{str(e)}", 
+                 horizontalalignment='center', verticalalignment='center', fontsize=12)
+        plt.axis('off')
+        plt.savefig(save_path, dpi=300)
+        plt.close()
+
+def create_institute_bubble_plot(years, plenary_data, parallel_data, figures_dir):
+    """Create bubble chart showing institute participation across conferences"""
+    print("\nCreating institute bubble chart...")
+    save_path = os.path.join(figures_dir, "institute_bubble_chart.pdf")
+    
+    try:
+        # Combine plenary and parallel data for total counts
+        institute_by_year = {}
+        
+        for year in years:
+            # Get plenary and parallel counts for this year
+            plenary_counts = plenary_data.get(year, {})
+            parallel_counts = parallel_data.get(year, {})
+            
+            # Combine counts from plenary and parallel
+            combined_counts = {}
+            for institute, count in plenary_counts.items():
+                combined_counts[institute] = combined_counts.get(institute, 0) + count
+                
+            for institute, count in parallel_counts.items():
+                combined_counts[institute] = combined_counts.get(institute, 0) + count
+            
+            institute_by_year[year] = combined_counts
+            print(f"  Year {year}: Found {len(combined_counts)} unique institutes")
+        
+        # Find all unique institutes across all years
+        all_institutes = set()
+        for year in years:
+            all_institutes.update(institute_by_year[year].keys())
+        
+        print(f"Found {len(all_institutes)} unique institutes across all years")
+        
+        # Count total contributions by institute
+        institute_totals = {}
+        for institute in all_institutes:
+            total = sum(institute_by_year[year].get(institute, 0) for year in years)
+            institute_totals[institute] = total
+        
+        # Select top 30 institutes by total contributions
+        top_institutes = sorted(institute_totals.items(), key=lambda x: x[1], reverse=True)[:30]
+        top_institute_names = [i[0] for i in top_institutes]
+        
+        print(f"Selected top {len(top_institute_names)} institutes for bubble chart")
+        print("Top 5 institutes:")
+        for inst, count in top_institutes[:5]:
+            print(f"  {inst}: {count} talks")
+        
+        # Create a bubble chart
+        plt.figure(figsize=(15, 10))
+        
+        # Set up a grid for the institutes (rows) and years (columns)
+        num_institutes = len(top_institute_names)
+        num_years = len(years)
+        
+        # Create normalized colormap for bubble sizes
+        sizes = []
+        for year in years:
+            for institute in top_institute_names:
+                count = institute_by_year[year].get(institute, 0)
+                if count > 0:
+                    sizes.append(count)
+        
+        max_size = max(sizes) if sizes else 1
+        print(f"Maximum contributions from a single institute in one year: {max_size}")
+        
+        # Plot the bubbles
+        for i, institute in enumerate(top_institute_names):
+            for j, year in enumerate(years):
+                count = institute_by_year[year].get(institute, 0)
+                if count > 0:
+                    size = (count / max_size) * 300  # Scale bubble size
+                    plt.scatter(j, num_institutes - i - 1, s=size, alpha=0.7, 
+                               edgecolor='black', linewidth=0.5)
+                    if count > max_size * 0.3:  # Only show count for larger bubbles
+                        plt.text(j, num_institutes - i - 1, str(count), 
+                                 ha='center', va='center', fontsize=8)
+        
+        # Enhanced styling
+        plt.xticks(range(num_years), years, rotation=45)
+        plt.yticks(range(num_institutes), top_institute_names[::-1])
+        plt.grid(linestyle='--', alpha=0.3)
+        plt.title('Institute Contributions Across Quark Matter Conferences',
+                  fontsize=14, fontweight='bold')
+        plt.xlabel('Conference Year', fontsize=12)
+        plt.tight_layout()
+        
+        # Add bubble size legend
+        for size in [1, 5, 10, 20]:
+            if size <= max_size:
+                scaled_size = (size / max_size) * 300
+                plt.scatter([], [], s=scaled_size, alpha=0.7, edgecolor='black', 
+                           linewidth=0.5, label=f'{size} talks')
+        plt.legend(title='Contribution Count', loc='upper right', scatterpoints=1)
+        
+        # Save the figure
+        plt.savefig(save_path, dpi=300, bbox_inches='tight')
+        plt.close()
+        print(f"Institute bubble chart saved to {save_path}")
+        
+    except Exception as e:
+        print(f"Error creating institute bubble chart: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        # Create a simple error plot so at least something is generated
+        plt.figure(figsize=(10, 6))
+        plt.text(0.5, 0.5, f"Error creating institute bubble chart:\n{str(e)}", 
+                 horizontalalignment='center', verticalalignment='center', fontsize=12)
+        plt.axis('off')
+        plt.savefig(save_path, dpi=300)
+        plt.close()
+
+def create_regional_diversity_plot(years, plenary_data, parallel_data, figures_dir):
+    """Create plot showing regional diversity across conferences"""
+    print("\nCreating regional diversity plot...")
+    save_path = os.path.join(figures_dir, "regional_diversity.pdf")
+    
+    try:
+        # Define regions and their countries
+        regions = {
+            'North America': ['USA', 'Canada', 'Mexico'],
+            'Europe': ['Germany', 'UK', 'France', 'Italy', 'Spain', 'Switzerland', 'Poland', 
+                      'Netherlands', 'Czech Republic', 'Sweden', 'Finland', 'Denmark', 'Norway',
+                      'Belgium', 'Austria', 'Hungary', 'Portugal', 'Greece', 'Ireland', 'Romania',
+                      'Slovakia', 'Serbia', 'Croatia', 'Ukraine', 'Belarus', 'Bulgaria', 'Slovenia',
+                      'Luxembourg', 'Lithuania', 'Estonia', 'Latvia', 'Iceland', 'Russia'],
+            'East Asia': ['Japan', 'China', 'South Korea', 'Taiwan', 'Hong Kong'],
+            'South & SE Asia': ['India', 'Singapore', 'Malaysia', 'Thailand', 'Vietnam', 'Indonesia',
+                              'Philippines', 'Bangladesh', 'Pakistan', 'Nepal', 'Sri Lanka'],
+            'Middle East': ['Israel', 'Turkey', 'Iran', 'Qatar', 'UAE', 'Saudi Arabia', 'Lebanon',
+                          'Jordan', 'Kuwait', 'Oman', 'Iraq'],
+            'Oceania': ['Australia', 'New Zealand'],
+            'Latin America': ['Brazil', 'Argentina', 'Chile', 'Colombia', 'Peru', 'Venezuela',
+                            'Mexico', 'Cuba', 'Costa Rica', 'Ecuador'],
+            'Africa': ['South Africa', 'Egypt', 'Nigeria', 'Kenya', 'Morocco', 'Tunisia',
+                      'Algeria', 'Ghana', 'Ethiopia', 'Tanzania']
+        }
+        
+        # Create a dictionary to map countries to regions
+        country_to_region = {}
+        for region, countries in regions.items():
+            for country in countries:
+                country_to_region[country] = region
+        
+        # Initialize data structures for region counts
+        region_counts_total = {}
+        region_counts_by_year = {year: {} for year in years}
+        
+        # Process data for all years
+        for year in years:
+            plenary_counts = plenary_data.get(year, {})
+            parallel_counts = parallel_data.get(year, {})
+            
+            # Combine counts
+            combined_counts = {}
+            for country, count in plenary_counts.items():
+                combined_counts[country] = combined_counts.get(country, 0) + count
+            for country, count in parallel_counts.items():
+                combined_counts[country] = combined_counts.get(country, 0) + count
+            
+            # Map countries to regions and count
+            for country, count in combined_counts.items():
+                if country != 'Unknown':
+                    region = country_to_region.get(country, 'Other')
+                else:
+                    region = 'Unknown'
+                
+                # Add to total counts
+                region_counts_total[region] = region_counts_total.get(region, 0) + count
+                
+                # Add to yearly counts
+                region_counts_by_year[year][region] = region_counts_by_year[year].get(region, 0) + count
+        
+        # Create a figure with two subplots
+        fig = plt.figure(figsize=(15, 7))
+        
+        # Add subplots in a 1x2 grid
+        ax1 = fig.add_subplot(121)
+        ax2 = fig.add_subplot(122)
+        
+        # 1. Pie chart for overall regional distribution
+        regions_to_plot = {k: v for k, v in region_counts_total.items() if k != 'Unknown' and v > 0}
+        labels = list(regions_to_plot.keys())
+        sizes = list(regions_to_plot.values())
+        
+        # Sort by size
+        sorted_data = sorted(zip(labels, sizes), key=lambda x: x[1], reverse=True)
+        labels = [x[0] for x in sorted_data]
+        sizes = [x[1] for x in sorted_data]
+        
+        # Custom colors for regions
+        region_colors = {
+            'North America': '#1f77b4',    # blue
+            'Europe': '#ff7f0e',           # orange
+            'East Asia': '#2ca02c',        # green
+            'South & SE Asia': '#d62728',  # red
+            'Middle East': '#9467bd',      # purple
+            'Oceania': '#8c564b',          # brown
+            'Latin America': '#e377c2',    # pink
+            'Africa': '#7f7f7f',           # grey
+            'Other': '#bcbd22',            # olive
+            'Unknown': '#17becf'           # cyan
+        }
+        
+        colors = [region_colors.get(region, '#17becf') for region in labels]
+        
+        # Create pie chart
+        ax1.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', 
+                startangle=90, wedgeprops={'edgecolor': 'w', 'linewidth': 1})
+        ax1.set_title('Overall Regional Distribution', fontsize=14, fontweight='bold')
+        
+        # 2. Stacked area chart for trend over time
+        # Convert year-by-year data to a format suitable for stacked area
+        region_data = {region: [] for region in labels}
+        for year in years:
+            year_total = sum(region_counts_by_year[year].values())
+            for region in labels:
+                count = region_counts_by_year[year].get(region, 0)
+                percentage = (count / year_total * 100) if year_total > 0 else 0
+                region_data[region].append(percentage)
+        
+        # Create the stacked area chart
+        bottom = np.zeros(len(years))
+        for region in labels:
+            ax2.fill_between(years, bottom, bottom + np.array(region_data[region]), 
+                            label=region, color=region_colors.get(region, '#17becf'), alpha=0.8)
+            bottom += np.array(region_data[region])
+        
+        # Style the area chart
+        ax2.set_xlabel('Conference Year', fontsize=12)
+        ax2.set_ylabel('Percentage of Contributions', fontsize=12)
+        ax2.set_title('Regional Representation Over Time', fontsize=14, fontweight='bold')
+        ax2.grid(True, linestyle='--', alpha=0.7)
+        ax2.legend(title='Regions', loc='center left', bbox_to_anchor=(1, 0.5))
+        
+        # Adjust layout and save
+        plt.tight_layout()
+        plt.savefig(save_path, dpi=300, bbox_inches='tight')
+        plt.close()
+        print(f"Regional diversity plot saved to {save_path}")
+        
+    except Exception as e:
+        print(f"Error creating regional diversity plot: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        # Create a simple error plot so at least something is generated
+        plt.figure(figsize=(10, 6))
+        plt.text(0.5, 0.5, f"Error creating regional diversity plot:\n{str(e)}", 
+                 horizontalalignment='center', verticalalignment='center', fontsize=12)
+        plt.axis('off')
+        plt.savefig(save_path, dpi=300)
+        plt.close()
+
+def create_diversity_metrics_plot(years, plenary_data, parallel_data, figures_dir):
+    """Create plot showing diversity metrics over time"""
+    print("\nCreating diversity metrics plot...")
+    save_path = os.path.join(figures_dir, "diversity_metrics.pdf")
+    
+    try:
+        # Initialize metrics holders
+        unique_countries_by_year = {}
+        hhi_by_year = {}  # Herfindahl-Hirschman Index, a measure of concentration
+        
+        # Process data for all years
+        for year in years:
+            plenary_counts = plenary_data.get(year, {})
+            parallel_counts = parallel_data.get(year, {})
+            
+            # Combine counts
+            country_counts = {}
+            for country, count in plenary_counts.items():
+                if country != 'Unknown':
+                    country_counts[country] = country_counts.get(country, 0) + count
+                    
+            for country, count in parallel_counts.items():
+                if country != 'Unknown':
+                    country_counts[country] = country_counts.get(country, 0) + count
+            
+            # Number of unique countries
+            unique_countries_by_year[year] = len(country_counts)
+            
+            # Calculate HHI (sum of squared market shares)
+            total_contributions = sum(country_counts.values())
+            hhi = 0
+            if total_contributions > 0:
+                for count in country_counts.values():
+                    market_share = count / total_contributions
+                    hhi += market_share ** 2
+            hhi_by_year[year] = hhi * 10000  # Scale to 0-10000 range
+            
+        # Create a figure with 2 subplots
+        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 10), sharex=True)
+        
+        # Plot 1: Number of unique countries
+        ax1.plot(years, [unique_countries_by_year.get(year, 0) for year in years], 
+                'o-', linewidth=2, color='#1f77b4')
+        
+        # Add data labels
+        for i, year in enumerate(years):
+            count = unique_countries_by_year.get(year, 0)
+            ax1.annotate(f'{count}', (year, count), 
+                        textcoords="offset points", xytext=(0,10), 
+                        ha='center', fontsize=9)
+        
+        # Style the first plot
+        ax1.set_ylabel('Number of Countries', fontsize=12)
+        ax1.set_title('Country Diversity Over Time', fontsize=14, fontweight='bold')
+        ax1.grid(True, linestyle='--', alpha=0.7)
+        
+        # Plot 2: HHI index (lower is more diverse)
+        ax2.plot(years, [hhi_by_year.get(year, 0) for year in years], 
+                'o-', linewidth=2, color='#ff7f0e')
+        
+        # Add data labels
+        for i, year in enumerate(years):
+            hhi = hhi_by_year.get(year, 0)
+            ax2.annotate(f'{hhi:.0f}', (year, hhi), 
+                        textcoords="offset points", xytext=(0,10), 
+                        ha='center', fontsize=9)
+        
+        # Style the second plot
+        ax2.set_xlabel('Conference Year', fontsize=12)
+        ax2.set_ylabel('HHI Index', fontsize=12)
+        ax2.set_title('Concentration Index Over Time (Lower = More Diverse)', 
+                     fontsize=14, fontweight='bold')
+        ax2.grid(True, linestyle='--', alpha=0.7)
+        
+        # Add explanatory text about HHI
+        ax2.text(0.5, -0.15, 
+                "The Herfindahl-Hirschman Index (HHI) measures market concentration.\n" +
+                "In this context, lower values indicate more diverse country representation.",
+                transform=ax2.transAxes, ha='center', va='center', fontsize=9)
+        
+        # Adjust layout and save
+        plt.tight_layout()
+        plt.savefig(save_path, dpi=300, bbox_inches='tight')
+        plt.close()
+        print(f"Diversity metrics plot saved to {save_path}")
+        
+    except Exception as e:
+        print(f"Error creating diversity metrics plot: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        # Create a simple error plot so at least something is generated
+        plt.figure(figsize=(10, 6))
+        plt.text(0.5, 0.5, f"Error creating diversity metrics plot:\n{str(e)}", 
+                 horizontalalignment='center', verticalalignment='center', fontsize=12)
+        plt.axis('off')
+        plt.savefig(save_path, dpi=300)
+        plt.close()
+
+def create_representation_ratio_plot(years, plenary_data, parallel_data, figures_dir):
+    """Create plot showing representation ratio between plenary and parallel talks"""
+    print("\nCreating representation ratio plot...")
+    save_path = os.path.join(figures_dir, "representation_ratio.pdf")
+    
+    try:
+        # Aggregate data across all years to get overall counts
+        plenary_counts_total = {}
+        parallel_counts_total = {}
+        
+        for year in years:
+            # Add plenary counts
+            for country, count in plenary_data.get(year, {}).items():
+                if country != 'Unknown':
+                    plenary_counts_total[country] = plenary_counts_total.get(country, 0) + count
+            
+            # Add parallel counts
+            for country, count in parallel_data.get(year, {}).items():
+                if country != 'Unknown':
+                    parallel_counts_total[country] = parallel_counts_total.get(country, 0) + count
+        
+        # Calculate total talks for percentages
+        total_plenary = sum(plenary_counts_total.values())
+        total_parallel = sum(parallel_counts_total.values())
+        
+        # Calculate percentages and ratios for each country
+        countries = set(plenary_counts_total.keys()) | set(parallel_counts_total.keys())
+        representation_data = {}
+        
+        for country in countries:
+            # Get counts (default to 0 if not present)
+            plenary_count = plenary_counts_total.get(country, 0)
+            parallel_count = parallel_counts_total.get(country, 0)
+            
+            # Only include countries with at least 5 talks total
+            if plenary_count + parallel_count >= 5:
+                # Calculate percentages
+                plenary_pct = (plenary_count / total_plenary * 100) if total_plenary > 0 else 0
+                parallel_pct = (parallel_count / total_parallel * 100) if total_parallel > 0 else 0
+                
+                # Calculate ratio (avoid division by zero)
+                if parallel_pct > 0:
+                    ratio = plenary_pct / parallel_pct
+                else:
+                    ratio = float('inf') if plenary_pct > 0 else 1.0  # Handle division by zero
+                
+                # Store data for plotting
+                representation_data[country] = {
+                    'plenary_count': plenary_count,
+                    'parallel_count': parallel_count,
+                    'total_count': plenary_count + parallel_count,
+                    'plenary_pct': plenary_pct,
+                    'parallel_pct': parallel_pct,
+                    'ratio': ratio
+                }
+        
+        # Sort countries by ratio
+        sorted_countries = sorted(representation_data.items(), 
+                                 key=lambda x: x[1]['ratio'], 
+                                 reverse=True)
+        
+        # Limit to top and bottom 15 countries (or all if fewer)
+        num_countries = min(30, len(sorted_countries))
+        top_countries = sorted_countries[:num_countries]
+        
+        # Create lists for plotting
+        country_names = [c[0] for c in top_countries]
+        ratios = [c[1]['ratio'] for c in top_countries]
+        total_counts = [c[1]['total_count'] for c in top_countries]
+        
+        # Create figure
+        plt.figure(figsize=(12, 10))
+        
+        # Create horizontal bars
+        bars = plt.barh(range(len(country_names)), ratios, height=0.7)
+        
+        # Color code bars (values > 1 in green, < 1 in red)
+        for i, bar in enumerate(bars):
+            if ratios[i] > 1.1:
+                bar.set_color('#2ca02c')  # Green for overrepresentation
+            elif ratios[i] < 0.9:
+                bar.set_color('#d62728')  # Red for underrepresentation
+            else:
+                bar.set_color('#1f77b4')  # Blue for roughly equal
+        
+        # Add a vertical line at x=1 to indicate equal representation
+        plt.axvline(x=1, color='gray', linestyle='--', alpha=0.7)
+        
+        # Add text annotations
+        for i, (ratio, count) in enumerate(zip(ratios, total_counts)):
+            # Format ratio to 2 decimal places
+            ratio_text = f"{ratio:.2f}"
+            
+            # Position the text
+            if ratio > 1.1:
+                plt.text(ratio + 0.1, i, f"{ratio_text} ({count} talks)", 
+                        va='center', ha='left', fontsize=9)
+            else:
+                plt.text(max(0.1, ratio - 0.5), i, f"{ratio_text} ({count} talks)", 
+                        va='center', ha='left', fontsize=9)
+        
+        # Set plot title and labels
+        plt.title('Representation Ratio: Plenary vs. Parallel Talks by Country', 
+                 fontsize=14, fontweight='bold')
+        plt.xlabel('Ratio of % Plenary Talks to % Parallel Talks', fontsize=12)
+        plt.ylabel('Country', fontsize=12)
+        
+        # Set y-axis ticks and labels
+        plt.yticks(range(len(country_names)), country_names)
+        
+        # Add reference text to explain the ratio
+        plt.text(0.5, -0.1, 
+                "Ratio > 1: Country has proportionally more plenary than parallel talks (overrepresented)\n" +
+                "Ratio < 1: Country has proportionally fewer plenary than parallel talks (underrepresented)",
+                transform=plt.gca().transAxes, ha='center', va='center', fontsize=10,
+                bbox=dict(facecolor='#f9f9f9', alpha=0.8, boxstyle='round,pad=0.5'))
+        
+        # Adjust layout and save
+        plt.tight_layout(rect=[0, 0.03, 1, 0.97])  # Make room for the explanation text
+        plt.grid(axis='x', linestyle='--', alpha=0.3)
+        plt.savefig(save_path, dpi=300, bbox_inches='tight')
+        plt.close()
+        print(f"Representation ratio plot saved to {save_path}")
+        
+    except Exception as e:
+        print(f"Error creating representation ratio plot: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        # Create a simple error plot so at least something is generated
+        plt.figure(figsize=(10, 6))
+        plt.text(0.5, 0.5, f"Error creating representation ratio plot:\n{str(e)}", 
+                 horizontalalignment='center', verticalalignment='center', fontsize=12)
+        plt.axis('off')
+        plt.savefig(save_path, dpi=300)
+        plt.close()
 
 def fetch_and_analyze_conferences():
     print("=== FETCHING AND PROCESSING CONFERENCES ===")
@@ -1939,6 +2802,9 @@ if __name__ == "__main__":
         # Sort conferences by year
         conferences.sort(key=lambda x: x[0])
         
+        # Extract sorted years list for use in trending charts
+        all_years = [year for year, _ in conferences if year in conference_data]
+        
         for year, _ in conferences:
             if year in conference_data:
                 data = conference_data[year]
@@ -1965,9 +2831,56 @@ if __name__ == "__main__":
         # Create country and institute plots
         create_country_institute_plots(conference_data)
         
-        # Create venue plot
-        create_venue_plot(conference_data)
+        # Ensure figures directory exists
+        figures_dir = 'figures'
+        os.makedirs(figures_dir, exist_ok=True)
+        
+        # Extract data for trending charts
+        plenary_country_data = {}
+        parallel_country_data = {}
+        plenary_institute_data = {}
+        parallel_institute_data = {}
+        
+        for year in all_years:
+            data = conference_data.get(year, {})
+            
+            # Process country data
+            plenary_country_counts = {}
+            parallel_country_counts = {}
+            
+            for talk in data.get('plenary_talks', []):
+                country = talk.get('Country', 'Unknown')
+                plenary_country_counts[country] = plenary_country_counts.get(country, 0) + 1
                 
+            for talk in data.get('parallel_talks', []):
+                country = talk.get('Country', 'Unknown')
+                parallel_country_counts[country] = parallel_country_counts.get(country, 0) + 1
+            
+            plenary_country_data[year] = plenary_country_counts
+            parallel_country_data[year] = parallel_country_counts
+            
+            # Process institute data
+            plenary_institute_counts = {}
+            parallel_institute_counts = {}
+            
+            for talk in data.get('plenary_talks', []):
+                institute = talk.get('Institute', 'Unknown')
+                plenary_institute_counts[institute] = plenary_institute_counts.get(institute, 0) + 1
+                
+            for talk in data.get('parallel_talks', []):
+                institute = talk.get('Institute', 'Unknown')
+                parallel_institute_counts[institute] = parallel_institute_counts.get(institute, 0) + 1
+            
+            plenary_institute_data[year] = plenary_institute_counts
+            parallel_institute_data[year] = parallel_institute_counts
+        
+        # Create diversity plots
+        create_country_trends_plot(all_years, plenary_country_data, parallel_country_data, figures_dir)
+        create_institute_bubble_plot(all_years, plenary_institute_data, parallel_institute_data, figures_dir)
+        create_regional_diversity_plot(all_years, plenary_country_data, parallel_country_data, figures_dir)
+        create_diversity_metrics_plot(all_years, plenary_country_data, parallel_country_data, figures_dir)
+        create_representation_ratio_plot(all_years, plenary_country_data, parallel_country_data, figures_dir)
+        
     except FileNotFoundError:
         print("Error: 'listofQMindigo' file not found")
         exit(1) 
