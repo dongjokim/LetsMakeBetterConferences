@@ -1,5 +1,5 @@
 # SPEAKERS WITH MISSING AFFILIATIONS (NO INSTITUTE AND NO COUNTRY)
-# Generated on: 2025-03-20 15:00:50
+# Generated on: 2025-03-20 15:07:26
 
 Total talks analyzed: 2185
 Registration data provided 86 missing institute/country values

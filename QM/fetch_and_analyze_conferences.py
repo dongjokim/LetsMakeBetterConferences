@@ -4977,3 +4977,145 @@ def create_parallel_institute_plot(parallel_institute):
     plt.savefig('figures/parallel_talks_by_institute.pdf', bbox_inches='tight')
     
     print("Parallel institute plot saved to figures/parallel_talks_by_institute.pdf")
+
+# Update the enhance_institute_data function for better consistency and efficiency
+def enhance_institute_data(conference_data):
+    """
+    Apply enhanced institute and country mapping from registration data to all talks.
+    
+    Parameters:
+    - conference_data: Dictionary with conference data
+    
+    Returns:
+    - Enhanced conference data with improved institute and country information
+    """
+    print("\nEnhancing speaker data using registration information...")
+    
+    # Track statistics
+    updated_institutes = {'plenary': 0, 'parallel': 0, 'poster': 0}
+    updated_countries = {'plenary': 0, 'parallel': 0, 'poster': 0}
+    
+    # First pass: Create comprehensive mapping of speakers to their institutes and countries
+    speaker_data_map = {}  # Will store {normalized_name: {'institute': inst, 'country': country}}
+    
+    print("Building comprehensive speaker database from all available sources...")
+    
+    # Process all registration data across all years first
+    for year, data in conference_data.items():
+        if not isinstance(data, dict):
+            continue
+        
+        # Process registrations
+        for reg in data.get('registrations', []):
+            speaker_name = reg.get('Name', '')
+            institute = reg.get('Institute', '')
+            country = reg.get('Country', '')
+            
+            if speaker_name:
+                normalized_name = speaker_name.lower().strip()
+                
+                # Create or update speaker entry
+                if normalized_name not in speaker_data_map:
+                    speaker_data_map[normalized_name] = {'institute': '', 'country': ''}
+                
+                # Only update if we have better data
+                if institute and institute.lower() != 'unknown':
+                    speaker_data_map[normalized_name]['institute'] = institute
+                
+                if country and country.lower() != 'unknown':
+                    speaker_data_map[normalized_name]['country'] = country
+    
+    # Also collect from talks with known data across all talk types and years
+    for year, data in conference_data.items():
+        if not isinstance(data, dict):
+            continue
+        
+        for talk_type in ['plenary_talks', 'parallel_talks', 'poster_talks']:
+            for talk in data.get(talk_type, []):
+                speaker = talk.get('Speaker', '')
+                institute = talk.get('Institute', '')
+                country = talk.get('Country', '')
+                
+                if speaker:
+                    normalized_name = speaker.lower().strip()
+                    
+                    # Create speaker entry if not exists
+                    if normalized_name not in speaker_data_map:
+                        speaker_data_map[normalized_name] = {'institute': '', 'country': ''}
+                    
+                    # Only update if we have better data
+                    if institute and institute.lower() != 'unknown':
+                        speaker_data_map[normalized_name]['institute'] = institute
+                    
+                    if country and country.lower() != 'unknown':
+                        speaker_data_map[normalized_name]['country'] = country
+    
+    print(f"Built database with {len(speaker_data_map)} unique speakers")
+    
+    # Second pass: Apply the comprehensive mapping to update all talks
+    for year, data in conference_data.items():
+        if not isinstance(data, dict):
+            continue
+        
+        # Process each talk type separately to track statistics
+        for talk_type in ['plenary_talks', 'parallel_talks', 'poster_talks']:
+            talk_key = talk_type.split('_')[0]  # Extract 'plenary', 'parallel', or 'poster'
+            
+            for talk in data.get(talk_type, []):
+                speaker = talk.get('Speaker', '')
+                current_institute = talk.get('Institute', '')
+                current_country = talk.get('Country', '')
+                
+                if speaker:
+                    normalized_name = speaker.lower().strip()
+                    
+                    # Try exact match first
+                    if normalized_name in speaker_data_map:
+                        speaker_data = speaker_data_map[normalized_name]
+                        
+                        # Update institute if needed
+                        if (not current_institute or current_institute.lower() == 'unknown') and speaker_data['institute']:
+                            talk['Institute'] = speaker_data['institute']
+                            updated_institutes[talk_key] += 1
+                        
+                        # Update country if needed
+                        if (not current_country or current_country.lower() == 'unknown') and speaker_data['country']:
+                            talk['Country'] = speaker_data['country']
+                            updated_countries[talk_key] += 1
+                        
+                        continue
+                    
+                    # Try partial matching for names
+                    for known_speaker, speaker_data in speaker_data_map.items():
+                        # Check if either name contains the other and is substantial (not just initials)
+                        if ((known_speaker in normalized_name or normalized_name in known_speaker) and 
+                            len(normalized_name) > 3 and len(known_speaker) > 3):
+                            
+                            # Update institute if needed
+                            if (not current_institute or current_institute.lower() == 'unknown') and speaker_data['institute']:
+                                talk['Institute'] = speaker_data['institute']
+                                updated_institutes[talk_key] += 1
+                            
+                            # Update country if needed
+                            if (not current_country or current_country.lower() == 'unknown') and speaker_data['country']:
+                                talk['Country'] = speaker_data['country']
+                                updated_countries[talk_key] += 1
+                            
+                            break
+    
+    # Print update statistics
+    total_institutes = sum(updated_institutes.values())
+    total_countries = sum(updated_countries.values())
+    
+    print(f"Enhanced speaker data for {total_institutes + total_countries} fields in total:")
+    print(f"  - Updated {total_institutes} institutes:")
+    print(f"    - Plenary talks: {updated_institutes['plenary']} institutes updated")
+    print(f"    - Parallel talks: {updated_institutes['parallel']} institutes updated")
+    print(f"    - Poster talks: {updated_institutes['poster']} institutes updated")
+    
+    print(f"  - Updated {total_countries} countries:")
+    print(f"    - Plenary talks: {updated_countries['plenary']} countries updated")
+    print(f"    - Parallel talks: {updated_countries['parallel']} countries updated")
+    print(f"    - Poster talks: {updated_countries['poster']} countries updated")
+    
+    return conference_data
