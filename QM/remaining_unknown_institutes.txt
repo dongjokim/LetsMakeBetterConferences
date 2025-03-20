@@ -1,14 +1,17 @@
 # Remaining institutes without country mapping
 # Format: Institute,Country
 B,
+CUNY Baruch,
 D,
 F,
 I,
 L,
+MPI for Physics, Munich,
 N,
 PhD student,
 R,
 U,
+University of Jyvaskyla, Finland,
 Unknown,
 Unknown-Unknown-Unknown,
 V,
