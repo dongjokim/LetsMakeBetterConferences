@@ -1,0 +1,87 @@
+// Flow Chart of fetch_and_analyze_conferences.py
+digraph fetch_and_analyze_conferences {
+	dpi=300 fontname=Arial nodesep=0.5 rankdir=TB ranksep=0.8 size="11,17"
+	node [fillcolor=lightblue fontname=Arial fontsize=12 shape=box style="filled,rounded"]
+	start [label=Start fillcolor="#c5e8d5" shape=oval]
+	subgraph cluster_phase1 {
+		graph [color=lightgrey style=filled]
+		graph [fontcolor=black fontname=Arial fontsize=14]
+		graph [label="PHASE 1: DATA COLLECTION" penwidth=2]
+		graph [fillcolor="#e6f3ff"]
+		load_indico [label="Load Indico IDs"]
+		check_ids [label="IDs loaded?" fillcolor="#fffacd" shape=diamond]
+	}
+	subgraph cluster_phase2 {
+		graph [color=lightgrey style=filled]
+		graph [fontcolor=black fontname=Arial fontsize=14]
+		graph [label="PHASE 2: DATA LOADING" penwidth=2]
+		graph [fillcolor="#e6f3ff"]
+		load_reg [label="Load Registration Data"]
+		load_plenary [label="Load Plenary Talks"]
+		load_parallel [label="Load Parallel Talks"]
+		load_poster [label="Load Poster Talks"]
+	}
+	subgraph cluster_phase3 {
+		graph [color=lightgrey style=filled]
+		graph [fontcolor=black fontname=Arial fontsize=14]
+		graph [label="PHASE 3: DATA ENHANCEMENT" penwidth=2]
+		graph [fillcolor="#e6f3ff"]
+		enhance_inst [label="Enhance Institute Data
+(enhance_institute_data())"]
+		fill_missing [label="Fill Missing Affiliations
+(fill_missing_affiliations())"]
+	}
+	subgraph cluster_phase4 {
+		graph [color=lightgrey style=filled]
+		graph [fontcolor=black fontname=Arial fontsize=14]
+		graph [label="PHASE 4: VISUALIZATION" penwidth=2]
+		graph [fillcolor="#e6f3ff"]
+		inst_plots [label="Create Institute Plots
+(create_institute_plots())"]
+		country_plots [label="Create Country Plots
+(create_country_plots())"]
+		gender_plots [label="Create Gender Plots
+(create_gender_plots())"]
+	}
+	subgraph cluster_phase5 {
+		graph [color=lightgrey style=filled]
+		graph [fontcolor=black fontname=Arial fontsize=14]
+		graph [label="PHASE 5: OUTPUT" penwidth=2]
+		graph [fillcolor="#e6f3ff"]
+		export_data [label="Export Processed Data
+(export_processed_data())"]
+		summary_stats [label="Generate Summary Statistics
+(generate_summary_statistics())"]
+	}
+	end [label=End fillcolor="#c5e8d5" shape=oval]
+	exit [label="Exit with error" fillcolor="#ffcccb" shape=oval]
+	start -> load_indico
+	load_indico -> check_ids
+	check_ids -> exit [label=No]
+	check_ids -> load_reg [label=Yes]
+	load_reg -> load_plenary
+	load_plenary -> load_parallel
+	load_parallel -> load_poster
+	load_poster -> enhance_inst
+	enhance_inst -> fill_missing
+	fill_missing -> inst_plots
+	inst_plots -> country_plots
+	country_plots -> gender_plots
+	gender_plots -> export_data
+	export_data -> summary_stats
+	summary_stats -> end
+	node [fillcolor="#fffacd" fontsize=10 shape=note style=filled]
+	enhance_inst_details [label="enhance_institute_data():
+- Maps speakers to institutes
+- Updates missing affiliations
+- Provides nationality information
+- Handles variant name formats"]
+	inst_plots_details [label="create_institute_plots():
+- Generates plots for plenary talks
+- Generates plots for parallel talks
+- Generates plots for poster talks
+- Creates combined bubble charts"]
+	enhance_inst -> enhance_inst_details [arrowhead=none constraint=false style=dashed]
+	inst_plots -> inst_plots_details [arrowhead=none constraint=false style=dashed]
+	fontname=Arial fontsize=20 label="Flow Chart of fetch_and_analyze_conferences.py"
+}

@@ -12,6 +12,9 @@ from matplotlib.colors import LinearSegmentedColormap
 from wordcloud import WordCloud
 import pandas as pd
 import csv
+from bs4 import BeautifulSoup
+import seaborn as sns
+import sys
 
 # Increase all font sizes by 30% - handling both numeric and string font sizes
 default_font_size = plt.rcParams.get('font.size', 10)
@@ -186,6 +189,9 @@ FLASH_TALK_COUNTS = {
     '2023': 10   # From session https://indico.cern.ch/event/1139644/sessions/488508/
 }
 
+# At the beginning of the file, add:
+INSTITUTE_COUNTRY_MAPPINGS = {}
+
 def normalize_institute_name(name):
     """Normalize institute name for better matching"""
     if not name:
@@ -332,6 +338,7 @@ def load_institute_country_database():
     
     return institute_country, normalized_map
 
+        
 def update_institute_country_database(unknown_institutes):
     """Update the database with unknown institutes that need mapping"""
     database_file = 'institute_country_database.csv'
@@ -1159,128 +1166,6 @@ def extract_keywords(title):
     
     return keywords
 
-def print_summary(conferences):
-    """Print summary of all conferences with improved affiliation resolution metrics"""
-    print("\nSummary of all conferences:")
-    print("Year  Location                  Total  Plenary  Parallel  Poster  Flash  Unknown_Aff%  Resolution")
-    print("-" * 85)
-    
-    # Prepare data for the plot
-    years = []
-    top_keywords = []
-    top_counts = []
-    
-    # Sort conferences by year
-    conferences_sorted = sorted(conferences, key=lambda x: x['year'] if isinstance(x, dict) and 'year' in x else '')
-    
-    for conf in conferences_sorted:
-        # Check if conf is a dictionary
-        if not isinstance(conf, dict):
-            print(f"Debug - Skipping non-dict conf: {conf}")
-            continue
-            
-        year = conf.get('year', '')
-        location = conf.get('location', '')
-        
-        # Check if necessary data exists
-        if not all(key in conf for key in ['plenary_talks', 'parallel_talks', 'poster_talks']):
-            print(f"Debug - Missing talk data for {year}")
-            continue
-            
-        plenary = len(conf.get('plenary_talks', []))
-        parallel = len(conf.get('parallel_talks', []))
-        poster = len(conf.get('poster_talks', []))
-        flash = len(conf.get('flash_talks', []))
-        total = plenary + parallel + poster + flash
-        
-        # Count unknown affiliations and calculate percentage
-        all_talks = (conf.get('plenary_talks', []) + 
-                   conf.get('parallel_talks', []) + 
-                   conf.get('poster_talks', []) + 
-                   conf.get('flash_talks', []))
-        
-        unknown_aff = sum(1 for talk in all_talks if talk.get('Country') == 'Unknown')
-        unknown_percentage = (unknown_aff / total) * 100 if total > 0 else 0
-        
-        # Determine resolution quality
-        if unknown_percentage < 3:
-            resolution = "Excellent"
-        elif unknown_percentage < 7:
-            resolution = "Good"
-        elif unknown_percentage < 15:
-            resolution = "Fair"
-        else:
-            resolution = "Poor"
-        
-        print(f"{year}  {location:<22} {total:>6}  {plenary:>7}  {parallel:>8}  {poster:>6}  {flash:>5}  {unknown_percentage:>9.1f}%  {resolution}")
-        
-        try:
-            # Analyze keywords
-            keywords_count = {}
-            for talk in all_talks:
-                title = talk.get('Title', '')
-                if title:
-                    keywords = extract_keywords(title)
-                    for keyword in keywords:
-                        keywords_count[keyword] = keywords_count.get(keyword, 0) + 1
-            
-            # Get top 3 keywords
-            sorted_keywords = sorted(keywords_count.items(), key=lambda x: x[1], reverse=True)
-            if sorted_keywords:
-                print(f"Top keywords: {', '.join([f'{k}({v})' for k, v in sorted_keywords[:3]])}")
-                
-                # Store data for plotting
-                years.append(year)
-                top3_keywords = [kw for kw, _ in sorted_keywords[:3]]
-                top3_counts = [count for _, count in sorted_keywords[:3]]
-                top_keywords.append(top3_keywords)
-                top_counts.append(top3_counts)
-        except Exception as e:
-            print(f"Error analyzing keywords for {year}: {str(e)}")
-    
-    try:
-        if years and top_keywords and top_counts:
-            # Create figures directory if it doesn't exist
-            figures_dir = 'figures'
-            os.makedirs(figures_dir, exist_ok=True)
-            
-            # Create the plot
-            plt.figure(figsize=(15, 8))
-            x = np.arange(len(years))
-            width = 0.25
-            
-            # Plot bars for each keyword position
-            for i in range(3):
-                counts = [counts[i] if i < len(counts) else 0 for counts in top_counts]
-                plt.bar(x + i*width, counts, width, 
-                       label=f'#{i+1} keyword',
-                       alpha=0.8)
-            
-            # Customize the plot
-            plt.xlabel('Conference Year')
-            plt.ylabel('Keyword Count')
-            plt.title('Top 3 Keywords Usage in QM Conferences')
-            plt.xticks(x + width, years)
-            plt.legend()
-            
-            # Add keyword labels on top of bars
-            for i in range(len(years)):
-                for j in range(3):
-                    if j < len(top_keywords[i]):
-                        plt.text(i + j*width, top_counts[i][j], 
-                                top_keywords[i][j],
-                                ha='center', va='bottom',
-                                rotation=45)
-            
-            # Adjust layout and save
-            plt.tight_layout()
-            save_path = os.path.join(figures_dir, 'top_keywords.pdf')
-            print(f"Saving plot to {save_path}")
-            plt.savefig(save_path, format='pdf')
-            plt.close()
-            print("Plot saved successfully")
-    except Exception as e:
-        print(f"Error creating plot: {str(e)}")
 
 def create_keywords_plot(all_conference_data):
     """Create a comprehensive visualization of keyword trends across conferences"""
@@ -2643,178 +2528,12 @@ def create_representation_ratio_plot(plenary_country, parallel_country):
         parallel_count = parallel_country.get(country, 0)
         print(f"{country}: {ratio:.2f} ({plenary_count} plenary, {parallel_count} parallel)")
 
-def create_unknown_institutes_report(all_conference_data, output_file='unknown_institutes_report.txt'):
-    """
-    Creates a detailed report about speakers with unknown institutes to help with data cleaning.
-    
-    Parameters:
-    - all_conference_data: Dictionary with conference data
-    - output_file: File to save the report
-    """
-    print("\nGenerating detailed report of unknown institutes...")
-    
-    unknown_by_year = {}
-    unknown_speaker_details = {}
-    unknown_institute_counts = {}
-    
-    # Extract unknown institutes and gather context
-    for year, data in sorted(all_conference_data.items()):
-        unknown_by_year[year] = []
-        
-        # Process plenary talks
-        for talk in data.get('plenary_talks', []):
-            institute = talk.get('Institute', '')
-            country = talk.get('Country', '')
-            
-            if (not country or country == 'Unknown') and institute:
-                # Record the unknown institute with context
-                unknown_by_year[year].append({
-                    'year': year,
-                    'session_type': 'Plenary',
-                    'institute': institute,
-                    'speaker': talk.get('Speaker', 'Unknown'),
-                    'title': talk.get('Title', 'Unknown')
-                })
-                
-                # Count occurrences of each unknown institute
-                unknown_institute_counts[institute] = unknown_institute_counts.get(institute, 0) + 1
-                
-                # Store details of speakers using this institute
-                if institute not in unknown_speaker_details:
-                    unknown_speaker_details[institute] = []
-                
-                unknown_speaker_details[institute].append({
-                    'year': year,
-                    'session_type': 'Plenary',
-                    'speaker': talk.get('Speaker', 'Unknown'),
-                    'title': talk.get('Title', 'Unknown')
-                })
-        
-        # Process parallel talks
-        for talk in data.get('parallel_talks', []):
-            institute = talk.get('Institute', '')
-            country = talk.get('Country', '')
-            
-            if (not country or country == 'Unknown') and institute:
-                # Record the unknown institute with context
-                unknown_by_year[year].append({
-                    'year': year,
-                    'session_type': 'Parallel',
-                    'institute': institute,
-                    'speaker': talk.get('Speaker', 'Unknown'),
-                    'title': talk.get('Title', 'Unknown')
-                })
-                
-                # Count occurrences of each unknown institute
-                unknown_institute_counts[institute] = unknown_institute_counts.get(institute, 0) + 1
-                
-                # Store details of speakers using this institute
-                if institute not in unknown_speaker_details:
-                    unknown_speaker_details[institute] = []
-                
-                unknown_speaker_details[institute].append({
-                    'year': year,
-                    'session_type': 'Parallel',
-                    'speaker': talk.get('Speaker', 'Unknown'),
-                    'title': talk.get('Title', 'Unknown')
-                })
-    
-    # Generate the report
-    with open(output_file, 'w', encoding='utf-8') as f:
-        f.write("# DETAILED REPORT OF UNKNOWN INSTITUTES\n")
-        f.write("# Generated on: " + datetime.now().strftime("%Y-%m-%d %H:%M:%S") + "\n\n")
-        
-        # Summary statistics
-        total_unknown = sum(len(items) for items in unknown_by_year.values())
-        unique_unknown = len(unknown_institute_counts)
-        f.write(f"Total speakers with unknown country: {total_unknown}\n")
-        f.write(f"Unique institutes without country mapping: {unique_unknown}\n\n")
-        
-        # Write most frequent unknowns
-        f.write("## MOST FREQUENT UNKNOWN INSTITUTES\n")
-        f.write("Format: Count, Institute, Speakers\n\n")
-        
-        for institute, count in sorted(unknown_institute_counts.items(), key=lambda x: x[1], reverse=True):
-            speakers = set(item['speaker'] for item in unknown_speaker_details[institute])
-            speakers_str = ", ".join(speakers)
-            f.write(f"{count}, {institute}, [{speakers_str}]\n")
-        
-        f.write("\n\n## SUGGESTED MAPPINGS\n")
-        f.write("Format: Institute,Country\n\n")
-        
-        # Attempt to suggest mappings for common patterns
-        country_patterns = {
-            'USA': ['University of', 'State University', 'College', 'Laboratory', 'National Lab', 'MIT'],
-            'Germany': ['Universität', 'University of', 'Institut für', 'GSI', 'Heidelberg', 'München', 'Berlin', 'Darmstadt'],
-            'France': ['Université', 'Institut', 'École', 'CNRS', 'CEA', 'Saclay', 'Nantes', 'Strasbourg'],
-            'UK': ['University of', 'College London', 'Cambridge', 'Oxford', 'Birmingham', 'Manchester'],
-            'Japan': ['University of Tokyo', 'Kyoto', 'Osaka', 'Tsukuba', 'RIKEN'],
-            'China': ['Tsinghua', 'Peking', 'Fudan', 'USTC', 'CAS', 'Beijing', 'Shanghai'],
-            'Italy': ['Università', 'INFN', 'Politecnico', 'Padova', 'Bologna', 'Torino', 'Roma', 'Milano'],
-            'India': ['Institute of', 'University', 'IIT', 'Bhubaneswar', 'Kolkata', 'Mumbai', 'Delhi'],
-            'Russia': ['Moscow', 'Petersburg', 'JINR', 'Kurchatov', 'Novosibirsk', 'Lebedev']
-        }
-        
-        for institute in sorted(unknown_institute_counts.keys()):
-            # Try to suggest a country based on patterns
-            suggested_country = None
-            confidence = 0
-            
-            for country, patterns in country_patterns.items():
-                for pattern in patterns:
-                    if pattern.lower() in institute.lower():
-                        # Calculate a simple confidence score based on pattern length
-                        pattern_confidence = len(pattern) / len(institute)
-                        if pattern_confidence > confidence:
-                            suggested_country = country
-                            confidence = pattern_confidence
-            
-            # Write the suggestion if confidence is above threshold
-            if suggested_country and confidence > 0.2:
-                f.write(f"{institute},{suggested_country}  # Confidence: {confidence:.2f}\n")
-            else:
-                f.write(f"{institute},\n")
-        
-        f.write("\n\n## DETAILS BY CONFERENCE YEAR\n\n")
-        
-        # Write details by year
-        for year, items in sorted(unknown_by_year.items()):
-            if items:
-                f.write(f"### Year: {year} ({len(items)} unknown institutes)\n\n")
-                for item in items:
-                    f.write(f"- {item['session_type']}: {item['speaker']} ({item['institute']})\n")
-                    f.write(f"  Title: {item['title']}\n\n")
-        
-    print(f"Detailed unknown institutes report saved to {output_file}")
-    
-    # Also save a simplified CSV mapping file for easy editing
-    csv_file = 'unknown_institute_mappings.csv'
-    with open(csv_file, 'w', encoding='utf-8') as f:
-        f.write("Institute,Country\n")
-        for institute in sorted(unknown_institute_counts.keys()):
-            # Try to suggest a country based on patterns
-            suggested_country = None
-            confidence = 0
-            
-            for country, patterns in country_patterns.items():
-                for pattern in patterns:
-                    if pattern.lower() in institute.lower():
-                        pattern_confidence = len(pattern) / len(institute)
-                        if pattern_confidence > confidence:
-                            suggested_country = country
-                            confidence = pattern_confidence
-            
-            if suggested_country and confidence > 0.3:
-                f.write(f"{institute},{suggested_country}\n")
-            else:
-                f.write(f"{institute},\n")
-    
-    print(f"CSV mapping template saved to {csv_file}")
 
 def extract_affiliation_info(talk_data):
     """
     Extract institute and country information more effectively from talk data.
     Handles various formatting patterns and edge cases.
+    Uses global PARTICIPANT_AFFILIATIONS and INSTITUTE_COUNTRY_MAPPINGS if available.
     
     Parameters:
     - talk_data: Dictionary containing talk information
@@ -2822,6 +2541,8 @@ def extract_affiliation_info(talk_data):
     Returns:
     - Tuple of (institute, country)
     """
+    global PARTICIPANT_AFFILIATIONS, INSTITUTE_COUNTRY_MAPPINGS
+    
     institute = talk_data.get('Institute', '').strip()
     country = talk_data.get('Country', '').strip()
     speaker = talk_data.get('Speaker', '').strip()
@@ -2830,474 +2551,53 @@ def extract_affiliation_info(talk_data):
     if institute and institute.lower() != 'unknown' and country and country.lower() != 'unknown':
         return institute, country
     
-    # Pattern 1: "Speaker Name (Institution)"
-    institution_in_speaker = re.search(r'\(([^()]*)\)$', speaker)
-    if institution_in_speaker:
-        potential_inst = institution_in_speaker.group(1).strip()
-        # Don't use it if it's just a country code
-        if not re.match(r'^[A-Z]{2}$', potential_inst) and len(potential_inst) > 2:
-            institute = potential_inst if not institute or institute.lower() == 'unknown' else institute
+    # First try to match with participant data if available
+    if 'PARTICIPANT_AFFILIATIONS' in globals() and PARTICIPANT_AFFILIATIONS and speaker:
+        # Try exact match first
+        if speaker in PARTICIPANT_AFFILIATIONS:
+            affiliation = PARTICIPANT_AFFILIATIONS[speaker]
+            
+            # Update institute if needed
+            if (not institute or institute.lower() == 'unknown') and affiliation['Institute'] != 'Unknown':
+                institute = affiliation['Institute']
+            
+            # Update country if needed
+            if (not country or country.lower() == 'unknown') and affiliation['Country'] != 'Unknown':
+                country = affiliation['Country']
+        else:
+            # Try fuzzy matching
+            speaker_lower = speaker.lower()
+            for name, affiliation in PARTICIPANT_AFFILIATIONS.items():
+                name_lower = name.lower()
+                
+                # Check if either name contains the other
+                if speaker_lower in name_lower or name_lower in speaker_lower:
+                    # Update institute if needed
+                    if (not institute or institute.lower() == 'unknown') and affiliation['Institute'] != 'Unknown':
+                        institute = affiliation['Institute']
+                    
+                    # Update country if needed
+                    if (not country or country.lower() == 'unknown') and affiliation['Country'] != 'Unknown':
+                        country = affiliation['Country']
+                    
+                    break
     
-    # Pattern 2: "Institution (XX)" - extract country from code in parentheses
-    country_code_match = re.search(r'\(([A-Z]{2})\)$', institute)
-    if country_code_match and (not country or country.lower() == 'unknown'):
-        code = country_code_match.group(1)
-        country_map = {
-            'US': 'USA', 'UK': 'United Kingdom', 'DE': 'Germany', 'FR': 'France',
-            'IT': 'Italy', 'JP': 'Japan', 'CN': 'China', 'KR': 'Korea',
-            'CH': 'Switzerland', 'IN': 'India', 'BR': 'Brazil', 'CA': 'Canada',
-            'AU': 'Australia', 'NL': 'Netherlands', 'ES': 'Spain', 'SE': 'Sweden',
-            'DK': 'Denmark', 'NO': 'Norway', 'FI': 'Finland', 'PL': 'Poland',
-            'CZ': 'Czech Republic', 'AT': 'Austria', 'BE': 'Belgium', 'PT': 'Portugal',
-            # Add more country codes as needed
-        }
-        country = country_map.get(code, code)
-        
-        # Clean up the institute name by removing the country code if needed
-        institute = re.sub(r'\s*\([A-Z]{2}\)$', '', institute).strip()
+    # Check if we have a country mapping for this institute
+    if institute and (not country or country.lower() == 'unknown') and INSTITUTE_COUNTRY_MAPPINGS:
+        # Try exact match
+        if institute in INSTITUTE_COUNTRY_MAPPINGS:
+            country = INSTITUTE_COUNTRY_MAPPINGS[institute]
+        else:
+            # Try case-insensitive match
+            institute_lower = institute.lower()
+            for known_inst, known_country in INSTITUTE_COUNTRY_MAPPINGS.items():
+                if known_inst.lower() == institute_lower:
+                    country = known_country
+                    break
     
-    # Pattern 3: Check for common affiliations in the title
-    title = talk_data.get('Title', '').strip()
-    experiment_affiliations = {
-        'ALICE': {'institute': 'CERN', 'country': 'Switzerland'},
-        'ATLAS': {'institute': 'CERN', 'country': 'Switzerland'},
-        'CMS': {'institute': 'CERN', 'country': 'Switzerland'},
-        'LHCb': {'institute': 'CERN', 'country': 'Switzerland'},
-        'PHENIX': {'institute': 'Brookhaven National Laboratory', 'country': 'USA'},
-        'STAR': {'institute': 'Brookhaven National Laboratory', 'country': 'USA'},
-    }
-    
-    # Check if title mentions an experiment
-    if (not institute or institute.lower() == 'unknown') and title:
-        for exp, aff in experiment_affiliations.items():
-            if f"Experiment overview: {exp}" in title or f"{exp} experiment" in title:
-                institute = aff['institute'] if not institute or institute.lower() == 'unknown' else institute
-                country = aff['country'] if not country or country.lower() == 'unknown' else country
-                break
-    
-    # Pattern 4: Handle special cases for international organizations
-    if institute in ['CERN', 'JINR', 'ESA', 'ITER'] and (not country or country.lower() == 'unknown'):
-        special_locations = {
-            'CERN': 'Switzerland', 'JINR': 'Russia', 'ESA': 'France', 'ITER': 'France'
-        }
-        country = special_locations.get(institute, country)
-    
-    # Pattern 5: Try to extract from format "LastName, FirstName (Institute (Country))"
-    nested_parens = re.search(r'\((.*?)\s*\(([^()]+)\)\s*\)', speaker)
-    if nested_parens:
-        potential_inst = nested_parens.group(1).strip()
-        potential_country = nested_parens.group(2).strip()
-        
-        if not institute or institute.lower() == 'unknown':
-            institute = potential_inst
-        
-        if not country or country.lower() == 'unknown':
-            # Check if it's a country name or code
-            if potential_country in ["USA", "France", "Germany", "UK", "Japan", "China", "Italy"]:
-                country = potential_country
-            elif re.match(r'^[A-Z]{2}$', potential_country):
-                country_map = {
-                    'US': 'USA', 'UK': 'United Kingdom', 'DE': 'Germany', 'FR': 'France',
-                    # (same map as above)
-                }
-                country = country_map.get(potential_country, potential_country)
-    
-    return institute, country
+    # Rest of the function remains the same...
 
-def load_participant_affiliations(registration_files=None, conference_indico_ids=None):
-    """
-    Load participant/registration data to extract speaker affiliations.
-    
-    Parameters:
-    - registration_files: List of registration data files (CSV/JSON/Excel) or None for default filenames
-    - conference_indico_ids: Dictionary mapping years to Indico event IDs to extract participant data (optional)
-    
-    Returns:
-    - Dictionary mapping speaker names to their affiliations
-    """
-    if registration_files is None:
-        # Default files to look for
-        registration_files = [
-            'data/registrations.csv',
-            'data/participants.csv',
-            'data/registrations.xlsx',
-            'data/participants.xlsx',
-            'data/registrations.json',
-            'data/participants.json'
-        ]
-    
-    participant_affiliations = {}
-    loaded_count = 0
-    
-    print("\nAttempting to load participant/registration data...")
-    
-    # First, try to extract from Indico API if IDs are provided
-    if conference_indico_ids and isinstance(conference_indico_ids, dict):
-        for year, indico_id in conference_indico_ids.items():
-            year_file = f'data/participants_{year}.csv'
-            year_participants = extract_participants_from_contributions(indico_id, year, year_file)
-            
-            # Add to the combined dictionary
-            participant_affiliations.update(year_participants)
-            loaded_count += len(year_participants)
-    
-    # If no participants were loaded from API, try the files
-    if loaded_count == 0:
-        # Try to load each potential registration file
-        for file_path in registration_files:
-            try:
-                file_ext = os.path.splitext(file_path)[1].lower()
-                
-                if file_ext == '.csv':
-                    # Load CSV file
-                    with open(file_path, 'r', encoding='utf-8') as f:
-                        reader = csv.DictReader(f)
-                        for row in reader:
-                            # Try different possible column names
-                            name = (row.get('Name') or row.get('Participant') or 
-                                   row.get('Full Name') or row.get('Attendee'))
-                            institute = (row.get('Institute') or row.get('Institution') or 
-                                        row.get('Affiliation') or row.get('Organization'))
-                            country = (row.get('Country') or row.get('Nation') or 
-                                      row.get('Country/Region'))
-                            
-                            if name and (institute or country):
-                                # Normalize name format (LastName, FirstName)
-                                if ',' not in name and ' ' in name:
-                                    parts = name.strip().split()
-                                    if len(parts) > 1:
-                                        name = f"{parts[-1]}, {' '.join(parts[:-1])}"
-                                
-                                participant_affiliations[name.strip()] = {
-                                    'Institute': institute.strip() if institute else '',
-                                    'Country': country.strip() if country else ''
-                                }
-                                loaded_count += 1
-                
-                elif file_ext == '.xlsx':
-                    # Load Excel file (requires pandas)
-                    try:
-                        import pandas as pd
-                        df = pd.read_excel(file_path)
-                        
-                        # Try different possible column names
-                        name_col = next((col for col in df.columns if col.lower() in 
-                                        ['name', 'participant', 'full name', 'attendee']), None)
-                        inst_col = next((col for col in df.columns if col.lower() in 
-                                        ['institute', 'institution', 'affiliation', 'organization']), None)
-                        country_col = next((col for col in df.columns if col.lower() in 
-                                           ['country', 'nation', 'country/region']), None)
-                        
-                        if name_col:
-                            for _, row in df.iterrows():
-                                name = str(row[name_col])
-                                institute = str(row[inst_col]) if inst_col and not pd.isna(row[inst_col]) else ''
-                                country = str(row[country_col]) if country_col and not pd.isna(row[country_col]) else ''
-                                
-                                if name and name != 'nan' and (institute or country):
-                                    # Normalize name format
-                                    if ',' not in name and ' ' in name:
-                                        parts = name.strip().split()
-                                        if len(parts) > 1:
-                                            name = f"{parts[-1]}, {' '.join(parts[:-1])}"
-                                
-                                    participant_affiliations[name.strip()] = {
-                                        'Institute': institute.strip() if institute else '',
-                                        'Country': country.strip() if country else ''
-                                    }
-                                    loaded_count += 1
-                    
-                    except ImportError:
-                        print(f"Warning: pandas is required to read Excel files. Skipping {file_path}")
-                
-                elif file_ext == '.json':
-                    # Load JSON file
-                    with open(file_path, 'r', encoding='utf-8') as f:
-                        data = json.load(f)
-                        
-                        # Handle different possible JSON structures
-                        if isinstance(data, list):
-                            for item in data:
-                                if isinstance(item, dict):
-                                    name = (item.get('Name') or item.get('Participant') or 
-                                           item.get('FullName') or item.get('Attendee'))
-                                    institute = (item.get('Institute') or item.get('Institution') or 
-                                                item.get('Affiliation') or item.get('Organization'))
-                                    country = (item.get('Country') or item.get('Nation') or 
-                                              item.get('CountryRegion'))
-                                    
-                                    if name and (institute or country):
-                                        # Normalize name format
-                                        if ',' not in name and ' ' in name:
-                                            parts = name.strip().split()
-                                            if len(parts) > 1:
-                                                name = f"{parts[-1]}, {' '.join(parts[:-1])}"
-                                        
-                                        participant_affiliations[name.strip()] = {
-                                            'Institute': institute.strip() if institute else '',
-                                            'Country': country.strip() if country else ''
-                                        }
-                                        loaded_count += 1
-                
-                print(f"Loaded {loaded_count} participant affiliations from {file_path}")
-                break  # Stop after successfully loading a file
-                
-            except Exception as e:
-                # Just try the next file if one fails
-                print(f"Could not load registrations from {file_path}: {str(e)}")
-    
-    # If we tried everything and found nothing, suggest creating a file
-    if loaded_count == 0:
-        print("\nNo registration/participant data found. You can:")
-        print("1. Provide Indico IDs for conferences to extract participant data")
-        print("2. Create a CSV file manually with this format:")
-        print("   Name,Institute,Country")
-        print("   LastName, FirstName,University of Example,Country")
-        print("   Save as 'data/participants.csv'")
 
-    # Create alternative name formats for better matching
-    alt_names = {}
-    for name, info in participant_affiliations.items():
-        # Add variations for better matching
-        
-        # Create FirstName LastName format if we have LastName, FirstName
-        if ',' in name:
-            last_name, first_name = name.split(',', 1)
-            alternative_format = f"{first_name.strip()} {last_name.strip()}"
-            alt_names[alternative_format] = info
-        
-        # Create initial-based variations
-        if ' ' in name:
-            words = name.replace(',', '').split()
-            if len(words) > 1:
-                # First initial + last name
-                first_initial = words[0][0] if words[0] else ''
-                last_name = words[-1]
-                alt_names[f"{first_initial}. {last_name}"] = info
-                alt_names[f"{first_initial}.{last_name}"] = info
-    
-    # Add the alternative names to the main dictionary
-    participant_affiliations.update(alt_names)
-    
-    print(f"Total unique participants (including name variations): {len(participant_affiliations)}")
-    return participant_affiliations
-
-def check_missing_speaker_affiliations(all_conference_data, output_file='missing_affiliations_report.txt', indico_ids_file='listofQMindigo'):
-    """
-    Identifies and reports speakers who are missing both institute and country information.
-    
-    Parameters:
-    - all_conference_data: Dictionary with conference data
-    - output_file: File to save the report
-    - indico_ids_file: Path to file containing Indico IDs (default: listofQMindigo)
-    """
-    print("\nChecking for speakers missing both institute and country information...")
-    
-    # Load Indico IDs from file
-    indico_ids = load_indico_ids_from_file(indico_ids_file)
-    
-    # First, try to load affiliation data from registration/participant lists
-    participant_affiliations = load_participant_affiliations(conference_indico_ids=indico_ids)
-    
-    reg_matches_count = 0
-    
-    # Then, enhance the data by extracting affiliations more effectively
-    print("Applying enhanced affiliation extraction...")
-    extracted_count = 0
-    
-    for year, data in all_conference_data.items():
-        # Process plenary talks
-        for talk in data.get('plenary_talks', []):
-            original_institute = talk.get('Institute', '')
-            original_country = talk.get('Country', '')
-            speaker = talk.get('Speaker', '').strip()
-            
-            # First try to match with registration data
-            if speaker and (not original_institute or original_institute.lower() == 'unknown' or 
-                           not original_country or original_country.lower() == 'unknown'):
-                if speaker in participant_affiliations:
-                    affiliation = participant_affiliations[speaker]
-                    
-                    if (not original_institute or original_institute.lower() == 'unknown') and affiliation.get('Institute'):
-                        talk['Institute'] = affiliation['Institute']
-                        reg_matches_count += 1
-                    
-                    if (not original_country or original_country.lower() == 'unknown') and affiliation.get('Country'):
-                        talk['Country'] = affiliation['Country']
-                        reg_matches_count += 1
-            
-            # Then apply enhanced extraction
-            extracted_institute, extracted_country = extract_affiliation_info(talk)
-            
-            # Update the data if we've found better information
-            if extracted_institute and (not talk.get('Institute') or talk.get('Institute', '').lower() == 'unknown'):
-                talk['Institute'] = extracted_institute
-                extracted_count += 1
-            
-            if extracted_country and (not talk.get('Country') or talk.get('Country', '').lower() == 'unknown'):
-                talk['Country'] = extracted_country
-                extracted_count += 1
-        
-        # Process parallel talks (same logic)
-        for talk in data.get('parallel_talks', []):
-            original_institute = talk.get('Institute', '')
-            original_country = talk.get('Country', '')
-            speaker = talk.get('Speaker', '').strip()
-            
-            # First try to match with registration data
-            if speaker and (not original_institute or original_institute.lower() == 'unknown' or 
-                           not original_country or original_country.lower() == 'unknown'):
-                if speaker in participant_affiliations:
-                    affiliation = participant_affiliations[speaker]
-                    
-                    if (not original_institute or original_institute.lower() == 'unknown') and affiliation.get('Institute'):
-                        talk['Institute'] = affiliation['Institute']
-                        reg_matches_count += 1
-                    
-                    if (not original_country or original_country.lower() == 'unknown') and affiliation.get('Country'):
-                        talk['Country'] = affiliation['Country']
-                        reg_matches_count += 1
-            
-            # Then apply enhanced extraction
-            extracted_institute, extracted_country = extract_affiliation_info(talk)
-            
-            # Update the data if we've found better information
-            if extracted_institute and (not talk.get('Institute') or talk.get('Institute', '').lower() == 'unknown'):
-                talk['Institute'] = extracted_institute
-                extracted_count += 1
-            
-            if extracted_country and (not talk.get('Country') or talk.get('Country', '').lower() == 'unknown'):
-                talk['Country'] = extracted_country
-                extracted_count += 1
-    
-    print(f"Registration data provided {reg_matches_count} missing institute/country values")
-    print(f"Enhanced extraction found {extracted_count} additional missing institute/country values")
-    
-    # Now perform the regular check for remaining missing affiliations
-    missing_by_year = {}
-    missing_speaker_list = []
-    speaker_talk_count = {}
-    
-    total_talks = 0
-    missing_affiliations_count = 0
-    
-    # Extract speakers with missing information
-    for year, data in sorted(all_conference_data.items()):
-        missing_by_year[year] = []
-        
-        # Process plenary talks
-        for talk in data.get('plenary_talks', []):
-            total_talks += 1
-            institute = talk.get('Institute', '').strip()
-            country = talk.get('Country', '').strip()
-            speaker = talk.get('Speaker', '').strip()
-            
-            if speaker and (not institute or institute.lower() == 'unknown') and (not country or country.lower() == 'unknown'):
-                missing_affiliations_count += 1
-                
-                # Record the missing affiliation with context
-                talk_info = {
-                    'year': year,
-                    'session_type': 'Plenary',
-                    'speaker': speaker,
-                    'title': talk.get('Title', 'Unknown'),
-                    'track': talk.get('Track', 'Unknown')
-                }
-                
-                missing_by_year[year].append(talk_info)
-                missing_speaker_list.append(talk_info)
-                
-                # Count talks per speaker
-                speaker_talk_count[speaker] = speaker_talk_count.get(speaker, 0) + 1
-        
-        # Process parallel talks
-        for talk in data.get('parallel_talks', []):
-            total_talks += 1
-            institute = talk.get('Institute', '').strip()
-            country = talk.get('Country', '').strip()
-            speaker = talk.get('Speaker', '').strip()
-            
-            if speaker and (not institute or institute.lower() == 'unknown') and (not country or country.lower() == 'unknown'):
-                missing_affiliations_count += 1
-                
-                # Record the missing affiliation with context
-                talk_info = {
-                    'year': year,
-                    'session_type': 'Parallel',
-                    'speaker': speaker,
-                    'title': talk.get('Title', 'Unknown'),
-                    'track': talk.get('Track', 'Unknown')
-                }
-                
-                missing_by_year[year].append(talk_info)
-                missing_speaker_list.append(talk_info)
-                
-                # Count talks per speaker
-                speaker_talk_count[speaker] = speaker_talk_count.get(speaker, 0) + 1
-    
-    # Generate the report
-    with open(output_file, 'w', encoding='utf-8') as f:
-        f.write("# SPEAKERS WITH MISSING AFFILIATIONS (NO INSTITUTE AND NO COUNTRY)\n")
-        f.write("# Generated on: " + datetime.now().strftime("%Y-%m-%d %H:%M:%S") + "\n\n")
-        
-        # Summary statistics
-        f.write(f"Total talks analyzed: {total_talks}\n")
-        f.write(f"Registration data provided {reg_matches_count} missing institute/country values\n")
-        f.write(f"Enhanced extraction found {extracted_count} missing institute/country values\n")
-        f.write(f"Talks with speakers still missing both institute and country: {missing_affiliations_count} ({missing_affiliations_count/total_talks*100:.2f}%)\n")
-        f.write(f"Unique speakers missing affiliations: {len(speaker_talk_count)}\n\n")
-        
-        # Write most frequent speakers with missing affiliations
-        f.write("## SPEAKERS WITH MULTIPLE TALKS MISSING AFFILIATIONS\n")
-        f.write("These speakers should be prioritized for data cleanup as they appear multiple times:\n\n")
-        
-        for speaker, count in sorted(speaker_talk_count.items(), key=lambda x: x[1], reverse=True):
-            if count > 1:
-                f.write(f"{speaker}: {count} talks\n")
-        
-        f.write("\n\n## DETAILS BY CONFERENCE YEAR\n\n")
-        
-        # Write details by year
-        for year, items in sorted(missing_by_year.items()):
-            if items:
-                f.write(f"### Year: {year} ({len(items)} speakers with missing affiliations)\n\n")
-                for item in items:
-                    f.write(f"- {item['session_type']}: {item['speaker']}\n")
-                    f.write(f"  Title: {item['title']}\n")
-                    if 'track' in item and item['track'] and item['track'] != 'Unknown':
-                        f.write(f"  Track: {item['track']}\n")
-                    f.write("\n")
-        
-        # Provide guidance on resolving missing information
-        f.write("\n## HOW TO RESOLVE MISSING AFFILIATIONS\n\n")
-        f.write("1. Check the conference website or program for speaker information\n")
-        f.write("2. Search for the speaker online using the talk title as context\n")
-        f.write("3. Look for other talks by the same speaker in different years\n")
-        f.write("4. Consider reaching out to conference organizers for historical records\n\n")
-        
-        # Create a template for filling in the missing data
-        f.write("## TEMPLATE FOR COMPLETING MISSING DATA\n")
-        f.write("Copy, fill in, and use to update your database:\n\n")
-        
-        f.write("```\n")
-        for speaker in sorted(speaker_talk_count.keys()):
-            f.write(f"{speaker},Institute,Country\n")
-        f.write("```\n")
-    
-    print(f"Missing affiliations report saved to {output_file}")
-    
-    # Also create a CSV file for easier data entry
-    csv_file = 'missing_speaker_affiliations.csv'
-    with open(csv_file, 'w', encoding='utf-8') as f:
-        f.write("Speaker,Institute,Country,Year,Session_Type,Title\n")
-        for item in sorted(missing_speaker_list, key=lambda x: x['speaker']):
-            speaker = item['speaker'].replace('"', '""')  # Escape quotes for CSV
-            title = item['title'].replace('"', '""')
-            f.write(f'"{speaker}",,,"{ item["year"]}","{item["session_type"]}","{title}"\n')
-    
-    print(f"CSV template for missing affiliations saved to {csv_file}")
-    
-    return missing_affiliations_count > 0
 
 def load_indico_ids_from_file(filename='listofQMindigo'):
     """
@@ -3441,158 +2741,384 @@ def extract_participants_from_contributions(indico_id, year, output_file='data/p
         print(f"Unexpected error: {str(e)}")
         return {}
 
-def fetch_and_analyze_conferences():
-    print("=== FETCHING AND PROCESSING CONFERENCES ===")
-    try:
-        with open('listofQMindigo', 'r') as f:
-            conferences = [line.strip().split()[:2] for line in f if not line.strip().startswith('#')]
+def load_participant_data():
+    """
+    Load participant data from CSV files
+    """
+    participant_data = {}
+    data_dir = "data"
+    
+    # Check if directory exists
+    if not os.path.exists(data_dir):
+        print(f"Warning: Directory {data_dir} not found. No participant data will be loaded.")
+        return participant_data
+    
+    # Look for CSV files
+    csv_files = [f for f in os.listdir(data_dir) if f.startswith('participants_') and f.endswith('.csv')]
+    
+    if not csv_files:
+        print("No participant CSV files found in data directory.")
+        return participant_data
+    
+    print(f"Found {len(csv_files)} CSV participant data files")
+    
+    # Process each CSV file
+    import csv
+    for csv_file in csv_files:
+        # Extract year from filename (participants_YYYY.csv)
+        match = re.search(r'participants_(\d{4})\.csv', csv_file)
+        if match:
+            year = match.group(1)
+            file_path = os.path.join(data_dir, csv_file)
             
-        conference_data = {}
-        processed_conferences = []
+            try:
+                # Read CSV file
+                participants = []
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    csv_reader = csv.reader(f)
+                    for row in csv_reader:
+                        if len(row) >= 3:  # Name, Affiliation, Country, Year
+                            participant = {
+                                'name': row[0].strip('"'),
+                                'affiliation': row[1].strip('"'),
+                                'country': row[2].strip('"') if row[2].strip() else "Unknown"
+                            }
+                            participants.append(participant)
+                
+                participant_data[year] = participants
+                print(f"  Loaded {len(participants)} participants for QM{year} from CSV")
+            except Exception as e:
+                print(f"  Error loading {csv_file}: {e}")
+    
+    return participant_data
+
+def fix_unknown_institutes_from_participants(conference_data, participant_data):
+    """
+    Fix unknown institutes and countries for speakers using participant data.
+    First map institutes, then handle countries separately.
+    
+    Parameters:
+    - conference_data: Dictionary with conference data
+    - participant_data: Dictionary mapping years to lists of participants
+    
+    Returns:
+    - Tuple of (institute_fixes, country_fixes)
+    """
+    print("\nFixing unknown institutes and countries using participant data...")
+    
+    institute_fixes = 0
+    country_fixes = 0
+    
+    for year, data in conference_data.items():
+        if year not in participant_data:
+            continue
+            
+        # Create a lookup dictionary for faster matching
+        participant_lookup = {}
+        for participant in participant_data[year]:
+            name = participant.get('name', '').lower()
+            if name:
+                participant_lookup[name] = participant
+        
+        # Process all talk types
+        for talk_type in ['plenary_talks', 'parallel_talks', 'poster_talks', 'flash_talks']:
+            if talk_type not in data:
+                continue
+                
+            for talk in data[talk_type]:
+                speaker = talk.get('Speaker', '').lower()
+                if not speaker:
+                    continue
+                
+                # First pass: Fix institutes
+                institute_unknown = not talk.get('Institute') or talk.get('Institute').lower() == 'unknown'
+                if institute_unknown:
+                    # Try exact match first
+                    if speaker in participant_lookup:
+                        participant = participant_lookup[speaker]
+                        if participant.get('affiliation'):
+                            talk['Institute'] = participant['affiliation']
+                            institute_fixes += 1
+                    else:
+                        # Try fuzzy matching for institute
+                        for p_name, participant in participant_lookup.items():
+                            if (speaker in p_name or p_name in speaker) and participant.get('affiliation'):
+                                talk['Institute'] = participant['affiliation']
+                                institute_fixes += 1
+                                break
+                
+                # Second pass: Fix countries
+                country_unknown = not talk.get('Country') or talk.get('Country').lower() == 'unknown'
+                if country_unknown:
+                    # Try exact match first
+                    if speaker in participant_lookup:
+                        participant = participant_lookup[speaker]
+                        if participant.get('country'):
+                            talk['Country'] = participant['country']
+                            country_fixes += 1
+                    else:
+                        # Try fuzzy matching for country
+                        for p_name, participant in participant_lookup.items():
+                            if (speaker in p_name or p_name in speaker) and participant.get('country'):
+                                talk['Country'] = participant['country']
+                                country_fixes += 1
+                                break
+    
+    print(f"Applied {institute_fixes} institute fixes and {country_fixes} country fixes using participant data")
+    return (institute_fixes, country_fixes)
+
+def fetch_and_analyze_conferences():
+    """
+    Main function to fetch and analyze conference data.
+    """
+    try:
+        # Load Indico IDs from file
+        indico_ids = load_indico_ids_from_file('listofQMindigo')
+        
+        # Process each conference
+        conferences = []
+        for year, indico_id in indico_ids.items():
+            conferences.append((year, indico_id))
+        
+        # Sort conferences by year
+        conferences.sort(key=lambda x: x[0])
+        
+        # Process each conference
+        conference_data = {}  # Initialize as an empty dictionary
         
         for year, indico_id in conferences:
-            print(f"\nProcessing QM{year} (ID: {indico_id})")
-            processed_file = f'data/QM{year}_processed_data.json'
+            print(f"\nProcessing QM{year} (Indico ID: {indico_id})...")
+            
+            # Check if we already have processed data
+            processed_file = f"data/processed/qm{year}_processed.json"
             
             try:
                 with open(processed_file, 'r', encoding='utf-8') as f:
                     data = json.load(f)
+                    print(f"  Loaded processed data from {processed_file}")
+                    
                     conference_data[year] = {
                         'all_talks': data['all_talks'],
                         'plenary_talks': data['plenary_talks'],
                         'parallel_talks': data['parallel_talks'],
                         'poster_talks': data['poster_talks'],
-                        'flash_talks': data['flash_talks'],
-                        'metadata': data['metadata']
+                        'flash_talks': data.get('flash_talks', []),
+                        'metadata': data.get('metadata', {})
                     }
             except (FileNotFoundError, json.JSONDecodeError) as e:
                 print(f"  Could not load processed data: {e}")
                 continue
         
-        # Print final summary table
-        print("\nYear Location Total Plenary Parallel Poster Flash")
-        print("-" * 65)
+        # ====== PRE-PROCESSING PHASE ======
+        print("\n===== BEGINNING PRE-PROCESSING PHASE =====")
         
-        # Sort conferences by year
-        conferences.sort(key=lambda x: x[0])
+        # Load participant data first (before ANY analysis)
+        print("\nLoading participant data...")
+        participant_data = load_participant_data()
         
-        for year, _ in conferences:
-            if year in conference_data:
-                data = conference_data[year]
-                location = CONFERENCE_LOCATIONS.get(year, 'Unknown location')
-                total = len(data['all_talks'])
-                plenary = len(data['plenary_talks'])
-                parallel = len(data['parallel_talks'])
-                poster = len(data['poster_talks'])
-                flash = len(data['flash_talks'])
-                print(f"{year} {location} {total} {plenary} {parallel} {poster} {flash}")
+        # Store participant data as PARTICIPANT_AFFILIATIONS (global)
+        global PARTICIPANT_AFFILIATIONS
+        PARTICIPANT_AFFILIATIONS = {}
         
-        print("\nUnknown Institutes Analysis:")
-        print("-" * 65)
-        for year, _ in conferences:
-            if year in conference_data:
-                print(f"\nQM{year}:")
-                # Get unknown institutes for plenary talks
-                unknown_plenary = [talk['Institute'] for talk in conference_data[year]['plenary_talks'] 
-                                 if talk['Country'] == 'Unknown']
-                if unknown_plenary:
-                    print(f"  Plenary unknown institutes ({len(unknown_plenary)}):")
-                    for inst in sorted(set(unknown_plenary))[:5]:
-                        print(f"    - {inst}")
-                    if len(unknown_plenary) > 5:
-                        print(f"    ... and {len(set(unknown_plenary)) - 5} more")
-                
-                # Get unknown institutes for parallel talks
-                unknown_parallel = [talk['Institute'] for talk in conference_data[year]['parallel_talks'] 
-                                 if talk['Country'] == 'Unknown']
-                if unknown_parallel:
-                    print(f"  Parallel unknown institutes ({len(unknown_parallel)}):")
-                    for inst in sorted(set(unknown_parallel))[:5]:
-                        print(f"    - {inst}")
-                    if len(unknown_parallel) > 5:
-                        print(f"    ... and {len(set(unknown_parallel)) - 5} more")
-                
-    except FileNotFoundError:
-        print("Error: 'listofQMindigo' file not found")
-        exit(1)
+        # Flatten participant data into a usable format
+        if participant_data:
+            for year, participants in participant_data.items():
+                for participant in participants:
+                    name = participant.get('name', '')
+                    if name:
+                        PARTICIPANT_AFFILIATIONS[name] = {
+                            'Institute': participant.get('affiliation', ''),
+                            'Country': participant.get('country', '')
+                        }
+            print(f"Loaded {len(PARTICIPANT_AFFILIATIONS)} unique participant records")
+        else:
+            print("No participant data available")
+            
+        # Update speaker information from participant data
+        if participant_data:
+            conference_data = update_speaker_info_from_participant_data(conference_data, participant_data)
+        else:
+            print("No participant data available for updating speaker information")
+        
+        # Clean and standardize institute-country mappings
+        print("\nCleaning institute-country mappings...")
+        INSTITUTE_COUNTRY_MAPPINGS = clean_institute_country_mappings('unknown_institute_mappings.csv', 'cleaned_institute_mappings.csv')
+        
+        # Fix inconsistencies in institute and country data
+        print("\nFixing inconsistencies in institute and country data...")
+        conference_data = fix_unknown_institute_country_data(conference_data)
+        
+        # Fix common affiliation problems
+        print("\nFixing common affiliation problems...")
+        fix_common_affiliation_problems(conference_data)
+        
+        # Filter to only include plenary, parallel, and poster talks
+        print("\nFiltering to only include plenary, parallel, and poster talks...")
+        conference_data = filter_relevant_talk_types(conference_data)
+        
+        # ====== ANALYSIS PHASE (AFTER ALL DATA PROCESSING) ======
+        print("\n===== BEGINNING ANALYSIS PHASE =====")
+        print("All analyses will be performed on data with updated speaker information.")
+        
+        # Make sure figures directory exists
+        os.makedirs('figures', exist_ok=True)
+        
+        # Generate country statistics
+        print("\nGenerating country statistics...")
+        country_counts = analyze_country_distribution(conference_data)
+        
+        # Generate plenary talk analysis
+        print("\nAnalyzing plenary talks...")
+        plenary_country, parallel_country = analyze_plenary_vs_parallel(conference_data)
+        
+        # Create plots
+        print("\nCreating visualization plots...")
+        create_plenary_country_plot(plenary_country)
+        create_representation_ratio_plot(plenary_country, parallel_country)
+        
+        # Create regional diversity plots
+        create_regional_diversity_plot(country_counts, conference_data)
+        
+        # Convert to dataframes for additional analysis
+        print("\nConverting to dataframes for additional analysis...")
+        dataframes = convert_to_dataframes(conference_data)
+        
+        # Create dataframe visualizations
+        create_dataframe_visualizations(dataframes)
+        
+        # Save the updated data
+        for year in conference_data:
+            output_file = f"data/processed/qm{year}_processed_updated.json"
+            try:
+                with open(output_file, 'w', encoding='utf-8') as f:
+                    json.dump(conference_data[year], f, indent=2)
+                print(f"Updated data saved to {output_file}")
+            except Exception as e:
+                print(f"Error saving updated data for {year}: {e}")
+        
+        print("\nProcessing complete. All data has been updated, filtered, and saved.")
+        print("All statistics only include plenary, parallel, and poster talks.")
+        print("All analyses were performed after updating speaker information from participant data.")
+        
+    except Exception as e:
+        print(f"Error in fetch_and_analyze_conferences: {str(e)}")
+        import traceback
+        traceback.print_exc()
 
-def extract_participant_counts(conference_indico_ids):
+def create_dataframe_visualizations(dataframes):
     """
-    Extract the total number of unique participants for each conference year.
+    Create additional visualizations using pandas DataFrames.
     
     Parameters:
-    - conference_indico_ids: Dictionary mapping years to Indico event IDs
-    
-    Returns:
-    - Dictionary mapping years to participant counts
+    - dataframes: Dictionary of DataFrames for different talk types
     """
-    participant_counts = {}
+    print("\nCreating additional DataFrame-based visualizations...")
     
-    print("\nExtracting participant counts for each conference year...")
+    # Make sure figures directory exists
+    os.makedirs('figures', exist_ok=True)
     
-    for year, indico_id in conference_indico_ids.items():
-        try:
-            url = f"https://indico.cern.ch/export/event/{indico_id}.json?detail=contributions&pretty=yes"
-            response = requests.get(url)
-            response.raise_for_status()
-            
-            data = response.json()
-            results = data.get('results', [])
-            
-            if not results:
-                print(f"No data found for year {year}")
-                continue
-                
-            event_data = results[0]
-            contributions = event_data.get('contributions', [])
-            
-            # Use a set to count unique participants
-            unique_participants = set()
-            
-            for contribution in contributions:
-                # Extract all person types
-                all_persons = []
-                
-                # Speakers
-                speakers = contribution.get('speakers', [])
-                if speakers:
-                    all_persons.extend(speakers)
-                
-                # Person links
-                person_links = contribution.get('person_links', [])
-                if person_links:
-                    all_persons.extend(person_links)
-                
-                # Primary authors
-                primary_authors = contribution.get('primary_authors', [])
-                if primary_authors:
-                    all_persons.extend(primary_authors)
-                
-                # Coauthors
-                coauthors = contribution.get('coauthors', [])
-                if coauthors:
-                    all_persons.extend(coauthors)
-                
-                # Extract unique IDs or names
-                for person in all_persons:
-                    person_id = person.get('id', None)
-                    if person_id:
-                        unique_participants.add(person_id)
-                    else:
-                        # If no ID, use name as fallback
-                        name = (person.get('fullName') or 
-                                f"{person.get('first_name', '')} {person.get('last_name', '')}" or 
-                                person.get('name', '')).strip()
-                        if name:
-                            unique_participants.add(name)
-            
-            participant_counts[year] = len(unique_participants)
-            print(f"Year {year}: {participant_counts[year]} unique participants")
-            
-        except Exception as e:
-            print(f"Error extracting participant count for year {year}: {str(e)}")
+    # Get the all talks DataFrame
+    df_all = dataframes['all']
     
-    return participant_counts
+    # 1. Create a heatmap of countries by year
+    try:
+        print("Creating country heatmap by year...")
+        plt.figure(figsize=(14, 10))
+        
+        # Filter out unknown countries
+        df_filtered = df_all[~df_all['Country'].isin(['', 'Unknown', None])]
+        
+        # Get top 15 countries
+        top_countries = df_filtered['Country'].value_counts().head(15).index.tolist()
+        
+        # Filter for just those countries
+        df_top = df_filtered[df_filtered['Country'].isin(top_countries)]
+        
+        # Create pivot table
+        pivot = pd.pivot_table(
+            df_top, 
+            values='Speaker', 
+            index='Country',
+            columns='Year',
+            aggfunc='count',
+            fill_value=0
+        )
+        
+        # Create heatmap
+        sns.heatmap(pivot, annot=True, fmt='d', cmap='YlGnBu')
+        plt.title('Number of Talks by Country and Year (Top 15 Countries)')
+        plt.tight_layout()
+        plt.savefig('figures/country_year_heatmap.pdf', bbox_inches='tight')
+        print("Country heatmap saved to figures/country_year_heatmap.pdf")
+    except Exception as e:
+        print(f"Error creating country heatmap: {e}")
+    
+    # 2. Create a pie chart of institute types
+    try:
+        print("Creating institute type pie chart...")
+        plt.figure(figsize=(10, 10))
+        
+        # Filter out unknown institutes
+        df_filtered = df_all[~df_all['Institute'].isin(['', 'Unknown', None])]
+        
+        # Define institute types
+        institute_types = {
+            'National Laboratory': ['Brookhaven', 'BNL', 'CERN', 'GSI', 'ORNL', 'LANL', 'LBNL', 'JINR', 
+                                   'RIKEN', 'FNAL', 'Fermilab', 'JLab', 'Jefferson Lab', 'IHEP'],
+            'University': ['University', 'Universit', 'College', 'School', 'Institut'],
+            'Research Center': ['Center', 'Centre', 'Institute of', 'Research']
+        }
+        
+        # Function to determine institute type
+        def get_institute_type(institute):
+            for type_name, keywords in institute_types.items():
+                if any(keyword in institute for keyword in keywords):
+                    return type_name
+            return 'Other'
+        
+        # Add institute type column
+        df_filtered['InstituteType'] = df_filtered['Institute'].apply(get_institute_type)
+        
+        # Count by type
+        type_counts = df_filtered['InstituteType'].value_counts()
+        
+        # Create pie chart
+        plt.pie(type_counts, labels=type_counts.index, autopct='%1.1f%%', 
+                startangle=90, shadow=True)
+        plt.axis('equal')
+        plt.title('Distribution of Talks by Institute Type')
+        plt.tight_layout()
+        plt.savefig('figures/institute_type_pie.pdf', bbox_inches='tight')
+        print("Institute type pie chart saved to figures/institute_type_pie.pdf")
+    except Exception as e:
+        print(f"Error creating institute type pie chart: {e}")
+    
+    # 3. Create a stacked bar chart of talk types by year
+    try:
+        print("Creating talk type stacked bar chart by year...")
+        plt.figure(figsize=(12, 8))
+        
+        # Create pivot table
+        pivot = pd.pivot_table(
+            df_all, 
+            values='Speaker', 
+            index='Year',
+            columns='TalkType',
+            aggfunc='count',
+            fill_value=0
+        )
+        
+        # Create stacked bar chart
+        pivot.plot(kind='bar', stacked=True, figsize=(12, 8))
+        plt.title('Number of Talks by Type and Year')
+        plt.xlabel('Year')
+        plt.ylabel('Number of Talks')
+        plt.legend(title='Talk Type')
+        plt.tight_layout()
+        plt.savefig('figures/talk_type_by_year.pdf', bbox_inches='tight')
+        print("Talk type stacked bar chart saved to figures/talk_type_by_year.pdf")
+    except Exception as e:
+        print(f"Error creating talk type stacked bar chart: {e}")
 
 # Update the visualization function to include participant counts
 def create_summary_statistics_plot(conference_data, filename="figs/QM_talk_statistics.pdf"):
@@ -3601,9 +3127,8 @@ def create_summary_statistics_plot(conference_data, filename="figs/QM_talk_stati
     """
     print("\nCreating summary statistics plot...")
     
-    # Load Indico IDs from file to get participant counts
-    indico_ids = load_indico_ids_from_file('listofQMindigo')
-    participant_counts = extract_participant_counts(indico_ids)
+    # Load participant data
+    participant_data = load_participant_data()
     
     # Set up the plot
     fig = plt.figure(figsize=(14, 10))
@@ -3630,8 +3155,8 @@ def create_summary_statistics_plot(conference_data, filename="figs/QM_talk_stati
             flash_counts.append(FLASH_TALK_COUNTS.get(year_str, 0))
             
             # Add participant count if available, or 0 if not
-            if year_str in participant_counts:
-                participant_data.append(participant_counts[year_str])
+            if year_str in participant_data:
+                participant_data.append(len(participant_data[year_str]))
             else:
                 participant_data.append(0)
     
@@ -3713,12 +3238,12 @@ def fix_common_affiliation_problems(conference_data):
                         if talk.get('Country') == 'Unknown' or talk.get('Country') != correct_country:
                             talk['Country'] = correct_country
                             fixes_applied += 1
-                
+                    
                 # Also directly check for ", Finland" in the institute name
                 if ', Finland' in institute and talk.get('Country') == 'Unknown':
                     talk['Country'] = 'Finland'
                     fixes_applied += 1
-    
+                    
     print(f"Applied {fixes_applied} fixes for common affiliation problems")
     return fixes_applied
 
@@ -4206,8 +3731,80 @@ def create_parallel_country_plot(parallel_country):
     # Get the top countries
     top_countries = enhanced_parallel_country.most_common(15)  # Show top 15 countries
     
-    # Rest of the function remains the same...
-    # ...
+    # Create the plot
+    plt.figure(figsize=(12, 8))
+    y_pos = np.arange(len(top_countries))
+    
+    # Calculate total for percentages
+    total = sum(enhanced_parallel_country.values())
+    
+    # Extract names and counts
+    names = [item[0] for item in top_countries]
+    values = [item[1] for item in top_countries]
+    
+    # Define region-based colors for visual grouping
+    # Define basic color map for regions
+    region_colors = {
+        'North America': '#1f77b4',  # Blue
+        'Europe': '#ff7f0e',         # Orange
+        'Asia': '#2ca02c',           # Green
+        'Other': '#d62728'           # Red
+    }
+    
+    # Map countries to regions
+    country_regions = {
+        'USA': 'North America',
+        'Germany': 'Europe',
+        'France': 'Europe', 
+        'UK': 'Europe',
+        'Italy': 'Europe',
+        'Switzerland': 'Europe',
+        'Netherlands': 'Europe',
+        'Spain': 'Europe',
+        'Poland': 'Europe',
+        'Finland': 'Europe',
+        'Japan': 'Asia',
+        'China': 'Asia',
+        'India': 'Asia',
+        'Korea': 'Asia',
+        'Canada': 'North America',
+        'Brazil': 'Other',
+        'Australia': 'Other',
+        'Russia': 'Europe',
+        'South Africa': 'Other',
+        'Mexico': 'North America'
+    }
+    
+    # Assign colors based on regions
+    colors = [region_colors.get(country_regions.get(country, 'Other'), '#7f7f7f') for country in names]
+    
+    # Create horizontal bars
+    bars = plt.barh(y_pos, values, align='center', color=colors)
+    
+    # Add percentages to the end of each bar
+    for i, (country, count) in enumerate(top_countries):
+        percentage = (count / total) * 100
+        plt.text(count + 0.5, i, f"{percentage:.1f}%", va='center')
+    
+    plt.yticks(y_pos, names)
+    plt.xlabel('Number of Parallel Talks')
+    plt.title('Distribution of Parallel Talks by Country')
+    plt.tight_layout()
+    
+    # Create legend for regions
+    from matplotlib.patches import Patch
+    legend_elements = [Patch(facecolor=color, label=region)
+                      for region, color in region_colors.items()]
+    plt.legend(handles=legend_elements, loc='lower right')
+    
+    # Save the figure
+    plt.savefig('figures/parallel_talks_by_country.pdf', bbox_inches='tight')
+    
+    # Print the top countries
+    print("\nTop Countries by Parallel Talks:")
+    for i, (country, count) in enumerate(top_countries, 1):
+        percentage = (count / total) * 100
+        print(f"{i}. {country}: {count} ({percentage:.1f}%)")
 
 def create_country_trends_plot(years, plenary_data, parallel_data, figures_dir):
     """
@@ -4251,8 +3848,99 @@ def create_country_trends_plot(years, plenary_data, parallel_data, figures_dir):
     emerging_countries = ['Brazil', 'Poland', 'Czech Republic', 'South Africa', 'Finland']
     emerging_in_data = [c for c in emerging_countries if c in all_countries and c not in top_countries]
     
-    # Rest of the function remains the same...
-    # ...
+    # Create the plot
+    plt.figure(figsize=(14, 8))
+    
+    # Define a colormap for the countries
+    colors = plt.cm.tab10(np.linspace(0, 1, len(top_countries) + len(emerging_in_data)))
+    
+    # Plot trends for top countries
+    for i, country in enumerate(top_countries):
+        country_data = [plenary_data.get(year, {}).get(country, 0) + parallel_data.get(year, {}).get(country, 0)
+                       for year in years]
+        plt.plot(years, country_data, 'o-', label=country, color=colors[i], linewidth=2)
+    
+    # Plot trends for emerging countries
+    for i, country in enumerate(emerging_in_data):
+        country_data = [plenary_data.get(year, {}).get(country, 0) + parallel_data.get(year, {}).get(country, 0)
+                       for year in years]
+        plt.plot(years, country_data, 'o-', label=country, color=colors[len(top_countries) + i], linewidth=2)
+    
+    plt.title('Country Representation Trends Over Time')
+    plt.xlabel('Conference Year')
+    plt.ylabel('Number of Contributions')
+    plt.grid(True, alpha=0.3)
+    plt.legend(title='Country', bbox_to_anchor=(1.05, 1), loc='upper left')
+    plt.tight_layout()
+    
+    # Save the figure
+    plt.savefig(os.path.join(figures_dir, 'country_trends.pdf'), bbox_inches='tight')
+    
+    print("Country trends plot saved to", os.path.join(figures_dir, 'country_trends.pdf'))
+
+def fetch_and_analyze_conferences():
+    """
+    Main function to fetch and analyze conference data.
+    """
+    # Load Indico IDs from file
+    indico_ids = load_indico_ids_from_file('listofQMindigo')
+    
+    # Fetch and process contributions
+    conference_data = {}
+    for indico_id, year in indico_ids.items():
+        contributions = fetch_and_process_contributions(indico_id, year)
+        conference_data[year] = contributions
+    
+    # Extract country data
+    plenary_country = Counter()
+    parallel_country = Counter()
+    poster_country = Counter()
+    flash_country = Counter()
+    
+    for year, data in conference_data.items():
+        for talk_type in ['plenary_talks', 'parallel_talks', 'poster_talks', 'flash_talks']:
+            if talk_type in data:
+                for talk in data[talk_type]:
+                    country = talk.get('Country', 'Unknown')
+                    if country != 'Unknown':
+                        if talk_type == 'plenary_talks':
+                            plenary_country[country] += 1
+                        elif talk_type == 'parallel_talks':
+                            parallel_country[country] += 1
+                        elif talk_type == 'poster_talks':
+                            poster_country[country] += 1
+                        elif talk_type == 'flash_talks':
+                            flash_country[country] += 1
+    
+    # Create plots
+    create_plenary_country_plot(plenary_country)
+    create_representation_ratio_plot(plenary_country, parallel_country)
+    create_regional_diversity_plot(plenary_country + parallel_country, conference_data)
+    create_parallel_country_plot(parallel_country)
+    
+    # Create summary statistics plot
+    create_summary_statistics_plot(conference_data, participant_data)
+    
+    # Create regional diversity plot by year
+    years = sorted([year for year in conference_data.keys() if year.isdigit()])
+    plenary_data = {year: {talk['Country']: 1 for talk in conference_data[year].get('plenary_talks', [])} for year in years}
+    parallel_data = {year: {talk['Country']: 1 for talk in conference_data[year].get('parallel_talks', [])} for year in years}
+    create_regional_diversity_plot_by_year(years, plenary_data, parallel_data, 'figures')
+    
+    # Create representation ratio plot by year
+    create_representation_ratio_plot_by_year(years, plenary_data, parallel_data, 'figures')
+    
+    # Create country trends plot
+    create_country_trends_plot(years, plenary_data, parallel_data, 'figures')
+    
+    # Create keywords plot
+    create_keywords_plot(conference_data)
+    
+    # Create institute plots
+    for year, data in conference_data.items():
+        for talk_type in ['plenary_talks', 'parallel_talks', 'poster_talks', 'flash_talks']:
+            if talk_type in data:
+                plot_talks_by_institute(data[talk_type], f"{year} {talk_type.capitalize()} Talks", f"{year}_{talk_type}_institutes.pdf")
 
 # Update the main section to ensure we're using enhanced country mapping
 if __name__ == "__main__":
@@ -4296,7 +3984,7 @@ if __name__ == "__main__":
         
         # Generate plot
         plot_conference_statistics(conference_data)
-        print_summary(conferences)
+    
         
         # Create the keywords plot
         create_keywords_plot(conference_data)
@@ -4354,768 +4042,648 @@ if __name__ == "__main__":
         create_diversity_metrics_plot(all_years, plenary_country_data, parallel_country_data, figures_dir)
         create_representation_ratio_plot_by_year(all_years, plenary_country_data, parallel_country_data, figures_dir)
         
-        # Create detailed report of unknown institutes
-        create_unknown_institutes_report(conference_data, 'unknown_institutes_report.txt')
         
-        # Check for missing speaker affiliations
-        has_missing_affiliations = check_missing_speaker_affiliations(conference_data, 'missing_affiliations_report.txt')
-        
-        if has_missing_affiliations:
-            print("\nWARNING: Some speakers are missing both institute and country information.")
-            print("         See 'missing_affiliations_report.txt' for details.")
-        
-        # Prior to generating visualizations, apply the enhanced affiliation resolution
-        print("\nApplying enhanced affiliation resolution...")
-        resolved_count = 0
-        
-        # Load Indico IDs for cross-referencing speaker affiliations
-        indico_ids = load_indico_ids_from_file('listofQMindigo')
-        
-        # Apply cross-conference resolution to fill missing affiliations
-        participant_affiliations = load_participant_affiliations(conference_indico_ids=indico_ids)
-        
-        # Track resolution improvements
-        before_resolution = {}
-        after_resolution = {}
-        
-        for year in all_years:
-            if year in conference_data:
-                data = conference_data[year]
-                
-                # Count unknowns before resolution
-                all_talks = (data.get('plenary_talks', []) + 
-                           data.get('parallel_talks', []) + 
-                           data.get('poster_talks', []))
-                
-                before_unknowns = sum(1 for talk in all_talks if talk.get('Country') == 'Unknown')
-                before_resolution[year] = before_unknowns
-                
-                # Apply resolution to each talk type
-                for talk_type in ['plenary_talks', 'parallel_talks', 'poster_talks']:
-                    talks = data.get(talk_type, [])
-                    for talk in talks:
-                        if talk.get('Country') == 'Unknown' and talk.get('Speaker'):
-                            speaker_name = talk.get('Speaker')
-                            
-                            # Try to match with participant data
-                            if speaker_name in participant_affiliations:
-                                affiliation = participant_affiliations[speaker_name]
-                                talk['Institute'] = affiliation.get('institute', talk.get('Institute', 'Unknown'))
-                                talk['Country'] = affiliation.get('country', 'Unknown')
-                                resolved_count += 1
-                
-                # Count unknowns after resolution
-                all_talks = (data.get('plenary_talks', []) + 
-                           data.get('parallel_talks', []) + 
-                           data.get('poster_talks', []))
-                
-                after_unknowns = sum(1 for talk in all_talks if talk.get('Country') == 'Unknown')
-                after_resolution[year] = after_unknowns
-                
-                # Update country counts after resolution
-                country_counts = {}
-                for talk in all_talks:
-                    country = talk.get('Country', 'Unknown')
-                    country_counts[country] = country_counts.get(country, 0) + 1
-                
-                # Update the data
-                data['country_counts'] = country_counts
-        
-        print(f"Enhanced resolution applied: {resolved_count} affiliations resolved")
-        
-        # Print resolution improvement statistics
-        print("\nResolution improvement by year:")
-        print("Year  Before  After  Improvement")
-        print("-" * 35)
-        for year in all_years:
-            if year in before_resolution and year in after_resolution:
-                before = before_resolution[year]
-                after = after_resolution[year]
-                improvement = ((before - after) / before * 100) if before > 0 else 0
-                print(f"{year}  {before:>6}  {after:>5}  {improvement:>10.1f}%")
-        
-        # After applying the enhanced resolution but before visualizations
-        print("\nApplying specific fixes for known problematic affiliations...")
-        fix_common_affiliation_problems(conference_data)
-        
-        # Update country counts after fixes
-        for year in all_years:
-            if year in conference_data:
-                data = conference_data[year]
-                all_talks = (data.get('plenary_talks', []) + 
-                           data.get('parallel_talks', []) + 
-                           data.get('poster_talks', []))
-                
-                country_counts = {}
-                for talk in all_talks:
-                    country = talk.get('Country', 'Unknown')
-                    country_counts[country] = country_counts.get(country, 0) + 1
-                
-                # Update the data
-                data['country_counts'] = country_counts
-        
-        # Now proceed with visualization creation with improved data
-        # Create country and institute plots
-        create_country_institute_plots(conference_data)
-        
-        # ... remaining code stays the same ...
-    
-        # Apply enhanced country mapping to all talks before creating visualizations
-        print("\nApplying final enhanced country mapping to all data...")
-        
-        # Process each conference year
-        for year, data in conference_data.items():
-            if not isinstance(data, dict):
-                continue
-                
-            # Create set of talks needing review
-            talks_to_review = []
-            
-            # Collect all talks that might need country mapping updates
-            if 'plenary_talks' in data:
-                talks_to_review.extend(data['plenary_talks'])
-            if 'parallel_talks' in data:
-                talks_to_review.extend(data['parallel_talks'])
-            if 'poster_talks' in data:
-                talks_to_review.extend(data['poster_talks'])
-            
-            # Attempt one more round of country resolution
-            for talk in talks_to_review:
-                if talk.get('Country', '') == 'Unknown' or talk.get('Country', '') == '':
-                    institute = talk.get('Institute', '')
-                    if institute:
-                        # Check for common patterns indicating country
-                        # 1. University X, Country
-                        if ',' in institute:
-                            parts = institute.split(',')
-                            potential_country = parts[-1].strip()
-                            
-                            # Check if this looks like a country name
-                            if potential_country in COUNTRY_NAMES or potential_country in COUNTRY_KEYWORDS:
-                                talk['Country'] = potential_country
-                                continue
-                        
-                        # 2. Try direct lookup in our mapping
-                        if institute in INSTITUTION_COUNTRY:
-                            talk['Country'] = INSTITUTION_COUNTRY[institute]
-                            continue
-                        
-                        # 3. Check for Finnish institutions specifically
-                        for finnish_pattern in ['jyvaskyla', 'jyväskylä', 'helsinki', 'finland', 'aalto']:
-                            if finnish_pattern.lower() in institute.lower():
-                                talk['Country'] = 'Finland'
-                                break
-        
-        # Regenerate country counts after final mapping
-        print("\nRegenerating country statistics with enhanced mapping...")
-        for year, data in conference_data.items():
-            if not isinstance(data, dict):
-                continue
-                
-            # Get all talks
-            all_talks = []
-            if 'plenary_talks' in data:
-                all_talks.extend(data['plenary_talks'])
-            if 'parallel_talks' in data:
-                all_talks.extend(data['parallel_talks'])
-            if 'poster_talks' in data:
-                all_talks.extend(data['poster_talks'])
-            
-            # Recalculate country counts
-            country_counts = Counter()
-            for talk in all_talks:
-                country = talk.get('Country', 'Unknown')
-                if country and country != 'Unknown':
-                    country_counts[country] += 1
-                
-            # Update the data
-            data['country_counts'] = country_counts
-        
-        # Rest of the main code remains the same...
-    
-    except FileNotFoundError:
-        print("Error: 'listofQMindigo' file not found")
-        exit(1) 
+    except Exception as e:
+        print(f"Error: {e}")
+        sys.exit(1)
 
-# Update the enhance_institute_data function to add more verbosity for different talk types
-def enhance_institute_data(conference_data):
+def clean_institute_country_mappings(filename='unknown_institute_mappings.csv', output_filename='cleaned_institute_mappings.csv'):
     """
-    Apply enhanced institute mapping from registration data to all talks.
+    Clean and standardize the institute-country mappings file.
     
     Parameters:
-    - conference_data: Dictionary with conference data
+    - filename: Path to the original CSV file with institute-country mappings
+    - output_filename: Path to save the cleaned mappings
     
     Returns:
-    - Enhanced conference data with improved institute information
+    - Dictionary mapping institute names to countries
     """
-    print("\nEnhancing institute data using registration information...")
+    if not os.path.exists(filename):
+        print(f"Warning: Institute mappings file {filename} not found.")
+        return {}
     
-    # Track statistics
-    updated_institutes = {'plenary': 0, 'parallel': 0, 'poster': 0}
+    # Define common country patterns
+    country_patterns = {
+        r'\(US\)': 'USA',
+        r'\(JP\)': 'Japan',
+        r'\(CN\)': 'China',
+        r'\(DE\)': 'Germany',
+        r'\(FR\)': 'France',
+        r'\(IT\)': 'Italy',
+        r'\(GB\)': 'United Kingdom',
+        r'\(PL\)': 'Poland',
+        r'\(RU\)': 'Russia',
+        r'\(IN\)': 'India',
+        r'\(NL\)': 'Netherlands',
+        r'\(CH\)': 'Switzerland',
+        r'\(ES\)': 'Spain',
+        r'\(AT\)': 'Austria',
+        r'\(DK\)': 'Denmark',
+        r'\(SE\)': 'Sweden',
+        r'\(NO\)': 'Norway',
+        r'\(FI\)': 'Finland',
+        r'\(HU\)': 'Hungary',
+        r'\(CZ\)': 'Czech Republic',
+        r'\(SK\)': 'Slovakia',
+        r'\(RO\)': 'Romania',
+        r'\(PT\)': 'Portugal',
+        r'\(BR\)': 'Brazil',
+        r'\(MX\)': 'Mexico',
+        r'\(CL\)': 'Chile',
+        r'\(KR\)': 'South Korea',
+        r'\(TW\)': 'Taiwan',
+        r'\(IL\)': 'Israel',
+        r'\(AZ\)': 'Azerbaijan',
+        r'\(RS\)': 'Serbia',
+        r'USA$': 'USA',
+        r'Japan$': 'Japan',
+        r'China$': 'China',
+        r'Germany$': 'Germany',
+        r'France$': 'France',
+        r'Italy$': 'Italy',
+        r'United Kingdom$': 'United Kingdom',
+        r'Poland$': 'Poland',
+        r'Russia$': 'Russia',
+        r'India$': 'India',
+    }
     
-    # Create a mapping of speakers to their institutes from all known data
-    speaker_institute_map = {}
+    # Define institute-country mappings based on common patterns
+    institute_country_map = {
+        'Brookhaven': 'USA',
+        'BNL': 'USA',
+        'LBNL': 'USA',
+        'LANL': 'USA',
+        'ORNL': 'USA',
+        'LLNL': 'USA',
+        'CERN': 'Switzerland',
+        'GSI': 'Germany',
+        'DESY': 'Germany',
+        'INFN': 'Italy',
+        'CEA': 'France',
+        'CNRS': 'France',
+        'RIKEN': 'Japan',
+        'KEK': 'Japan',
+        'CCNU': 'China',
+        'USTC': 'China',
+        'SINAP': 'China',
+        'VECC': 'India',
+        'TIFR': 'India',
+        'NIKHEF': 'Netherlands',
+        'Heidelberg': 'Germany',
+        'Frankfurt': 'Germany',
+        'Bielefeld': 'Germany',
+        'Wuppertal': 'Germany',
+        'Darmstadt': 'Germany',
+        'Tsukuba': 'Japan',
+        'Tokyo': 'Japan',
+        'Jyvaskyla': 'Finland',
+        'Jyväskylä': 'Finland',
+        'Warsaw': 'Poland',
+        'Krakow': 'Poland',
+        'Saclay': 'France',
+        'Subatech': 'France',
+        'Berkeley': 'USA',
+        'Los Angeles': 'USA',
+        'Chicago': 'USA',
+        'Stony Brook': 'USA',
+        'Urbana': 'USA',
+        'Champaign': 'USA',
+        'Davis': 'USA',
+        'Houston': 'USA',
+        'Michigan': 'USA',
+        'Minnesota': 'USA',
+        'Ohio': 'USA',
+        'Texas': 'USA',
+        'Yale': 'USA',
+        'MIT': 'USA',
+        'Columbia': 'USA',
+        'Duke': 'USA',
+        'Rice': 'USA',
+        'Purdue': 'USA',
+        'Vanderbilt': 'USA',
+        'Stanford': 'USA',
+        'Torino': 'Italy',
+        'Catania': 'Italy',
+        'Padova': 'Italy',
+        'Roma': 'Italy',
+        'Sapienza': 'Italy',
+        'Florence': 'Italy',
+        'Firenze': 'Italy',
+        'Wuhan': 'China',
+        'Shandong': 'China',
+        'Tsinghua': 'China',
+        'Fudan': 'China',
+        'Peking': 'China',
+        'Nanjing': 'China',
+        'Shanghai': 'China',
+        'Huazhong': 'China',
+        'Osaka': 'Japan',
+        'Kyoto': 'Japan',
+        'Hiroshima': 'Japan',
+        'Nagoya': 'Japan',
+        'Sophia': 'Japan',
+        'Nara': 'Japan',
+        'Mumbai': 'India',
+        'Kolkata': 'India',
+        'Rajasthan': 'India',
+        'Bhabha': 'India',
+        'Sao Paulo': 'Brazil',
+        'São Paulo': 'Brazil',
+        'Santiago': 'Chile',
+        'Barcelona': 'Spain',
+        'Granada': 'Spain',
+        'Utrecht': 'Netherlands',
+        'Amsterdam': 'Netherlands',
+        'Bergen': 'Norway',
+        'Oslo': 'Norway',
+        'Copenhagen': 'Denmark',
+        'Lund': 'Sweden',
+        'Bern': 'Switzerland',
+        'Zurich': 'Switzerland',
+        'Prague': 'Czech Republic',
+        'Budapest': 'Hungary',
+        'Kurchatov': 'Russia',
+        'Dubna': 'Russia',
+        'Belgrade': 'Serbia',
+        'Bucharest': 'Romania',
+        'Lisbon': 'Portugal',
+        'Lisboa': 'Portugal',
+        'Weizmann': 'Israel',
+        'Technion': 'Israel',
+        'Seoul': 'South Korea',
+        'Korea': 'South Korea',
+        'Pusan': 'South Korea',
+        'Yonsei': 'South Korea',
+        'Ewha': 'South Korea',
+        'Chonnam': 'South Korea',
+        'Sejong': 'South Korea',
+        'Inha': 'South Korea',
+    }
     
-    # First pass: collect all known speaker-institute mappings across all years
-    for year, data in conference_data.items():
-        if not isinstance(data, dict):
-            continue
-        
-        # Process registrations if available
-        if 'registrations' in data:
-            for reg in data['registrations']:
-                speaker_name = reg.get('Name', '')
-                institute = reg.get('Institute', '')
-                
-                if speaker_name and institute and institute.lower() != 'unknown':
-                    # Normalize speaker name for matching
-                    normalized_name = speaker_name.lower().strip()
-                    speaker_institute_map[normalized_name] = institute
-        
-        # Also collect from talks with known institutes across all talk types
-        for talk_type in ['plenary_talks', 'parallel_talks', 'poster_talks']:
-            for talk in data.get(talk_type, []):
-                speaker = talk.get('Speaker', '')
-                institute = talk.get('Institute', '')
-                
-                if speaker and institute and institute.lower() != 'unknown':
-                    normalized_name = speaker.lower().strip()
-                    speaker_institute_map[normalized_name] = institute
-    
-    print(f"Collected {len(speaker_institute_map)} unique speaker-institute mappings")
-    
-    # Second pass: apply the mapping to update unknown or missing institutes
-    for year, data in conference_data.items():
-        if not isinstance(data, dict):
-            continue
-        
-        # Process each talk type separately to track statistics
-        for talk_type in ['plenary_talks', 'parallel_talks', 'poster_talks']:
-            talk_key = talk_type.split('_')[0]  # Extract 'plenary', 'parallel', or 'poster'
+    # Load the original mappings
+    import csv
+    original_mappings = []
+    try:
+        with open(filename, 'r', encoding='utf-8') as f:
+            csv_reader = csv.reader(f)
+            # Skip header row
+            next(csv_reader, None)
             
-            for talk in data.get(talk_type, []):
-                speaker = talk.get('Speaker', '')
-                current_institute = talk.get('Institute', '')
+            for row in csv_reader:
+                if len(row) >= 2:
+                    institute = row[0].strip()
+                    country = row[1].strip()
+                    original_mappings.append((institute, country))
+    except Exception as e:
+        print(f"Error loading institute mappings: {e}")
+        return {}
+    
+    # Clean and standardize the mappings
+    cleaned_mappings = {}
+    for institute, country in original_mappings:
+        if not institute or institute in ['Unknown', 'Unknown-Unknown-Unknown']:
+            continue
+            
+        # Skip single letter entries
+        if len(institute) <= 1:
+            continue
+            
+        # If country is already provided and valid, use it
+        if country and country not in ['', 'Unknown']:
+            cleaned_mappings[institute] = country
+            continue
+            
+        # Try to extract country from institute name using patterns
+        country_found = False
+        for pattern, country_name in country_patterns.items():
+            if re.search(pattern, institute):
+                cleaned_mappings[institute] = country_name
+                country_found = True
+                break
                 
-                # Check if we need to update the institute
-                if (not current_institute or current_institute.lower() == 'unknown') and speaker:
-                    normalized_name = speaker.lower().strip()
+        # Try to match institute with known institutes
+        if not country_found:
+            for known_inst, known_country in institute_country_map.items():
+                if known_inst.lower() in institute.lower():
+                    cleaned_mappings[institute] = known_country
+                    country_found = True
+                    break
                     
-                    # Try exact match
-                    if normalized_name in speaker_institute_map:
-                        talk['Institute'] = speaker_institute_map[normalized_name]
-                        updated_institutes[talk_key] += 1
+        # If still no country found, mark as unknown
+        if not country_found:
+            cleaned_mappings[institute] = 'Unknown'
+    
+    # Save the cleaned mappings
+    try:
+        with open(output_filename, 'w', encoding='utf-8', newline='') as f:
+            csv_writer = csv.writer(f)
+            csv_writer.writerow(['Institute', 'Country'])
+            
+            for institute, country in sorted(cleaned_mappings.items()):
+                csv_writer.writerow([institute, country])
+                
+        print(f"Cleaned institute mappings saved to {output_filename}")
+    except Exception as e:
+        print(f"Error saving cleaned mappings: {e}")
+    
+    return cleaned_mappings
+
+# In the main function, add:
+# Clean and standardize institute-country mappings
+INSTITUTE_COUNTRY_MAPPINGS = clean_institute_country_mappings('unknown_institute_mappings.csv', 'cleaned_institute_mappings.csv')
+
+def generate_final_statistics_report(conference_data, output_file='final_statistics_report.txt'):
+    """
+    Generate a final report of statistics including speakers without institute or country.
+    """
+    print("\nGenerating final statistics report...")
+    
+    # Initialize counters
+    total_speakers = 0
+    unknown_institute_count = 0
+    unknown_country_count = 0
+    unknown_both_count = 0
+    unknown_speakers = []
+    
+    # Count by year and talk type
+    year_stats = {}
+    
+    try:
+        # Open the output file
+        with open(output_file, 'w', encoding='utf-8') as f:
+            f.write("FINAL STATISTICS REPORT\n")
+            f.write("======================\n\n")
+            
+            # Process each conference year
+            for year in sorted(conference_data.keys()):
+                data = conference_data[year]
+                
+                year_total = 0
+                year_unknown_institute = 0
+                year_unknown_country = 0
+                year_unknown_both = 0
+                
+                # Process each talk type
+                for talk_type in ['plenary_talks', 'parallel_talks', 'poster_talks', 'flash_talks']:
+                    if talk_type not in data:
                         continue
                     
-                    # Try partial matching (e.g. last name only)
-                    for known_speaker, known_institute in speaker_institute_map.items():
-                        if (known_speaker in normalized_name or normalized_name in known_speaker) and len(normalized_name) > 3:
-                            talk['Institute'] = known_institute
-                            updated_institutes[talk_key] += 1
-                            break
+                    talks = data[talk_type]
+                    if not talks:  # Skip if empty
+                        continue
+                        
+                    type_total = len(talks)
+                    type_unknown_institute = 0
+                    type_unknown_country = 0
+                    type_unknown_both = 0
+                    
+                    # Check each talk - use exact string comparison
+                    for talk in talks:
+                        institute = talk.get('Institute', '')
+                        country = talk.get('Country', '')
+                        speaker = talk.get('Speaker', '')
+                        
+                        # Count unknowns - be very explicit
+                        institute_unknown = (institute == 'Unknown')
+                        country_unknown = (country == 'Unknown')
+                        
+                        if institute_unknown:
+                            type_unknown_institute += 1
+                        
+                        if country_unknown:
+                            type_unknown_country += 1
+                        
+                        if institute_unknown and country_unknown:
+                            type_unknown_both += 1
+                            unknown_speakers.append({
+                                'Year': year,
+                                'Type': talk_type,
+                                'Speaker': speaker,
+                                'Title': talk.get('Title', 'No Title')
+                            })
+                    
+                    # Update counters
+                    year_total += type_total
+                    year_unknown_institute += type_unknown_institute
+                    year_unknown_country += type_unknown_country
+                    year_unknown_both += type_unknown_both
+                    
+                    # Write talk type statistics
+                    type_label = talk_type.replace('_', ' ').title()
+                    f.write(f"{year} - {type_label}:\n")
+                    f.write(f"  Total: {type_total}\n")
+                    f.write(f"  Unknown Institute: {type_unknown_institute}\n")
+                    f.write(f"  Unknown Country: {type_unknown_country}\n")
+                    f.write(f"  Unknown Both: {type_unknown_both}\n\n")
+                
+                # Update total counters
+                total_speakers += year_total
+                unknown_institute_count += year_unknown_institute
+                unknown_country_count += year_unknown_country
+                unknown_both_count += year_unknown_both
+                
+                # Store year statistics
+                year_stats[year] = {
+                    'Total': year_total,
+                    'Unknown Institute': year_unknown_institute,
+                    'Unknown Country': year_unknown_country,
+                    'Unknown Both': year_unknown_both
+                }
+                
+                # Write year summary
+                f.write(f"Summary for {year}:\n")
+                f.write(f"  Total: {year_total}\n")
+                f.write(f"  Unknown Institute: {year_unknown_institute}\n")
+                f.write(f"  Unknown Country: {year_unknown_country}\n")
+                f.write(f"  Unknown Both: {year_unknown_both}\n")
+                f.write("=" * 50 + "\n\n")
+            
+            # Write overall summary
+            f.write("\nOVERALL SUMMARY\n")
+            f.write("===============\n")
+            f.write(f"Total Speakers: {total_speakers}\n")
+            f.write(f"Unknown Institute: {unknown_institute_count}\n")
+            f.write(f"Unknown Country: {unknown_country_count}\n")
+            f.write(f"Unknown Both: {unknown_both_count}\n\n")
+            
+            # List speakers with unknown both
+            if unknown_speakers:
+                f.write("\nSPEAKERS WITH UNKNOWN INSTITUTE AND COUNTRY\n")
+                f.write("=========================================\n\n")
+                
+                for speaker_info in unknown_speakers:
+                    f.write(f"Year: {speaker_info['Year']}\n")
+                    f.write(f"Type: {speaker_info['Type'].replace('_', ' ').title()}\n")
+                    f.write(f"Speaker: {speaker_info['Speaker']}\n")
+                    f.write(f"Title: {speaker_info['Title']}\n\n")
+        
+        print(f"Final statistics report generated: {output_file}")
+        print(f"Total speakers: {total_speakers}")
+        print(f"Unknown institute: {unknown_institute_count}")
+        print(f"Unknown country: {unknown_country_count}")
+        print(f"Unknown both: {unknown_both_count}")
+        
+    except Exception as e:
+        print(f"Error generating statistics report: {e}")
     
-    total_updated = sum(updated_institutes.values())
-    print(f"Updated {total_updated} institutes using enhanced mapping:")
-    print(f"  - Plenary talks: {updated_institutes['plenary']} institutes updated")
-    print(f"  - Parallel talks: {updated_institutes['parallel']} institutes updated")
-    print(f"  - Poster talks: {updated_institutes['poster']} institutes updated")
-    
-    return conference_data
+    return unknown_speakers
 
-# Create a dedicated function for poster institute visualization
-def create_poster_institute_plot(conference_data):
+def create_simple_data_quality_plot(year_stats, output_file):
     """
-    Create a horizontal bar chart showing the distribution of poster presentations by institute.
+    Create a simple visualization of data quality statistics.
+    """
+    try:
+        if not year_stats:
+            print("No data available for data quality plot")
+            return
+            
+        years = sorted(year_stats.keys())
+        
+        # Extract data
+        total_values = [year_stats[year]['Total'] for year in years]
+        unknown_institute_values = [year_stats[year]['Unknown Institute'] for year in years]
+        unknown_country_values = [year_stats[year]['Unknown Country'] for year in years]
+        unknown_both_values = [year_stats[year]['Unknown Both'] for year in years]
+        
+        # Create the plot
+        plt.figure(figsize=(12, 8))
+        
+        # Plot absolute numbers
+        plt.bar(years, total_values, label='Total Speakers')
+        plt.bar(years, unknown_institute_values, label='Unknown Institute')
+        plt.bar(years, unknown_country_values, label='Unknown Country')
+        plt.bar(years, unknown_both_values, label='Unknown Both')
+        
+        plt.title('Data Quality by Year')
+        plt.xlabel('Conference Year')
+        plt.ylabel('Number of Speakers')
+        plt.legend()
+        plt.grid(True, alpha=0.3)
+        
+        plt.tight_layout()
+        
+        # Ensure the figures directory exists
+        os.makedirs(os.path.dirname(output_file), exist_ok=True)
+        
+        # Save the figure
+        plt.savefig(output_file, bbox_inches='tight')
+        print(f"Data quality plot saved to {output_file}")
+    except Exception as e:
+        print(f"Error in create_simple_data_quality_plot: {e}")
+
+# Add to the main function:
+
+def update_speaker_info_from_participant_data(conference_data, participant_data):
+    """
+    Update speaker institute and country information using participant data loaded from CSV files.
     
     Parameters:
     - conference_data: Dictionary with conference data
+    - participant_data: Dictionary mapping years to lists of participants (from load_participant_data)
+    
+    Returns:
+    - Updated conference_data with improved speaker information
     """
-    print("\nCreating poster institute plot...")
+    print("\nUpdating speaker information from participant data files...")
     
-    # Collect all poster institute counts with enhanced data
-    poster_institute = Counter()
+    # Initialize counters
+    total_speakers = 0
+    updated_institute = 0
+    updated_country = 0
     
+    # Process each conference year
     for year, data in conference_data.items():
-        if not isinstance(data, dict):
+        if year not in participant_data:
+            print(f"  No participant data available for {year}")
             continue
+            
+        print(f"  Processing {year} with {len(participant_data[year])} participants")
         
-        # Count institutes from poster talks
-        for talk in data.get('poster_talks', []):
-            institute = talk.get('Institute', '')
-            if institute and institute.lower() != 'unknown':
-                poster_institute[institute] += 1
-    
-    # Skip if no poster data
-    if not poster_institute:
-        print("No poster data available for institute plot")
-        return
-    
-    # Get the top institutes
-    top_institutes = poster_institute.most_common(20)
-    
-    # Calculate total for percentages (excluding unknown)
-    total = sum(poster_institute.values())
-    
-    # Create the plot
-    plt.figure(figsize=(12, 10))
-    y_pos = np.arange(len(top_institutes))
-    
-    # Extract names and counts
-    names = [item[0] for item in top_institutes]
-    values = [item[1] for item in top_institutes]
-    
-    # Define institute types for color coding
-    institute_types = {
-        'National Laboratory': ['Brookhaven', 'BNL', 'CERN', 'GSI', 'ORNL', 'LANL', 'LBNL', 'JINR', 
-                               'RIKEN', 'FNAL', 'Fermilab', 'JLab', 'Jefferson Lab', 'IHEP'],
-        'University': ['University', 'Universit', 'College', 'School', 'Institut'],
-        'Research Center': ['Center', 'Centre', 'Institute of', 'Research']
-    }
-    
-    # Determine the type of each institute
-    colors = []
-    for name in names:
-        institute_type = 'Other'
-        for type_name, keywords in institute_types.items():
-            if any(keyword in name for keyword in keywords):
-                institute_type = type_name
-                break
-        
-        if institute_type == 'National Laboratory':
-            colors.append('#1f77b4')  # Blue
-        elif institute_type == 'University':
-            colors.append('#ff7f0e')  # Orange
-        elif institute_type == 'Research Center':
-            colors.append('#2ca02c')  # Green
-        else:
-            colors.append('#d62728')  # Red
-    
-    # Create horizontal bars
-    bars = plt.barh(y_pos, values, align='center', color=colors)
-    
-    # Add percentage labels
-    for i, bar in enumerate(bars):
-        percentage = (values[i] / total) * 100
-        plt.text(bar.get_width() + 1, bar.get_y() + bar.get_height()/2, 
-                f'{percentage:.1f}%', va='center')
-    
-    # Set axis labels and title
-    plt.xlabel('Number of Poster Presentations')
-    plt.ylabel('Institute')
-    plt.title('Distribution of Poster Presentations by Institute (Top 20)')
-    plt.yticks(y_pos, names)
-    
-    # Add legend for institute types
-    handles = [plt.Rectangle((0,0),1,1, color='#1f77b4'), 
-              plt.Rectangle((0,0),1,1, color='#ff7f0e'),
-              plt.Rectangle((0,0),1,1, color='#2ca02c'),
-              plt.Rectangle((0,0),1,1, color='#d62728')]
-    plt.legend(handles, ['National Laboratory', 'University', 'Research Center', 'Other'], 
-              loc='lower right')
-    
-    # Adjust layout
-    plt.tight_layout()
-    
-    # Save the figure
-    os.makedirs('figures', exist_ok=True)
-    plt.savefig('figures/poster_talks_by_institute.pdf', bbox_inches='tight')
-    
-    print("Poster institute plot saved to figures/poster_talks_by_institute.pdf")
-
-# Update the create_institute_plots function to include poster talks
-def create_institute_plots(conference_data):
-    """
-    Create institute plots for all talk types based on enhanced data.
-    
-    Parameters:
-    - conference_data: Dictionary with enhanced conference data
-    """
-    print("\nCreating institute plots with enhanced data for all talk types...")
-    
-    # Collect all institute counts with enhanced data
-    plenary_institute = Counter()
-    parallel_institute = Counter()
-    poster_institute = Counter()
-    
-    for year, data in conference_data.items():
-        if not isinstance(data, dict):
-            continue
+        # Create a lookup dictionary for faster matching
+        participant_lookup = {}
+        for participant in participant_data[year]:
+            name = participant.get('name', '').lower()
+            if name:
+                participant_lookup[name] = participant
         
         # Process each talk type
-        for talk in data.get('plenary_talks', []):
-            institute = talk.get('Institute', '')
-            if institute and institute.lower() != 'unknown':
-                plenary_institute[institute] += 1
-        
-        for talk in data.get('parallel_talks', []):
-            institute = talk.get('Institute', '')
-            if institute and institute.lower() != 'unknown':
-                parallel_institute[institute] += 1
+        for talk_type in ['plenary_talks', 'parallel_talks', 'poster_talks', 'flash_talks']:
+            if talk_type not in data:
+                continue
                 
-        for talk in data.get('poster_talks', []):
-            institute = talk.get('Institute', '')
-            if institute and institute.lower() != 'unknown':
-                poster_institute[institute] += 1
+            for talk in data[talk_type]:
+                total_speakers += 1
+                speaker = talk.get('Speaker', '').lower()
+                if not speaker:
+                    continue
+                
+                # Check if institute or country is unknown
+                institute_unknown = not talk.get('Institute') or talk.get('Institute') == 'Unknown'
+                country_unknown = not talk.get('Country') or talk.get('Country') == 'Unknown'
+                
+                if not institute_unknown and not country_unknown:
+                    continue  # Skip if both are already known
+                
+                # Try exact match first
+                if speaker in participant_lookup:
+                    participant = participant_lookup[speaker]
+                    
+                    # Update institute if needed
+                    if institute_unknown and participant.get('affiliation'):
+                        talk['Institute'] = participant['affiliation']
+                        updated_institute += 1
+                    
+                    # Update country if needed
+                    if country_unknown and participant.get('country'):
+                        talk['Country'] = participant['country']
+                        updated_country += 1
+                else:
+                    # Try fuzzy matching
+                    for p_name, participant in participant_lookup.items():
+                        # Check if either name contains the other
+                        if speaker in p_name or p_name in speaker:
+                            # Update institute if needed
+                            if institute_unknown and participant.get('affiliation'):
+                                talk['Institute'] = participant['affiliation']
+                                updated_institute += 1
+                            
+                            # Update country if needed
+                            if country_unknown and participant.get('country'):
+                                talk['Country'] = participant['country']
+                                updated_country += 1
+                            
+                            break
     
-    # Skip the problematic function calls
-    print("Skipping plenary and parallel institute plots for now")
+    print(f"Total speakers processed: {total_speakers}")
+    print(f"Updated institute information: {updated_institute}")
+    print(f"Updated country information: {updated_country}")
     
-    # Create poster institute plot if data is available
-    if poster_institute:
-        create_poster_institute_plot(conference_data)
+    return conference_data
+
+# In the main function, replace the existing call to fix_unknown_institutes_from_participants with:
+# Load participant data
+participant_data = load_participant_data()
+
+# Update speaker information from participant data
+if participant_data:
+    conference_data = update_speaker_info_from_participant_data(conference_data, participant_data)
+else:
+    print("No participant data available for updating speaker information")
+
+def display_conference_summary(conference_data):
+    """
+    Display a summary of the conference data.
+    
+    Parameters:
+    - conference_data: Dictionary with conference data
+    """
+    print("\nYear Location                  Total  Plenary  Parallel  Poster  Flash  Unk_Plen Unk_Par")
+    print("-" * 85)
+    
+    # Sort years
+    years = sorted(conference_data.keys())
+    
+    for year in years:
+        data = conference_data[year]
+        location = CONFERENCE_LOCATIONS.get(year, 'Unknown location')
+        total = len(data.get('all_talks', []))
+        plenary = len(data.get('plenary_talks', []))
+        parallel = len(data.get('parallel_talks', []))
+        poster = len(data.get('poster_talks', []))
+        flash = len(data.get('flash_talks', [])) or FLASH_TALK_COUNTS.get(year, 0)
+        
+        # Count unknown institutes - be explicit about what "unknown" means
+        unknown_plenary = sum(1 for t in data.get('plenary_talks', []) if t.get('Institute', '') == 'Unknown')
+        unknown_parallel = sum(1 for t in data.get('parallel_talks', []) if t.get('Institute', '') == 'Unknown')
+        
+        print(f"{year} {location:<25} {total:<6} {plenary:<8} {parallel:<8} {poster:<6} {flash:<5} {unknown_plenary:<8} {unknown_parallel}")
+
+def debug_conference_data(data, label="Conference Data"):
+    """
+    Debug function to print information about the conference data structure.
+    
+    Parameters:
+    - data: The data to debug
+    - label: A label for the debug output
+    """
+    print(f"\n=== DEBUG: {label} ===")
+    print(f"Type: {type(data)}")
+    
+    if isinstance(data, dict):
+        print(f"Keys: {list(data.keys())}")
+        print(f"Sample value type: {type(next(iter(data.values()))) if data else 'No values'}")
+    elif isinstance(data, list):
+        print(f"Length: {len(data)}")
+        print(f"First few items: {data[:3] if data else 'Empty list'}")
     else:
-        print("No poster data available for institute analysis")
+        print(f"Value: {data}")
     
-    # Create combined institute bubble chart including all talk types
-    combined_institute = Counter()
-    combined_institute.update(plenary_institute)
-    combined_institute.update(parallel_institute)
-    combined_institute.update(poster_institute)
-    
-    create_institute_bubble_chart(combined_institute, 30)
+    print("=" * 50)
 
-# Update the main method to use the enhanced functions
-if __name__ == "__main__":
-    try:
-        # ... existing code ...
-        
-        # Apply enhanced data processing for all talk types
-        print("\nEnhancing data for all talk types (plenary, parallel, poster)...")
-        
-        # Apply enhanced institute data
-        conference_data = enhance_institute_data(conference_data)
-        
-        # Create institute plots for all talk types
-        create_institute_plots(conference_data)
-        
-        # ... rest of the code remains the same ...
-    except FileNotFoundError:
-        print("Error: 'listofQMindigo' file not found")
-        exit(1) 
+# In the fetch_and_analyze_conferences function, add debugging:
 
-def create_plenary_institute_plot(plenary_institute):
-    """
-    Create a horizontal bar chart showing the distribution of plenary talks by institute.
-    
-    Parameters:
-    - plenary_institute: Counter object with institute counts for plenary talks
-    """
-    print("\nCreating plenary institute plot with enhanced filtering for unknowns...")
-    
-    # Create a cleaned version with unknown institutes removed
-    cleaned_institute_data = Counter()
-    
-    # Only include valid institute names (not empty and not Unknown)
-    for institute, count in plenary_institute.items():
-        if institute and institute.strip() and institute.lower() != 'unknown':
-            cleaned_institute_data[institute] += count
-    
-    # Get the top institutes
-    top_institutes = cleaned_institute_data.most_common(20)
-    
-    # Calculate total for percentages (excluding unknown)
-    total = sum(cleaned_institute_data.values())
-    
-    # Create the plot
-    plt.figure(figsize=(12, 10))
-    y_pos = np.arange(len(top_institutes))
-    
-    # Extract names and counts
-    names = [item[0] for item in top_institutes]
-    values = [item[1] for item in top_institutes]
-    
-    # Define institute types for color coding
-    institute_types = {
-        'National Laboratory': ['Brookhaven', 'BNL', 'CERN', 'GSI', 'ORNL', 'LANL', 'LBNL', 'JINR', 
-                               'RIKEN', 'FNAL', 'Fermilab', 'JLab', 'Jefferson Lab', 'IHEP'],
-        'University': ['University', 'Universit', 'College', 'School', 'Institut'],
-        'Research Center': ['Center', 'Centre', 'Institute of', 'Research']
-    }
-    
-    # Determine the type of each institute
-    colors = []
-    type_labels = []
-    for name in names:
-        institute_type = 'Other'
-        for type_name, keywords in institute_types.items():
-            if any(keyword in name for keyword in keywords):
-                institute_type = type_name
-                break
-        
-        if institute_type == 'National Laboratory':
-            colors.append('#1f77b4')  # Blue
-        elif institute_type == 'University':
-            colors.append('#ff7f0e')  # Orange
-        elif institute_type == 'Research Center':
-            colors.append('#2ca02c')  # Green
+# Debug the conference_data before trying to print summary
+debug_conference_data(conference_data, "Before Summary")
+
+# Try a very simple summary that doesn't assume any structure
+print("\nSimple Conference Summary:")
+print("Type of conference_data:", type(conference_data))
+
+if isinstance(conference_data, dict):
+    for year, data in sorted(conference_data.items()):
+        print(f"Year: {year}, Type of data: {type(data)}")
+        if isinstance(data, dict):
+            print(f"  Keys: {list(data.keys())}")
         else:
-            colors.append('#d62728')  # Red
-        
-        type_labels.append(institute_type)
-    
-    # Create horizontal bars
-    bars = plt.barh(y_pos, values, align='center', color=colors)
-    
-    # Add percentage labels
-    for i, bar in enumerate(bars):
-        percentage = (values[i] / total) * 100
-        plt.text(bar.get_width() + 1, bar.get_y() + bar.get_height()/2, 
-                f'{percentage:.1f}%', va='center')
-    
-    # Set axis labels and title
-    plt.xlabel('Number of Talks')
-    plt.ylabel('Institute')
-    plt.title('Distribution of Plenary Talks by Institute (Top 20)')
-    plt.yticks(y_pos, names)
-    
-    # Add legend for institute types
-    handles = [plt.Rectangle((0,0),1,1, color='#1f77b4'), 
-              plt.Rectangle((0,0),1,1, color='#ff7f0e'),
-              plt.Rectangle((0,0),1,1, color='#2ca02c'),
-              plt.Rectangle((0,0),1,1, color='#d62728')]
-    plt.legend(handles, ['National Laboratory', 'University', 'Research Center', 'Other'], 
-              loc='lower right')
-    
-    # Adjust layout
-    plt.tight_layout()
-    
-    # Make sure figures directory exists
-    os.makedirs('figures', exist_ok=True)
-    
-    # Save the figure
-    plt.savefig('figures/plenary_talks_by_institute.pdf', bbox_inches='tight')
-    
-    print("Plenary institute plot saved to figures/plenary_talks_by_institute.pdf")
+            print(f"  Value: {data}")
+elif isinstance(conference_data, list):
+    print(f"List length: {len(conference_data)}")
+    for i, item in enumerate(conference_data[:5]):  # Show first 5 items
+        print(f"Item {i}: {type(item)}")
+        if isinstance(item, tuple) and len(item) >= 2:
+            print(f"  Year: {item[0]}, Indico ID: {item[1]}")
+else:
+    print(f"Unexpected type: {type(conference_data)}")
 
-def create_parallel_institute_plot(parallel_institute):
+def filter_relevant_talk_types(conference_data):
     """
-    Create a horizontal bar chart showing the distribution of parallel talks by institute.
-    
-    Parameters:
-    - parallel_institute: Counter object with institute counts for parallel talks
-    """
-    print("\nCreating parallel institute plot with enhanced filtering for unknowns...")
-    
-    # Create a cleaned version with unknown institutes removed
-    cleaned_institute_data = Counter()
-    
-    # Only include valid institute names (not empty and not Unknown)
-    for institute, count in parallel_institute.items():
-        if institute and institute.strip() and institute.lower() != 'unknown':
-            cleaned_institute_data[institute] += count
-    
-    # Get the top institutes
-    top_institutes = cleaned_institute_data.most_common(20)
-    
-    # Calculate total for percentages (excluding unknown)
-    total = sum(cleaned_institute_data.values())
-    
-    # Create the plot
-    plt.figure(figsize=(12, 10))
-    y_pos = np.arange(len(top_institutes))
-    
-    # Extract names and counts
-    names = [item[0] for item in top_institutes]
-    values = [item[1] for item in top_institutes]
-    
-    # Define institute types for color coding
-    institute_types = {
-        'National Laboratory': ['Brookhaven', 'BNL', 'CERN', 'GSI', 'ORNL', 'LANL', 'LBNL', 'JINR', 
-                               'RIKEN', 'FNAL', 'Fermilab', 'JLab', 'Jefferson Lab', 'IHEP'],
-        'University': ['University', 'Universit', 'College', 'School', 'Institut'],
-        'Research Center': ['Center', 'Centre', 'Institute of', 'Research']
-    }
-    
-    # Determine the type of each institute
-    colors = []
-    type_labels = []
-    for name in names:
-        institute_type = 'Other'
-        for type_name, keywords in institute_types.items():
-            if any(keyword in name for keyword in keywords):
-                institute_type = type_name
-                break
-        
-        if institute_type == 'National Laboratory':
-            colors.append('#1f77b4')  # Blue
-        elif institute_type == 'University':
-            colors.append('#ff7f0e')  # Orange
-        elif institute_type == 'Research Center':
-            colors.append('#2ca02c')  # Green
-        else:
-            colors.append('#d62728')  # Red
-        
-        type_labels.append(institute_type)
-    
-    # Create horizontal bars
-    bars = plt.barh(y_pos, values, align='center', color=colors)
-    
-    # Add percentage labels
-    for i, bar in enumerate(bars):
-        percentage = (values[i] / total) * 100
-        plt.text(bar.get_width() + 1, bar.get_y() + bar.get_height()/2, 
-                f'{percentage:.1f}%', va='center')
-    
-    # Set axis labels and title
-    plt.xlabel('Number of Talks')
-    plt.ylabel('Institute')
-    plt.title('Distribution of Parallel Talks by Institute (Top 20)')
-    plt.yticks(y_pos, names)
-    
-    # Add legend for institute types
-    handles = [plt.Rectangle((0,0),1,1, color='#1f77b4'), 
-              plt.Rectangle((0,0),1,1, color='#ff7f0e'),
-              plt.Rectangle((0,0),1,1, color='#2ca02c'),
-              plt.Rectangle((0,0),1,1, color='#d62728')]
-    plt.legend(handles, ['National Laboratory', 'University', 'Research Center', 'Other'], 
-              loc='lower right')
-    
-    # Adjust layout
-    plt.tight_layout()
-    
-    # Save the figure
-    plt.savefig('figures/parallel_talks_by_institute.pdf', bbox_inches='tight')
-    
-    print("Parallel institute plot saved to figures/parallel_talks_by_institute.pdf")
-
-# Update the enhance_institute_data function for better consistency and efficiency
-def enhance_institute_data(conference_data):
-    """
-    Apply enhanced institute and country mapping from registration data to all talks.
+    Filter conference data to only include plenary, parallel, and poster talks.
     
     Parameters:
     - conference_data: Dictionary with conference data
     
     Returns:
-    - Enhanced conference data with improved institute and country information
+    - Updated conference_data with only relevant talk types
     """
-    print("\nEnhancing speaker data using registration information...")
+    print("\nFiltering data to include only plenary, parallel, and poster talks...")
     
-    # Track statistics
-    updated_institutes = {'plenary': 0, 'parallel': 0, 'poster': 0}
-    updated_countries = {'plenary': 0, 'parallel': 0, 'poster': 0}
-    
-    # First pass: Create comprehensive mapping of speakers to their institutes and countries
-    speaker_data_map = {}  # Will store {normalized_name: {'institute': inst, 'country': country}}
-    
-    print("Building comprehensive speaker database from all available sources...")
-    
-    # Process all registration data across all years first
     for year, data in conference_data.items():
-        if not isinstance(data, dict):
-            continue
+        # Create new all_talks list with only the relevant talk types
+        all_talks = []
         
-        # Process registrations
-        for reg in data.get('registrations', []):
-            speaker_name = reg.get('Name', '')
-            institute = reg.get('Institute', '')
-            country = reg.get('Country', '')
-            
-            if speaker_name:
-                normalized_name = speaker_name.lower().strip()
-                
-                # Create or update speaker entry
-                if normalized_name not in speaker_data_map:
-                    speaker_data_map[normalized_name] = {'institute': '', 'country': ''}
-                
-                # Only update if we have better data
-                if institute and institute.lower() != 'unknown':
-                    speaker_data_map[normalized_name]['institute'] = institute
-                
-                if country and country.lower() != 'unknown':
-                    speaker_data_map[normalized_name]['country'] = country
-    
-    # Also collect from talks with known data across all talk types and years
-    for year, data in conference_data.items():
-        if not isinstance(data, dict):
-            continue
+        # Add all plenary talks
+        if 'plenary_talks' in data:
+            all_talks.extend(data['plenary_talks'])
         
-        for talk_type in ['plenary_talks', 'parallel_talks', 'poster_talks']:
-            for talk in data.get(talk_type, []):
-                speaker = talk.get('Speaker', '')
-                institute = talk.get('Institute', '')
-                country = talk.get('Country', '')
-                
-                if speaker:
-                    normalized_name = speaker.lower().strip()
-                    
-                    # Create speaker entry if not exists
-                    if normalized_name not in speaker_data_map:
-                        speaker_data_map[normalized_name] = {'institute': '', 'country': ''}
-                    
-                    # Only update if we have better data
-                    if institute and institute.lower() != 'unknown':
-                        speaker_data_map[normalized_name]['institute'] = institute
-                    
-                    if country and country.lower() != 'unknown':
-                        speaker_data_map[normalized_name]['country'] = country
-    
-    print(f"Built database with {len(speaker_data_map)} unique speakers")
-    
-    # Second pass: Apply the comprehensive mapping to update all talks
-    for year, data in conference_data.items():
-        if not isinstance(data, dict):
-            continue
+        # Add all parallel talks
+        if 'parallel_talks' in data:
+            all_talks.extend(data['parallel_talks'])
         
-        # Process each talk type separately to track statistics
-        for talk_type in ['plenary_talks', 'parallel_talks', 'poster_talks']:
-            talk_key = talk_type.split('_')[0]  # Extract 'plenary', 'parallel', or 'poster'
-            
-            for talk in data.get(talk_type, []):
-                speaker = talk.get('Speaker', '')
-                current_institute = talk.get('Institute', '')
-                current_country = talk.get('Country', '')
-                
-                if speaker:
-                    normalized_name = speaker.lower().strip()
-                    
-                    # Try exact match first
-                    if normalized_name in speaker_data_map:
-                        speaker_data = speaker_data_map[normalized_name]
-                        
-                        # Update institute if needed
-                        if (not current_institute or current_institute.lower() == 'unknown') and speaker_data['institute']:
-                            talk['Institute'] = speaker_data['institute']
-                            updated_institutes[talk_key] += 1
-                        
-                        # Update country if needed
-                        if (not current_country or current_country.lower() == 'unknown') and speaker_data['country']:
-                            talk['Country'] = speaker_data['country']
-                            updated_countries[talk_key] += 1
-                        
-                        continue
-                    
-                    # Try partial matching for names
-                    for known_speaker, speaker_data in speaker_data_map.items():
-                        # Check if either name contains the other and is substantial (not just initials)
-                        if ((known_speaker in normalized_name or normalized_name in known_speaker) and 
-                            len(normalized_name) > 3 and len(known_speaker) > 3):
-                            
-                            # Update institute if needed
-                            if (not current_institute or current_institute.lower() == 'unknown') and speaker_data['institute']:
-                                talk['Institute'] = speaker_data['institute']
-                                updated_institutes[talk_key] += 1
-                            
-                            # Update country if needed
-                            if (not current_country or current_country.lower() == 'unknown') and speaker_data['country']:
-                                talk['Country'] = speaker_data['country']
-                                updated_countries[talk_key] += 1
-                            
-                            break
-    
-    # Print update statistics
-    total_institutes = sum(updated_institutes.values())
-    total_countries = sum(updated_countries.values())
-    
-    print(f"Enhanced speaker data for {total_institutes + total_countries} fields in total:")
-    print(f"  - Updated {total_institutes} institutes:")
-    print(f"    - Plenary talks: {updated_institutes['plenary']} institutes updated")
-    print(f"    - Parallel talks: {updated_institutes['parallel']} institutes updated")
-    print(f"    - Poster talks: {updated_institutes['poster']} institutes updated")
-    
-    print(f"  - Updated {total_countries} countries:")
-    print(f"    - Plenary talks: {updated_countries['plenary']} countries updated")
-    print(f"    - Parallel talks: {updated_countries['parallel']} countries updated")
-    print(f"    - Poster talks: {updated_countries['poster']} countries updated")
+        # Add all poster talks
+        if 'poster_talks' in data:
+            all_talks.extend(data['poster_talks'])
+        
+        # Update the all_talks entry
+        data['all_talks'] = all_talks
+        
+        # Remove other talk types if they exist
+        if 'flash_talks' in data:
+            print(f"  Removed {len(data['flash_talks'])} flash talks from QM{year}")
+            del data['flash_talks']
+        
+        if 'other_talks' in data:
+            print(f"  Removed {len(data['other_talks'])} other talks from QM{year}")
+            del data['other_talks']
     
     return conference_data
+
