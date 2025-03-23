@@ -1,0 +1,12 @@
+IMPORTANT NOTE ON GENDER ANALYSIS METHODOLOGY
+
+The gender analysis presented in these visualizations is based on algorithmic inference from first names.
+This approach has significant limitations and inherent biases, including:
+
+1. Names do not always reliably indicate gender identity
+2. The algorithm uses simplified Western/European naming patterns
+3. Many names are culturally specific and may be misclassified
+4. Non-binary and other gender identities are not represented
+
+These results should be interpreted as approximate patterns only and not definitive analyses.
+A more accurate approach would require self-reported gender information which is not available in the dataset.

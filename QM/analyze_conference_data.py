@@ -1946,42 +1946,218 @@ def create_regional_diversity_by_year(years, conference_data, regions):
     plt.savefig('figures/regional_diversity_by_year.pdf')
     plt.close()
 
-def plot_talks_by_institute(talks, title, output_file):
-    """Create plot showing distribution of talks by institute"""
-    # Count institutes
+def plot_talks_by_institute(talks, title, filename):
+    """
+    Create a bar chart showing the top institutes by number of talks.
+    
+    Parameters:
+    - talks: List of talk data
+    - title: Title for the plot
+    - filename: Filename to save the plot
+    """
+    print(f"Creating institute visualization for {title}...")
+    
+    # Count talks by institute
     institute_counts = Counter()
     
-    for talk in talks:
-        institute = talk.get('Institute', 'Unknown')
-        if institute != 'Unknown':
-            institute_counts[institute] += 1
+    # Tracking for debugging
+    missing_institute_count = 0
     
-    # Check if we have data
+    # Check for different field names that might contain institute information
+    for talk in talks:
+        institute = None
+        
+        # Try different possible field names for institute information
+        for field in ['Institute', 'Affiliation', 'institution', 'affiliation']:
+            if field in talk and talk[field] and talk[field] != 'Unknown':
+                institute = talk[field]
+                break
+        
+        # Clean up institute name if needed
+        if institute:
+            # Normalize the institute name
+            institute = normalize_institute_name(institute)
+            
+            # Add to counts
+            institute_counts[institute] += 1
+        else:
+            missing_institute_count += 1
+    
+    print(f"  Found {len(institute_counts)} unique institutes for {sum(institute_counts.values())} talks")
+    print(f"  {missing_institute_count} talks were missing institute information")
+    
+    # Check if we found any institutes
     if not institute_counts:
         plt.figure(figsize=(10, 6))
-        plt.text(0.5, 0.5, f"No institute data available for {title}", 
+        plt.text(0.5, 0.5, f"No institute data found for {title}", 
                 ha='center', va='center', fontsize=16)
-        plt.savefig(f"figures/{output_file}")
+        plt.savefig(f'figures/{filename}')
         plt.close()
         return
     
-    # Get top institutes
-    top_institutes = institute_counts.most_common(20)
+    # Get top institutes (limit to 25 for readability)
+    top_institutes = institute_counts.most_common(25)
     
-    # Create plot
-    plt.figure(figsize=(12, 10))
+    # Debug print to see what we found
+    print(f"  Top 5 institutes: {top_institutes[:5]}")
     
-    institutes, counts = zip(*top_institutes)
-    y_pos = range(len(institutes))
+    # Prepare data for horizontal bar chart
+    institutes = []
+    counts = []
     
-    plt.barh(y_pos, counts)
-    plt.yticks(y_pos, [inst[:30] + '...' if len(inst) > 30 else inst for inst in institutes])
+    for institute, count in top_institutes:
+        if len(institute) > 40:  # Truncate very long names
+            institute = institute[:37] + '...'
+        institutes.append(institute)
+        counts.append(count)
+    
+    # Create horizontal bar chart
+    plt.figure(figsize=(14, 10))
+    
+    # Create color gradient
+    colors = plt.cm.viridis(np.linspace(0, 1, len(institutes)))
+    
+    # Plot bars
+    bars = plt.barh(range(len(institutes)), counts, color=colors, alpha=0.8)
+    
+    # Add count labels to the right of each bar
+    for bar, count in zip(bars, counts):
+        plt.text(bar.get_width() + 0.3, bar.get_y() + bar.get_height()/2, 
+                str(count), va='center', fontweight='bold')
+    
+    # Add labels and title
     plt.xlabel('Number of Talks')
-    plt.title(f'Distribution of {title}')
+    plt.title(f'{title}: Top Institutes')
+    
+    # Set y-ticks (institute names)
+    plt.yticks(range(len(institutes)), institutes)
+    
+    # Add grid
+    plt.grid(True, axis='x', linestyle='--', alpha=0.7)
     
     plt.tight_layout()
-    plt.savefig(f"figures/{output_file}")
+    plt.savefig(f'figures/{filename}')
     plt.close()
+
+def normalize_institute_name(name):
+    """
+    Normalize institute names to group similar entries.
+    
+    Parameters:
+    - name: Raw institute name
+    
+    Returns:
+    - Normalized institute name
+    """
+    # Convert to string if not already
+    if not isinstance(name, str):
+        return "Unknown"
+    
+    # Convert to lowercase for case-insensitive comparison
+    normalized = name.lower()
+    
+    # Remove common appendages and punctuation
+    for pattern in [', inc.', ', ltd.', ', llc', ', gmbh', ', corp', ', corporation', 
+                    ' incorporated', ' limited', ' corporation', ' university']:
+        normalized = normalized.replace(pattern.lower(), '')
+    
+    # Normalize common abbreviations
+    abbr_map = {
+        'univ': 'university',
+        'inst': 'institute',
+        'lab': 'laboratory',
+        'natl': 'national',
+        'dept': 'department',
+        'coll': 'college',
+        'tech': 'technology',
+        'sci': 'science',
+        'phys': 'physics',
+        'sch': 'school',
+        'assoc': 'association',
+        'res': 'research',
+        'acad': 'academy',
+        'center': 'centre',  # Standardize US/UK spelling
+        'center': 'centre'
+    }
+    
+    # Apply abbreviation normalization
+    for abbr, full in abbr_map.items():
+        # Look for the abbreviation as a standalone word
+        normalized = re.sub(r'\b' + abbr + r'\b', full, normalized)
+        # Also replace when followed by a period
+        normalized = normalized.replace(abbr + '.', full)
+    
+    # Special cases for major institutions
+    institution_map = {
+        'mit': 'Massachusetts Institute of Technology',
+        'lbl': 'Lawrence Berkeley National Laboratory',
+        'cern': 'CERN',
+        'ornl': 'Oak Ridge National Laboratory',
+        'bnl': 'Brookhaven National Laboratory',
+        'jlab': 'Jefferson Laboratory',
+        'fnal': 'Fermi National Accelerator Laboratory',
+        'lanl': 'Los Alamos National Laboratory',
+        'pnnl': 'Pacific Northwest National Laboratory',
+        'slac': 'SLAC National Accelerator Laboratory'
+    }
+    
+    # Check for major institution names
+    for abbr, full in institution_map.items():
+        if abbr == normalized or abbr + ' ' in normalized or ' ' + abbr in normalized:
+            return full
+    
+    # Capitalize properly and return
+    words = normalized.split()
+    if words:
+        return ' '.join(word.capitalize() for word in words)
+    else:
+        return "Unknown"
+
+def analyze_institute_diversity(conference_data):
+    """Analyze institute diversity across conferences"""
+    print("Analyzing institute diversity...")
+    
+    # Extract all years
+    years = sorted([year for year in conference_data.keys() if year != '2025'])
+    
+    # Create aggregate visualization for all talk types combined
+    try:
+        all_talks = []
+        for year in years:
+            for talk_type in ['plenary_talks', 'parallel_talks', 'poster_talks']:
+                if talk_type in conference_data[year]:
+                    all_talks.extend(conference_data[year][talk_type])
+        
+        if all_talks:
+            plot_talks_by_institute(
+                all_talks,
+                "All Talks",
+                "all_institutes.pdf"
+            )
+    except Exception as e:
+        print(f"Error creating aggregate institute visualization: {e}")
+        traceback.print_exc()
+    
+    # Create visualizations for individual talk types (without yearly breakdowns)
+    for talk_type in ['plenary_talks', 'parallel_talks', 'poster_talks']:
+        try:
+            # Collect all talks of this type across years
+            all_talks = []
+            for year in years:
+                if talk_type in conference_data[year]:
+                    all_talks.extend(conference_data[year][talk_type])
+            
+            # Create visualization for all years combined
+            if all_talks:
+                plot_talks_by_institute(
+                    all_talks,
+                    f"All Years {talk_type.replace('_', ' ').title()}",
+                    f"all_years_{talk_type}_by_institute.pdf"
+                )
+            
+        except Exception as e:
+            print(f"Error creating {talk_type} institute visualization: {e}")
+            traceback.print_exc()
 
 def debug_data_structure(conference_data):
     """Print out a sample of the data structure to help debug issues"""
@@ -2325,6 +2501,136 @@ def create_diversity_metrics_plot(years, unique_countries, hhi_by_year):
     plt.savefig('figures/data_quality.pdf')  # Match existing filename
     plt.close()
 
+def normalize_institute_name(name):
+    """Normalize institute names for consistent identification"""
+    # Basic normalization
+    name = name.strip().lower()
+    
+    # Handle common variations and abbreviations
+    mappings = {
+        'cern': 'CERN',
+        'brookhaven': 'BNL',
+        'bnl': 'BNL',
+        'lawrence berkeley': 'LBNL',
+        'lbnl': 'LBNL',
+        'berkeley lab': 'LBNL',
+        'mit': 'MIT',
+        'berkeley': 'UC Berkeley',
+        'los alamos': 'LANL',
+        'lanl': 'LANL',
+        'oak ridge': 'ORNL',
+        'ornl': 'ORNL',
+        'argonne': 'ANL',
+        'anl': 'ANL',
+        'jyväskylä': 'University of Jyväskylä',
+        'jyvaskyla': 'University of Jyväskylä',
+        'university of jyväskylä': 'University of Jyväskylä',
+        'university of jyvaskyla': 'University of Jyväskylä',
+        'unam': 'UNAM',
+        'gsi': 'GSI',
+        'infn': 'INFN',
+        'dubna': 'JINR',
+        'jinr': 'JINR'
+    }
+    
+    # Apply mappings
+    for key, value in mappings.items():
+        if key in name:
+            return value
+    
+    # Return the original name with first letters capitalized for readability
+    return ' '.join(word.capitalize() for word in name.split())
+
+def create_institute_bubble_chart(conference_data):
+    """
+    Create a bubble chart showing institute contributions across conference years.
+    
+    This visualization shows the top 30 institutes and their contributions over time,
+    with bubble size proportional to number of presentations.
+    """
+    print("Creating institute bubble chart...")
+    
+    # Extract years, excluding 2025 if present
+    years = sorted([year for year in conference_data.keys() if year != '2025'])
+    
+    # Count institutes across all years
+    all_institute_counts = Counter()
+    
+    # Dictionary to store institute counts by year
+    institute_by_year = {}
+    
+    # First, count all institutes across all years
+    for year in years:
+        institute_counts = Counter()
+        
+        # Get all talks for this year
+        for talk_type in ['plenary_talks', 'parallel_talks', 'poster_talks']:
+            if talk_type in conference_data[year]:
+                for talk in conference_data[year][talk_type]:
+                    # Try different possible fields for institute
+                    institute = None
+                    for field in ['Institute', 'Affiliation', 'institution', 'affiliation']:
+                        if field in talk and talk[field] and talk[field] != 'Unknown':
+                            institute = normalize_institute_name(talk[field])
+                            break
+                    
+                    if institute:
+                        institute_counts[institute] += 1
+        
+        # Add to overall counts
+        all_institute_counts.update(institute_counts)
+        
+        # Store this year's counts
+        institute_by_year[year] = institute_counts
+    
+    # Get top 30 institutes by total count
+    top_institutes = [inst for inst, count in all_institute_counts.most_common(30)]
+    
+    # Create a matrix for the bubble chart
+    matrix = []
+    for institute in top_institutes:
+        row = []
+        for year in years:
+            row.append(institute_by_year[year].get(institute, 0))
+        matrix.append(row)
+    
+    # Create the bubble chart
+    plt.figure(figsize=(14, 12))
+    
+    # Create meshgrid for bubble positions
+    x_indices = np.arange(len(years))
+    y_indices = np.arange(len(top_institutes))
+    X, Y = np.meshgrid(x_indices, y_indices)
+    
+    # Flatten the arrays for scatter plot
+    x = X.flatten()
+    y = Y.flatten()
+    
+    # Get bubble sizes from matrix
+    sizes = []
+    for i, row in enumerate(matrix):
+        for count in row:
+            sizes.append(count * 50)  # Scale size for visibility
+    
+    # Create scatter plot
+    plt.scatter(x, y, s=sizes, alpha=0.7, edgecolors='gray', linewidth=1)
+    
+    # Set axes labels and ticks
+    plt.xlabel('Conference Year')
+    plt.ylabel('Institute')
+    plt.xticks(x_indices, years)
+    plt.yticks(y_indices, top_institutes)
+    
+    # Add grid for better readability
+    plt.grid(True, linestyle='--', alpha=0.7)
+    
+    # Add title
+    plt.title('Institute Contributions Across Conference Years')
+    
+    plt.tight_layout()
+    plt.savefig('figures/institute_bubble_chart.pdf', bbox_inches='tight')
+    plt.close()
+
 def analyze_conference_data():
     """Main function to analyze conference data"""
     try:
@@ -2370,9 +2676,28 @@ def analyze_conference_data():
         if not filtered_data:
             print("Error: Filtering failed, using original data")
             filtered_data = conference_data
+        
+        # Create QM talk statistics figure with the filtered data
+        print("\nCreating QM talk statistics figure...")
+        try:
+            create_talk_statistics_figure(filtered_data)
+            print("QM talk statistics figure created successfully!")
+        except Exception as e:
+            print(f"Error creating QM talk statistics figure: {e}")
+            traceback.print_exc()
             
         # STEP 6: Generate all visualizations for the paper
         print("\nSTEP 6: Generating visualizations for the paper...")
+        
+        # Add gender diversity analysis and visualization
+        try:
+            print("Analyzing gender diversity...")
+            gender_by_year, gender_by_talk_type = analyze_gender_diversity(filtered_data)
+            create_gender_diversity_plot(gender_by_year, gender_by_talk_type)
+            print("Gender diversity visualization created successfully!")
+        except Exception as e:
+            print(f"Error analyzing gender diversity: {e}")
+            traceback.print_exc()
         
         # Figure: Keywords visualization 
         try:
@@ -2403,6 +2728,14 @@ def analyze_conference_data():
                 print(f"Error creating plenary country visualization: {e}")
                 traceback.print_exc()
             
+            # Create parallel country visualization
+            try:
+                print("Creating parallel country visualization...")
+                create_parallel_country_plot(parallel_country)
+            except Exception as e:
+                print(f"Error creating parallel country visualization: {e}")
+                traceback.print_exc()
+            
             # Create representation ratio visualization
             try:
                 print("Creating representation ratio visualization...")
@@ -2426,16 +2759,17 @@ def analyze_conference_data():
         # Create institute visualizations
         try:
             print("Creating institute visualizations...")
-            for year, data in filtered_data.items():
-                for talk_type in ['plenary_talks', 'parallel_talks', 'poster_talks']:
-                    if talk_type in data:
-                        plot_talks_by_institute(
-                            data[talk_type], 
-                            f"{year} {talk_type.replace('_', ' ').title()}", 
-                            f"{talk_type}_by_institute.pdf"
-                        )
+            analyze_institute_diversity(filtered_data)
         except Exception as e:
             print(f"Error creating institute visualizations: {e}")
+            traceback.print_exc()
+            
+        # Create institute bubble chart
+        try:
+            print("Creating institute bubble chart...")
+            create_institute_bubble_chart(filtered_data)
+        except Exception as e:
+            print(f"Error creating institute bubble chart: {e}")
             traceback.print_exc()
         
         print("\n===== ANALYSIS COMPLETE =====")
@@ -2447,6 +2781,392 @@ def analyze_conference_data():
         print(f"Error in analyze_conference_data: {e}")
         traceback.print_exc()
         return None
+
+def create_talk_statistics_figure(conference_data):
+    """
+    Create a comprehensive plot of QM conference statistics.
+    Based on the implementation in fetch_and_analyze_conferences.py.
+    
+    Parameters:
+    - conference_data: Dictionary with conference data by year
+    """
+    print("Creating QM talk statistics figure...")
+    
+    # Extract all years 
+    years = sorted([int(year) for year in conference_data.keys() if year != '2025' and year.isdigit()])
+    x = np.array(years)
+    
+    # Set up the plot
+    fig = plt.figure(figsize=(14, 10))
+    
+    # Create GridSpec for layout
+    gs = gridspec.GridSpec(3, 1, height_ratios=[1.5, 1, 1])
+    
+    # Plot 1: Talk Counts by Type
+    ax1 = plt.subplot(gs[0])
+    plenary_counts = []
+    parallel_counts = []
+    poster_counts = []
+    
+    for year in years:
+        year_str = str(year)
+        if year_str in conference_data:
+            plenary_counts.append(len(conference_data[year_str].get('plenary_talks', [])))
+            parallel_counts.append(len(conference_data[year_str].get('parallel_talks', [])))
+            poster_counts.append(len(conference_data[year_str].get('poster_talks', [])))
+    
+    # Create the stacked bar chart for talk counts
+    width = 0.8
+    bars1 = ax1.bar(x, plenary_counts, width, label='Plenary Talks', color='#1f77b4')
+    bars2 = ax1.bar(x, parallel_counts, width, label='Parallel Talks', bottom=plenary_counts, color='#ff7f0e')
+    
+    # Calculate cumulative heights for stacking
+    bottom = np.array(plenary_counts) + np.array(parallel_counts)
+    bars3 = ax1.bar(x, poster_counts, width, label='Posters', bottom=bottom, color='#2ca02c')
+    
+    # Add legend
+    ax1.legend(loc='upper left')
+    
+    ax1.set_xticks(x)
+    ax1.set_xticklabels(years)
+    ax1.set_ylabel('Number of Talks')
+    ax1.set_title('QM Conference Statistics by Year', fontsize=16)
+    
+    # Add annotations for total talk counts
+    for i in range(len(x)):
+        total = plenary_counts[i] + parallel_counts[i] + poster_counts[i]
+        ax1.text(x[i], total + 5, f"{total}", ha='center', va='bottom')
+    
+    # Calculate unique countries and institutes per year
+    countries_by_year = []
+    institutes_by_year = []
+    
+    # Plot 2: Country diversity
+    ax2 = plt.subplot(gs[1])
+    
+    for year in years:
+        year_str = str(year)
+        countries = set()
+        institutes = set()
+        
+        for talk_type in ['plenary_talks', 'parallel_talks', 'poster_talks']:
+            if talk_type in conference_data[year_str]:
+                for talk in conference_data[year_str][talk_type]:
+                    if 'Country' in talk and talk['Country'] != 'Unknown':
+                        countries.add(talk['Country'])
+                    
+                    for field in ['Institute', 'Affiliation', 'institution', 'affiliation']:
+                        if field in talk and talk[field] and talk[field] != 'Unknown':
+                            institutes.add(normalize_institute_name(talk[field]))
+                            break
+        
+        countries_by_year.append(len(countries))
+        institutes_by_year.append(len(institutes))
+    
+    # Plot country diversity
+    ax2.plot(x, countries_by_year, 'o-', color='#d62728', linewidth=2, label='Unique Countries')
+    ax2.set_ylabel('Number of Countries', color='#d62728')
+    ax2.tick_params(axis='y', labelcolor='#d62728')
+    
+    # Add secondary y-axis for institutes
+    ax2_2 = ax2.twinx()
+    ax2_2.plot(x, institutes_by_year, 's-', color='#9467bd', linewidth=2, label='Unique Institutes')
+    ax2_2.set_ylabel('Number of Institutes', color='#9467bd')
+    ax2_2.tick_params(axis='y', labelcolor='#9467bd')
+    
+    # Combine legends for both axes
+    lines1, labels1 = ax2.get_legend_handles_labels()
+    lines2, labels2 = ax2_2.get_legend_handles_labels()
+    ax2.legend(lines1 + lines2, labels1 + labels2, loc='upper left')
+    
+    ax2.set_xticks(x)
+    ax2.set_xticklabels(years)
+    ax2.set_title('Geographic Diversity in QM Conferences', fontsize=16)
+    
+    # Plot 3: Talk type distribution over time
+    ax3 = plt.subplot(gs[2])
+    
+    # Calculate percentages
+    total_talks = np.array(plenary_counts) + np.array(parallel_counts) + np.array(poster_counts)
+    plenary_pct = np.array(plenary_counts) / total_talks * 100
+    parallel_pct = np.array(parallel_counts) / total_talks * 100
+    poster_pct = np.array(poster_counts) / total_talks * 100
+    
+    ax3.plot(x, plenary_pct, 'o-', color='#1f77b4', linewidth=2, label='Plenary %')
+    ax3.plot(x, parallel_pct, 's-', color='#ff7f0e', linewidth=2, label='Parallel %')
+    ax3.plot(x, poster_pct, '^-', color='#2ca02c', linewidth=2, label='Poster %')
+    
+    ax3.set_xlabel('Conference Year')
+    ax3.set_ylabel('Percentage of Talks')
+    ax3.set_xticks(x)
+    ax3.set_xticklabels(years)
+    ax3.set_title('Talk Type Distribution Over Time', fontsize=16)
+    ax3.grid(True, linestyle='--', alpha=0.5)
+    ax3.legend(loc='center left')
+    
+    plt.tight_layout()
+    
+    # Save the figure with explicit paths and names
+    print("Saving QM_talk_statistics.pdf...")
+    plt.savefig('figures/QM_talk_statistics.pdf', bbox_inches='tight')
+    plt.savefig('figures/QM_talk_statistics.png', dpi=300, bbox_inches='tight')
+    
+    # Make sure the figure is closed properly
+    plt.close(fig)
+    print("QM talk statistics figure saved successfully!")
+
+def create_parallel_country_plot(parallel_country):
+    """Create plot showing distribution of parallel talks by country"""
+    print("Creating parallel country distribution plot...")
+    
+    plt.figure(figsize=(12, 8))
+    
+    # Get top countries for parallel talks
+    top_parallel = [country for country, count in parallel_country.most_common(10)]
+    counts = [parallel_country[country] for country in top_parallel]
+    
+    # Create bar chart
+    y_pos = range(len(top_parallel))
+    plt.barh(y_pos, counts, align='center')
+    plt.yticks(y_pos, top_parallel)
+    plt.xlabel('Number of Parallel Talks')
+    plt.title('Top Countries for Parallel Talks')
+    
+    plt.tight_layout()
+    plt.savefig('figures/parallel_talks_by_country.pdf')
+    plt.close()
+
+def estimate_gender_from_name(first_name):
+    """
+    Estimate gender from first name using common patterns.
+    
+    Note: This is a simplified approach and has significant limitations.
+    Gender determination from names is inherently imprecise and culturally biased.
+    This should only be used for aggregate analysis with appropriate caveats.
+    """
+    # Strip any titles, periods, or extra spaces
+    if not first_name or first_name == "Unknown" or len(first_name) < 2:
+        return "Unknown"
+        
+    first_name = first_name.lower().strip()
+    
+    # Common female name endings in various languages
+    female_patterns = ['a', 'ie', 'ette', 'elle', 'ina', 'ia', 'lyn', 'en', 'ey', 'anne', 'enne']
+    # Names that end with these are typically feminine in many languages
+    
+    # Common male name endings in various languages
+    male_patterns = ['o', 'us', 'er', 'on', 'in', 'im', 'el', 'an', 'or', 'en', 'as']
+    # Names that end with these are typically masculine in many languages
+    
+    # Simple very common first names (this is just a small sample)
+    common_female_names = {'mary', 'jennifer', 'elizabeth', 'susan', 'margaret', 'sarah', 'lisa', 'emma', 'olivia',
+                          'sophia', 'mia', 'anna', 'maria', 'elena', 'julia', 'laura', 'natalia', 'alice', 'helen'}
+    
+    common_male_names = {'john', 'robert', 'michael', 'william', 'david', 'richard', 'joseph', 'thomas', 'james',
+                        'daniel', 'matthew', 'alexander', 'peter', 'paul', 'mark', 'andrew', 'george', 'henry'}
+    
+    # Check common name lists first
+    if first_name in common_female_names:
+        return "Female"
+    if first_name in common_male_names:
+        return "Male"
+    
+    # Check endings
+    for pattern in female_patterns:
+        if first_name.endswith(pattern):
+            return "Female"
+    
+    for pattern in male_patterns:
+        if first_name.endswith(pattern):
+            return "Male"
+    
+    # If we can't determine, return Unknown
+    return "Unknown"
+
+def analyze_gender_diversity(conference_data):
+    """
+    Analyze gender diversity in QM conferences.
+    
+    Returns dictionaries with gender counts by year and talk type.
+    """
+    print("Analyzing gender diversity...")
+    
+    # Extract years, excluding 2025 if present
+    years = sorted([year for year in conference_data.keys() if year != '2025'])
+    
+    # Track gender by year and talk type
+    gender_by_year = {year: {'Male': 0, 'Female': 0, 'Unknown': 0} for year in years}
+    gender_by_talk_type = {'plenary_talks': {'Male': 0, 'Female': 0, 'Unknown': 0},
+                          'parallel_talks': {'Male': 0, 'Female': 0, 'Unknown': 0},
+                          'poster_talks': {'Male': 0, 'Female': 0, 'Unknown': 0}}
+    
+    for year in years:
+        for talk_type in ['plenary_talks', 'parallel_talks', 'poster_talks']:
+            if talk_type in conference_data[year]:
+                for talk in conference_data[year][talk_type]:
+                    # Get speaker/first author name
+                    speaker_name = talk.get('Speaker', '')
+                    if not speaker_name or speaker_name == 'Unknown':
+                        first_author = talk.get('Authors', ['Unknown'])[0]
+                        speaker_name = first_author
+                    
+                    # Extract first name - assume format is "Last, First" or "First Last"
+                    first_name = "Unknown"
+                    if ',' in speaker_name:
+                        parts = speaker_name.split(',')
+                        if len(parts) > 1:
+                            first_name = parts[1].strip().split()[0]
+                    else:
+                        parts = speaker_name.split()
+                        if len(parts) > 0:
+                            first_name = parts[0].strip()
+                    
+                    # Estimate gender
+                    gender = estimate_gender_from_name(first_name)
+                    
+                    # Update counters
+                    gender_by_year[year][gender] += 1
+                    gender_by_talk_type[talk_type][gender] += 1
+    
+    return gender_by_year, gender_by_talk_type
+
+def create_gender_diversity_plot(gender_by_year, gender_by_talk_type):
+    """
+    Create visualizations for gender diversity analysis.
+    
+    Creates two plots:
+    1. Gender distribution by year
+    2. Gender distribution by talk type
+    """
+    print("Creating gender diversity visualizations...")
+    
+    # Extract years and calculate percentages for plotting
+    years = sorted(gender_by_year.keys())
+    
+    # Setup figure with two subplots
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 8))
+    
+    # Plot 1: Gender by Year
+    male_pct = []
+    female_pct = []
+    unknown_pct = []
+    
+    for year in years:
+        total = sum(gender_by_year[year].values())
+        if total > 0:
+            male_pct.append(gender_by_year[year]['Male'] / total * 100)
+            female_pct.append(gender_by_year[year]['Female'] / total * 100)
+            unknown_pct.append(gender_by_year[year]['Unknown'] / total * 100)
+        else:
+            male_pct.append(0)
+            female_pct.append(0)
+            unknown_pct.append(0)
+    
+    # Create stacked bar chart
+    bar_width = 0.7
+    ind = np.arange(len(years))
+    
+    ax1.bar(ind, male_pct, bar_width, label='Male', color='skyblue')
+    ax1.bar(ind, female_pct, bar_width, bottom=male_pct, label='Female', color='pink')
+    ax1.bar(ind, unknown_pct, bar_width, bottom=np.array(male_pct) + np.array(female_pct), 
+           label='Unknown', color='lightgray')
+    
+    # Add labels and title
+    ax1.set_xlabel('Conference Year')
+    ax1.set_ylabel('Percentage (%)')
+    ax1.set_title('Gender Distribution by Year')
+    ax1.set_xticks(ind)
+    ax1.set_xticklabels(years, rotation=45)
+    ax1.legend(loc='upper right')
+    
+    # Add percentages on the bars
+    for i, year in enumerate(years):
+        total = sum(gender_by_year[year].values())
+        if total > 0:
+            female_count = gender_by_year[year]['Female']
+            female_percent = female_count / total * 100
+            if female_percent > 5:  # Only add text if there's enough space
+                ax1.text(i, male_pct[i] + female_pct[i]/2, f"{female_percent:.1f}%", 
+                        ha='center', va='center', fontweight='bold')
+    
+    # Plot 2: Gender by Talk Type
+    talk_types = ['plenary_talks', 'parallel_talks', 'poster_talks']
+    talk_type_labels = ['Plenary', 'Parallel', 'Poster']
+    
+    male_counts = [gender_by_talk_type[tt]['Male'] for tt in talk_types]
+    female_counts = [gender_by_talk_type[tt]['Female'] for tt in talk_types]
+    unknown_counts = [gender_by_talk_type[tt]['Unknown'] for tt in talk_types]
+    
+    # Calculate percentages
+    totals = [sum(gender_by_talk_type[tt].values()) for tt in talk_types]
+    male_pct = [male_counts[i]/totals[i]*100 if totals[i] > 0 else 0 for i in range(len(talk_types))]
+    female_pct = [female_counts[i]/totals[i]*100 if totals[i] > 0 else 0 for i in range(len(talk_types))]
+    unknown_pct = [unknown_counts[i]/totals[i]*100 if totals[i] > 0 else 0 for i in range(len(talk_types))]
+    
+    # Create stacked bar chart
+    ind = np.arange(len(talk_types))
+    
+    ax2.bar(ind, male_pct, bar_width, label='Male', color='skyblue')
+    ax2.bar(ind, female_pct, bar_width, bottom=male_pct, label='Female', color='pink')
+    ax2.bar(ind, unknown_pct, bar_width, bottom=np.array(male_pct) + np.array(female_pct), 
+           label='Unknown', color='lightgray')
+    
+    # Add labels and title
+    ax2.set_xlabel('Talk Type')
+    ax2.set_ylabel('Percentage (%)')
+    ax2.set_title('Gender Distribution by Talk Type')
+    ax2.set_xticks(ind)
+    ax2.set_xticklabels(talk_type_labels)
+    ax2.legend(loc='upper right')
+    
+    # Add female percentages on the bars
+    for i, tt in enumerate(talk_types):
+        if totals[i] > 0:
+            female_percent = female_counts[i] / totals[i] * 100
+            if female_percent > 5:  # Only add text if there's enough space
+                ax2.text(i, male_pct[i] + female_pct[i]/2, f"{female_percent:.1f}%", 
+                        ha='center', va='center', fontweight='bold')
+    
+    plt.tight_layout()
+    plt.savefig('figures/gender_diversity.pdf')
+    plt.close()
+    
+    # Create a second figure showing female representation in plenary vs other talk types
+    plt.figure(figsize=(10, 6))
+    
+    # Calculate female representation ratio
+    plenary_female_pct = female_pct[0]
+    other_female_pct = (female_counts[1] + female_counts[2]) / (totals[1] + totals[2]) * 100 if (totals[1] + totals[2]) > 0 else 0
+    
+    comparison_data = [plenary_female_pct, other_female_pct]
+    
+    # Create bar chart
+    plt.bar(['Plenary Talks', 'Other Talks'], comparison_data, color=['darkred', 'navy'])
+    plt.axhline(y=other_female_pct, color='black', linestyle='--', alpha=0.7)
+    
+    # Add labels and title
+    plt.ylabel('Female Representation (%)')
+    plt.title('Female Representation: Plenary vs Other Talks')
+    
+    # Add percentage labels
+    for i, value in enumerate(comparison_data):
+        plt.text(i, value/2, f"{value:.1f}%", ha='center', va='center', color='white', fontweight='bold')
+    
+    plt.tight_layout()
+    plt.savefig('figures/gender_representation_comparison.pdf')
+    plt.close()
+
+    # Create a note about methodology limitations
+    with open('figures/gender_analysis_note.txt', 'w') as f:
+        f.write("IMPORTANT NOTE ON GENDER ANALYSIS METHODOLOGY\n\n")
+        f.write("The gender analysis presented in these visualizations is based on algorithmic inference from first names.\n")
+        f.write("This approach has significant limitations and inherent biases, including:\n\n")
+        f.write("1. Names do not always reliably indicate gender identity\n")
+        f.write("2. The algorithm uses simplified Western/European naming patterns\n")
+        f.write("3. Many names are culturally specific and may be misclassified\n")
+        f.write("4. Non-binary and other gender identities are not represented\n\n")
+        f.write("These results should be interpreted as approximate patterns only and not definitive analyses.\n")
+        f.write("A more accurate approach would require self-reported gender information which is not available in the dataset.\n")
 
 # Add proper entry point at the end of the file
 if __name__ == "__main__":

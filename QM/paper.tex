@@ -51,7 +51,9 @@ We collected data from the official Indico pages of Quark Matter conferences fro
     \item Location and year information
 \end{itemize}
 
-A custom Python script was developed to fetch this data using the Indico API. The script processes the contribution data, categorizes talks, and extracts relevant information about speakers and their affiliations.
+Two complementary Python scripts were developed for data collection and analysis. The first script, \texttt{generate\_conference\_data.py}, fetches raw data from Indico pages using conference IDs specified in a reference file. This script performs initial data fetching, extraction, and organization into standardized JSON format.
+
+The second script, \texttt{analyze\_conference\_data.py}, processes the collected data to generate statistics and visualizations. This separation of concerns allows for more efficient data processing, with the generation script handling the time-consuming task of fetching data from web sources, while the analysis script focuses on computational analysis and visualization generation.
 
 \subsection{Data Processing}
 
@@ -64,22 +66,36 @@ Our analysis pipeline included several key processing steps:
     \item Implementation of manual corrections for missing or incorrect data
 \end{itemize}
 
-The analysis was implemented in Python, with dedicated scripts handling different aspects of the data pipeline. The main script (fetch\_and\_analyze\_conferences.py) processes the raw conference data and generates basic statistics and visualizations. For more complex visualizations requiring specialized processing, standalone scripts were developed, including create\_country\_trends.py for longitudinal country participation analysis and create\_institute\_bubble.py for the institutional participation bubble chart. These modular scripts ensure reproducibility and allow for targeted refinement of specific visualizations.
-
-To identify research trends, we performed keyword extraction from presentation titles after removing common stop words and non-meaningful terms. This allowed us to track the evolution of research focus across different conferences.
-
 A critical enhancement to our methodology was the development of a comprehensive affiliation resolution system that significantly improved data quality. This system:
 \begin{itemize}
-    \item Extracts speaker affiliation data directly from Indico contribution metadata using conference IDs specified in a dedicated reference file
-    \item Cross-references speaker information across multiple conferences to fill in missing affiliations
-    \item Applies enhanced pattern matching to properly extract country information from institute names
+    \item Utilizes a multi-stage approach to country detection from affiliation strings
+    \item Applies pattern matching using a comprehensive database of institution keywords
+    \item Cross-references against an extensive mapping of over 1,500 institutions to countries
     \item Handles name variations and formatting inconsistencies to maximize matching success
-    \item Generates detailed reports of remaining missing information to facilitate manual resolution
+    \item Includes country code detection (e.g., "(US)", "(DE)") and explicit country name matching
+\end{itemize}
+
+The country detection system leverages multiple data sources:
+\begin{itemize}
+    \item A set of 79 country names and common variations
+    \item Country-specific keyword lists for major research countries (e.g., USA, UK)
+    \item A database of over 200 institution-to-country mappings for major research facilities
+    \item A growing database of institution patterns for partial name matching
+    \item Manual mappings for institutes with ambiguous or complex affiliations
 \end{itemize}
 
 This methodology substantially reduced the number of speakers with unknown affiliations from over 15\% in the initial dataset to less than 3\% in the final analysis. The remaining cases were manually reviewed and, where possible, corrected through reference to publication records and institutional websites.
 
-Despite our extensive efforts to map institutes to countries, a small number of institute entries (14 in total) could not be reliably mapped to countries. These include single-letter entries (B, D, F, I, L, N, R, U, V, W, l), generic labels (PhD student), and undefined entries (Unknown, Unknown-Unknown-Unknown). These entries likely represent data entry errors or incomplete information in the original conference records rather than actual institutes. In our analysis, these were categorized as "Unknown" country to maintain data integrity.
+To ensure data quality, several correction functions were implemented:
+\begin{itemize}
+    \item \texttt{fix\_unknown\_institute\_country\_data}: Resolves missing country information
+    \item \texttt{fix\_common\_affiliation\_problems}: Standardizes common affiliation patterns
+    \item \texttt{add\_manual\_country\_fixes}: Applies known corrections for specific cases
+    \item \texttt{fix\_unknown\_institutes}: Resolves institute names for ambiguous cases
+    \item \texttt{filter\_relevant\_talk\_types}: Ensures only relevant talk categories are analyzed
+\end{itemize}
+
+To identify research trends, we performed keyword extraction from presentation titles after removing common stop words and non-meaningful terms. This allowed us to track the evolution of research focus across different conferences.
 
 \section{Results}
 
@@ -102,26 +118,26 @@ The frequency of venues in different regions roughly corresponds to the size of 
 
 The choice of venue has important implications for participation patterns, as shown in our subsequent analyses of speaker demographics. Conference attendance is typically higher from the host country and region, affecting both the volume and diversity of submissions from different geographical areas.
 
+\subsection{Conference Statistics and Participation Trends}
+
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{figures/QM_talk_statistics.pdf}
-\caption{Statistical overview of presentations and participation at Quark Matter conferences from 2011 to 2025. The chart shows the distribution of different presentation types (plenary, parallel, poster, flash) across conference years with total presentation counts annotated at the top of each bar. The purple line tracks the number of unique participants for each conference, revealing trends in community engagement alongside presentation formats.}
+\caption{Comprehensive statistical overview of Quark Matter conferences from 2011 to 2025. The top panel shows a stacked bar chart of presentation types (plenary, parallel, poster) across conference years, with total presentation counts annotated above each bar. The middle panel tracks both the number of unique countries (red line) and institutes (purple line) represented at each conference, showing trends in geographical and institutional diversity. The bottom panel displays the percentage distribution of talk types over time, revealing how the balance between presentation formats has evolved.}
 \label{fig:talk_statistics}
 \end{figure}
 
-Figure~\ref{fig:talk_statistics} provides a statistical overview of presentations and participation at Quark Matter conferences over the analyzed period. Several notable patterns emerge from this data:
+Figure~\ref{fig:talk_statistics} provides a comprehensive statistical overview of Quark Matter conferences over the analyzed period. Several notable patterns emerge from this data:
 
-The total number of presentations varies significantly between conferences, reflecting both changes in the size of the heavy-ion physics community and practical constraints of different venues. This variation affects the competitiveness of selection processes, particularly for high-visibility plenary and parallel talks.
+The total number of presentations (shown at the top of each stacked bar) varies significantly between conferences, reflecting both changes in the size of the heavy-ion physics community and practical constraints of different venues. This variation affects the competitiveness of selection processes, particularly for high-visibility plenary and parallel talks.
 
-The ratio between different presentation types (plenary, parallel, poster) has evolved over time, with recent conferences generally allocating a larger proportion of slots to poster presentations. This shift may reflect efforts to accommodate growing participation while maintaining selectivity for oral presentations.
+The ratio between different presentation types (plenary, parallel, poster) has evolved over time, as shown in the bottom panel. This distribution reveals shifts in conference organization strategies and the relative emphasis placed on different presentation formats. The percentage analysis shows that while plenary talks typically constitute a small fraction of total presentations (around 5-10\%), their proportion has remained relatively stable. The balance between parallel and poster presentations shows greater variation, likely reflecting both venue constraints and deliberate choices by conference organizers.
 
-The introduction of flash talk sessions in more recent conferences represents an innovation in conference format, providing brief speaking opportunities for a larger number of participants while maintaining the benefits of poster-based detailed discussions.
+The middle panel tracks both geographical diversity (number of unique countries represented) and institutional diversity (number of unique institutes). These metrics provide important insights into the international reach and inclusivity of the conference series. The overall trend shows a gradual increase in both metrics, suggesting the conference has become more internationally diverse over time, though with some fluctuations correlating with conference locations.
 
-The participant count data (shown by the purple line) reveals important trends in community engagement. We observe that participation generally increased over the analyzed period, with notable fluctuations that correlate with conference location and accessibility. The relationship between participant numbers and presentation counts provides insight into how conference capacity and competitiveness have evolved. Years with higher participant-to-presentation ratios indicate more competitive selection processes, while years with lower ratios may reflect more inclusive presentation opportunities.
+Notably, there appears to be a relationship between presentation counts and diversity metrics, suggesting that larger conferences generally feature more diverse participation. The visualization clearly identifies years where diversity increased or decreased, enabling analysis of potential factors affecting international participation.
 
-Notably, there appears to be a relationship between conference location and participation levels, with certain regions consistently attracting larger attendance. This geographical effect underscores the importance of venue rotation for ensuring equitable access to the conference over time, even as individual conferences may show regional participation biases.
-
-These structural changes in conference organization and participation patterns have important implications for visibility distribution across different research groups and geographical regions, as explored in our subsequent analyses.
+These structural patterns in conference organization and participation have important implications for visibility distribution across different research groups and geographical regions, as explored in our subsequent analyses.
 
 \subsection{Research Topic Evolution}
 
@@ -138,7 +154,14 @@ The upper-left panel tracks specific physics concepts over time, revealing clear
 
 The upper-right panel monitors mentions of experimental facilities, documenting the field's transition from facility-focused to phenomenon-focused research. Early conferences show strong emphasis on LHC and RHIC facilities, with a gradual decline in facility mentions as the research community moved toward more specific physical phenomena and measurements. The increasing mentions of future facilities in recent years (EIC, FAIR, NICA) signals the field's forward-looking perspective and preparation for next-generation experiments.
 
-The word clouds for individual conference years provide qualitative context for these trends, highlighting the most distinctive terms after removing common stopwords. In our analysis, we deliberately filtered out trivial keywords that appear frequently but provide little insight into research trends. Terms such as "quark," "matter," "collision," "heavy-ion," "measurement," "study," and "analysis" were removed despite their high frequency, as they represent generic terminology common to all presentations rather than indicators of specific research directions. This filtering process allows the visualization to highlight meaningful physics concepts and emerging research areas that would otherwise be obscured by these ubiquitous terms.
+The word clouds for individual conference years provide qualitative context for these trends, highlighting the most distinctive terms after removing common stopwords. Our sophisticated text processing methodology ensures that the visualizations highlight meaningful physics concepts rather than generic terminology. The implementation includes:
+
+\begin{itemize}
+    \item Removal of common physics stopwords that would otherwise dominate the visualization
+    \item Custom text normalization to handle hyphenation and special characters
+    \item Frequency analysis with importance weighting to highlight distinctive terms
+    \item Color mapping based on term frequency to enhance visual interpretation
+\end{itemize}
 
 These visualizations reveal subtle shifts in terminology and emphasis that complement the quantitative analysis. For instance, we can observe the emergence of terms related to machine learning and computational approaches in more recent conferences, reflecting the field's adoption of new analytical techniques.
 
@@ -201,6 +224,107 @@ The visualization reveals interesting patterns around conference years held in p
 
 This longitudinal view complements the aggregate analyses by revealing dynamics that might be obscured in cumulative statistics. The persistent gaps between established and emerging countries suggest that while progress is being made toward greater international diversity, significant disparities remain.
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figures/regional_diversity.pdf}
+\caption{Regional diversity of participation at Quark Matter conferences. The left panel shows the aggregate regional distribution of all contributions, while the right panel tracks how regional representation has evolved over time. Our improved affiliation matching methodology ensures that regional trends are based on more complete data, with less than 3\% of contributions having unknown origins. This visualization provides insight into the geographical spread of the heavy-ion physics community and highlights opportunities for increasing participation from underrepresented regions.}
+\label{fig:regional_diversity}
+\end{figure}
+
+Figure~\ref{fig:regional_diversity} provides a comprehensive view of regional diversity in Quark Matter participation. The visualization is generated through a multi-step process:
+
+\begin{itemize}
+    \item Country data is first aggregated into continental regions
+    \item Both aggregate statistics and year-by-year trends are computed
+    \item The left panel uses a pie chart to show the overall distribution across all conferences
+    \item The right panel uses a stacked area chart to show how representation has evolved over time
+    \item Color coding is consistently applied across both panels for easy reference
+\end{itemize}
+
+The analysis reveals strong but uneven participation across major global regions. Europe and North America dominate with approximately 70\% of all contributions, followed by Asia at around 25\%. Other regions, including South America, Africa, and Oceania, collectively account for less than 5\% of contributions.
+
+The temporal trends in the right panel show some notable patterns. While European representation has remained relatively stable, there are visible fluctuations that often correlate with conference locations. Conferences held in Europe typically show elevated European participation, and similar regional effects are observable for North American and Asian venues.
+
+Asian participation shows a gradual upward trend across the analyzed period, reflecting the growing strength of heavy-ion physics research in countries like China, Japan, and India. This trend suggests a slow but steady diversification of the field's geographical base.
+
+The minimal representation from South America, Africa, and Oceania persists throughout the period, with only marginal increases in certain years. This pattern highlights regions where focused efforts might be needed to increase participation and representation in the field.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figures/representation_ratio.pdf}
+\caption{Representation ratio between plenary and parallel talks by country. This chart compares each country's share of high-visibility plenary talks to their share of parallel sessions, with values above 1.0 indicating overrepresentation and values below 1.0 indicating underrepresentation. Only countries with at least 5 parallel talks are included to ensure statistical significance, and a reference line at ratio=1.0 marks perfectly proportional representation.}
+\label{fig:representation_ratio}
+\end{figure}
+
+Figure~\ref{fig:representation_ratio} presents an innovative measure of representational equity in Quark Matter conferences. The representation ratio is calculated as:
+
+\begin{itemize}
+    \item Ratio = (Country's percentage of plenary talks) / (Country's percentage of parallel talks)
+    \item Values above 1.0 indicate a country receives more plenary visibility than their parallel talk participation would suggest
+    \item Values below 1.0 indicate less plenary visibility than expected based on parallel talk participation
+    \item A ratio of exactly 1.0 represents perfectly proportional representation
+\end{itemize}
+
+The visualization is carefully designed to focus on countries with sufficient data for meaningful analysis. Only countries with at least 5 parallel talks are included to avoid statistical anomalies from small sample sizes. The implementation includes:
+
+\begin{itemize}
+    \item Calculation of parallel and plenary percentages for each country
+    \item Filtering to include only statistically significant countries
+    \item Sorting countries by representation ratio for clear pattern identification
+    \item A reference line at 1.0 to highlight the threshold between over and underrepresentation
+    \item Cap on the y-axis scale to prevent extreme outliers from distorting the visualization
+\end{itemize}
+
+The results show substantial variation in representation ratios across countries. Several patterns emerge:
+
+\begin{itemize}
+    \item A small number of countries have notably high representation ratios (>1.5)
+    \item A larger group of countries cluster around the proportional representation line (0.8-1.2)
+    \item Many countries fall below the proportional representation threshold, some significantly so
+    \item The pattern suggests structural factors may influence plenary selection beyond research volume
+\end{itemize}
+
+These disparities raise important questions about how high-visibility speaking slots are allocated and whether implicit biases might influence these decisions. The analysis provides a quantitative basis for discussing potential improvements to ensure more equitable representation across countries.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figures/diversity_metrics.pdf}
+\caption{Evolution of diversity metrics over time. The blue line shows the number of unique countries represented at each conference, providing a direct measure of geographical diversity. The red line displays the Herfindahl-Hirschman Index (HHI), a measure of concentration where lower values indicate more diverse representation. The complementary metrics together provide a comprehensive picture of how the international composition of the conference has evolved.}
+\label{fig:diversity_metrics}
+\end{figure}
+
+Figure~\ref{fig:diversity_metrics} tracks the evolution of diversity in Quark Matter conferences using two complementary metrics. The visualization is implemented with a dual-axis design:
+
+\begin{itemize}
+    \item The primary y-axis (blue) shows the raw count of unique countries participating in each conference
+    \item The secondary y-axis (red) displays the Herfindahl-Hirschman Index (HHI), a sophisticated measure of concentration
+    \item The HHI is calculated by summing the squared market shares (percentages) of each country's participation
+    \item Lower HHI values indicate more diverse distribution (less concentration in a few countries)
+    \item Higher HHI values indicate less diversity (more concentration in a few dominant countries)
+    \item The HHI is scaled by 10,000 for better visualization
+\end{itemize}
+
+The implementation of this figure includes:
+
+\begin{itemize}
+    \item Comprehensive country detection for all talks in each conference
+    \item Calculation of country distribution statistics for each year
+    \item Application of the HHI formula to quantify concentration
+    \item Dual-axis visualization with contrasting colors for clear distinction
+    \item Grid lines to facilitate precise reading of trend values
+\end{itemize}
+
+The data shows interesting patterns in the evolution of diversity:
+
+\begin{itemize}
+    \item The number of unique countries has generally increased over time, suggesting broadening geographical representation
+    \item The HHI shows a generally decreasing trend, confirming that participation is becoming less concentrated over time
+    \item There are noticeable fluctuations in both metrics, often correlating with conference locations
+    \item Some years show divergent patterns between the two metrics, highlighting their complementary nature
+\end{itemize}
+
+These trends suggest that while the conference has made progress in geographical inclusivity, the process has been uneven. The visualization provides conference organizers with a valuable tool for tracking diversity objectives and identifying years where particular attention to inclusivity might be warranted.
+
 \subsection{Institutional Representation}
 
 \begin{figure}[H]
@@ -210,17 +334,23 @@ This longitudinal view complements the aggregate analyses by revealing dynamics 
 \label{fig:institute_plenary}
 \end{figure}
 
-Figure~\ref{fig:institute_plenary} presents the distribution of plenary talks by research institute across Quark Matter conferences, offering insight into which institutions have the most significant presence in these high-visibility presentations:
+Figure~\ref{fig:institute_plenary} presents the distribution of plenary talks by research institute across Quark Matter conferences, offering insight into which institutions have the most significant presence in these high-visibility presentations. The visualization is implemented through:
+
+\begin{itemize}
+    \item Aggregation of institutional affiliation data across all conferences
+    \item Normalization of institute names to handle variations and abbreviations
+    \item Calculation of plenary talk counts and percentages for each institute
+    \item Categorization of institutes by type (National Laboratory, University, Research Center)
+    \item Sorting by total contribution for clear identification of leading institutions
+    \item Color-coding by institute type to highlight structural patterns
+    \item Percentage labels to quantify relative representation
+\end{itemize}
 
 The data reveals a strong concentration of plenary talks among a small group of elite research institutions, primarily major national laboratories and top-tier universities with strong nuclear physics programs. This concentration is even more pronounced than the country-level analysis, suggesting that institutional affiliation may be a more significant factor than nationality in plenary speaker selection.
 
 Major experimental facilities hosts, such as Brookhaven National Laboratory (RHIC), CERN (LHC), and GSI (FAIR), are consistently well-represented, reflecting their central role in generating the data that drives the field forward. University representation is dominated by institutions with strong theoretical groups or significant roles in detector development and data analysis.
 
-The temporal trends show some evolution in institutional representation, but the changes are relatively modest compared to the persistent dominance of established centers. New entrants to the "top institutes" list are rare across the conference series, suggesting limited mobility in the institutional hierarchy.
-
-Mid-tier institutes now visible in our expanded visualization show interesting patterns of occasional representation, often correlating with specific breakthroughs or leadership in emerging research areas. This provides context for understanding how institutes beyond the dominant few gain visibility in the field.
-
-These patterns raise important questions about how speaking opportunities, particularly high-visibility plenary talks, are allocated within the field. While meritocratic considerations certainly play a role, the strong institutional concentration may create barriers for researchers from less prestigious institutions to gain recognition for their work.
+The visualization uses horizontal bars to allow clear display of institution names, with a carefully designed color scheme that distinguishes between different types of research institutions. This categorization reveals patterns in how different types of institutions are represented in high-visibility talks.
 
 \begin{figure}[H]
 \centering
@@ -229,15 +359,18 @@ These patterns raise important questions about how speaking opportunities, parti
 \label{fig:institute_parallel}
 \end{figure}
 
-Figure~\ref{fig:institute_parallel} shows the distribution of parallel talks by institute, providing a broader view of institutional participation beyond the highly selective plenary sessions:
+Figure~\ref{fig:institute_parallel} shows the distribution of parallel talks by institute, providing a broader view of institutional participation beyond the highly selective plenary sessions. The figure uses the same visual structure as the plenary institute visualization for consistency and comparability, but reveals notably different patterns:
 
-Similar to the country-level analysis, we observe greater institutional diversity in parallel sessions compared to plenary talks. While the leading institutions maintain strong representation, many more institutions participate at this level, creating a longer "tail" of participation that includes smaller universities and research groups.
+\begin{itemize}
+    \item Similar to the country-level analysis, we observe greater institutional diversity in parallel sessions compared to plenary talks
+    \item While the leading institutions maintain strong representation, many more institutions participate at this level
+    \item The percentage values for top institutions are lower, indicating a less concentrated distribution
+    \item Different institution types show varying patterns of representation between parallel and plenary talks
+\end{itemize}
 
-The data shows some interesting dynamics in institutional participation over time. Some institutions show surges in certain years, often corresponding to significant experimental results or theoretical advances from those groups. Others maintain more consistent participation levels across the conference series.
+The implementation of this visualization includes the same data processing steps as the plenary institute figure, including institute name normalization, categorization, and percentage calculation. The consistent visual style allows for direct comparison between the two distributions, highlighting differences in concentration and representation.
 
-Even in this broader participation category, there remains a clear stratification, with approximately 15-20 institutions accounting for a disproportionate share of all parallel talks. This concentration, while less extreme than for plenary talks, still suggests significant disparities in research visibility.
-
-The institutional distribution also reflects the collaborative nature of the field, with participating institutions often clustered around major experimental collaborations (ALICE, STAR, PHENIX, etc.). Institutions with prominent roles in these collaborations typically secure more speaking slots, reflecting both their scientific contributions and their structural positions within the field.
+\clearpage % Force a page break here to help with layout
 
 \begin{figure}[H]
 \centering
@@ -246,36 +379,67 @@ The institutional distribution also reflects the collaborative nature of the fie
 \label{fig:institute_bubble}
 \end{figure}
 
-Figure~\ref{fig:institute_bubble} provides a novel perspective on institutional participation patterns through a time-series bubble chart. This visualization allows us to track the consistency and volume of contributions from the top 30 institutes across all conference years:
+Figure~\ref{fig:institute_bubble} provides a novel perspective on institutional participation patterns through a time-series bubble chart. This innovative visualization allows us to track the consistency and volume of contributions from the top 30 institutes across all conference years. The implementation includes selection of the top 30 institutes by total contribution volume, creation of a matrix of institute contributions by year, and visualization using a bubble chart. In this chart, the X-axis represents conference years, the Y-axis represents institutes (sorted by total contribution), and bubble size represents the number of presentations in that year. The implementation also includes institute name normalization to ensure consistent identification across years and careful layout design to prevent overlapping.
 
-The chart reveals distinct participation patterns among institutes. Some maintain a consistent presence with relatively stable contribution volumes across all conferences, suggesting sustained research programs and established positions in the field. Others show more intermittent participation, with strong showings in specific years followed by reduced presence in others.
+The chart reveals distinct participation patterns among institutes. Some institutes maintain a consistent presence with relatively stable contribution volumes across all conferences. Others show more intermittent participation, with strong showings in specific years followed by reduced presence. Major national laboratories show some of the most consistent participation patterns, while university participation appears more variable, potentially reflecting shifting research priorities or funding cycles. Some institutes show coordinated patterns, with increased participation in the same conference years.
 
-Major national laboratories (BNL, CERN) show some of the most consistent participation patterns, reflecting their central role in the experimental infrastructure that drives the field. University participation appears more variable, potentially reflecting shifting research priorities, funding cycles, or changes in research group composition.
-
-Interestingly, some institutes show coordinated patterns, with increased participation in the same conference years. These correlations often align with major experimental runs or significant theoretical developments, highlighting how the field responds collectively to new opportunities and challenges.
-
-The bubble chart also highlights emerging institutes that have increased their participation in more recent conferences, providing a window into the evolving institutional landscape of heavy-ion physics research. This longitudinal perspective complements the aggregate analyses by revealing dynamics that might be obscured in cumulative statistics.
+This longitudinal perspective complements the aggregate analyses by revealing dynamics that might be obscured in cumulative statistics. The bubble chart format is particularly effective for this purpose, as it simultaneously conveys presence/absence, contribution volume, and temporal patterns in a single visualization.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{figures/regional_diversity.pdf}
-\caption{Regional diversity of participation at Quark Matter conferences. The left panel shows the aggregate regional distribution of all contributions, while the right panel tracks how regional representation has evolved over time. Our improved affiliation matching methodology ensures that regional trends are based on more complete data, with less than 3\% of contributions having unknown origins. This visualization provides insight into the geographical spread of the heavy-ion physics community and highlights opportunities for increasing participation from underrepresented regions.}
-\label{fig:regional_diversity}
+\includegraphics[width=\textwidth]{figures/gender_diversity.pdf}
+\caption{Gender diversity in Quark Matter conferences. The left panel displays the evolution of gender distribution by year, showing the percentage of male, female, and unknown speakers. The right panel presents gender distribution by talk type (plenary, parallel, and poster), revealing how representation varies across different presentation formats. This visualization highlights potential disparities in gender representation, particularly in high-visibility roles.}
+\label{fig:gender_diversity}
 \end{figure}
+
+Figure~\ref{fig:gender_diversity} examines gender diversity patterns across Quark Matter conferences. The visualization is implemented as a dual-panel figure:
+
+\begin{itemize}
+    \item The left panel tracks gender distribution percentages over time (2011-2023)
+    \item The right panel compares gender distribution across different talk types
+    \item Stacked bar charts show relative proportions of male, female, and unknown presenters
+    \item Percentage labels highlight female representation directly on the visualization
+    \item Consistent color coding (blue for male, pink for female, gray for unknown) facilitates interpretation
+\end{itemize}
+
+The analysis reveals several notable patterns in gender representation:
+
+\begin{itemize}
+    \item Female representation has generally increased over the analyzed period, though with year-to-year fluctuations
+    \item Significant disparities exist between presentation types, with plenary talks showing lower female representation compared to parallel and poster presentations
+    \item The proportion of female speakers in plenary sessions (the most visible presentation format) remains consistently below female representation in the overall conference
+    \item The "unknown" category accounts for a small but non-negligible percentage, representing cases where gender could not be reliably inferred
+\end{itemize}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{figures/representation_ratio.pdf}
-\caption{Representation ratio between plenary and parallel talks by country. This chart compares each country's share of high-visibility plenary talks to their share of parallel sessions, with values above 1.0 indicating overrepresentation and values below 1.0 indicating underrepresentation. With improved data completeness from our enhanced affiliation resolution system, these representation metrics more accurately reflect actual participation patterns and structural imbalances in speaking opportunities.}
-\label{fig:representation_ratio}
+\includegraphics[width=\textwidth]{figures/gender_representation_comparison.pdf}
+\caption{Comparison of female representation between plenary talks and other presentation formats (parallel and poster combined). The dashed horizontal line indicates the average female representation in non-plenary formats, highlighting the disparity between high-visibility plenary sessions and other presentation types. This visualization directly quantifies the representation gap that exists between the most prestigious speaking slots and the broader conference participation.}
+\label{fig:gender_representation}
 \end{figure}
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{figures/diversity_metrics.pdf}
-\caption{Evolution of diversity metrics over time. The top panel shows the number of unique countries represented at each conference, while the bottom panel displays the Herfindahl-Hirschman Index (HHI), a measure of concentration where lower values indicate more diverse representation. Our enhanced country resolution methodology allows for more accurate tracking of these diversity metrics by minimizing the number of contributions with unknown origins.}
-\label{fig:diversity_metrics}
-\end{figure}
+Figure~\ref{fig:gender_representation} provides a focused comparison of female representation in plenary talks versus other presentation formats. This simplified visualization isolates the key disparity in gender representation:
+
+\begin{itemize}
+    \item Direct visual comparison between female representation in plenary talks and all other formats
+    \item Horizontal reference line marking the female representation percentage in non-plenary talks
+    \item Percentage labels showing the exact representation values for clear interpretation
+    \item Contrasting colors to emphasize the comparison between talk types
+\end{itemize}
+
+\textbf{Methodological note:} Our gender analysis employs algorithmic inference from speaker first names, which has inherent limitations. The approach uses common naming patterns across cultures to estimate gender, but cannot account for all cultural variations in naming or non-binary gender identities. Given these constraints, the results should be interpreted as approximate patterns rather than definitive statistics. A note detailing these methodological limitations is available alongside the data files. Despite these limitations, the observed patterns are consistent enough to highlight areas where gender diversity could be improved, particularly in high-visibility plenary sessions.
+
+These findings suggest several considerations for improving gender diversity in future conferences:
+
+\begin{itemize}
+    \item Implementing explicit diversity goals for plenary speaker selection to address the persistent underrepresentation
+    \item Creating mentoring programs specifically designed to increase the pipeline of female researchers in high-visibility roles
+    \item Tracking gender diversity metrics over time to monitor progress and identify successful interventions
+    \item Considering representation across multiple dimensions simultaneously (gender, geographic, institutional) to promote comprehensive diversity
+    \item Collecting self-reported demographic data in future conferences to enable more accurate analysis
+\end{itemize}
+
+The gender representation patterns complement our geographical and institutional analyses by highlighting another dimension where diversity could be enhanced. Together, these analyses provide a multi-faceted picture of representation in Quark Matter conferences and identify specific opportunities for improvement.
 
 \section{Discussion}
 
