@@ -2670,156 +2670,179 @@ def create_institute_bubble_chart(conference_data):
     plt.savefig('figures/institute_bubble_chart.pdf', bbox_inches='tight')
     plt.close()
 
-def analyze_conference_data():
-    """Main function to analyze conference data"""
-    try:
-        # Load the processed data
-        conference_data = load_processed_data()
-        if not conference_data:
-            print("Error: Could not load processed data")
-            return
-            
-        print("\n===== BEGINNING ANALYSIS =====")
-        
-        # Create output directories
-        os.makedirs('figures', exist_ok=True)
-        os.makedirs('data/analysis', exist_ok=True)
-        
-        # Display initial conference summary
-        print("\nConference summary from processed data:")
-        display_conference_summary(conference_data)
-        
-        # STEP 1: Fix inconsistencies in institute and country data
-        print("\nSTEP 1: Fixing inconsistencies in institute and country data...")
-        conference_data = fix_unknown_institute_country_data(conference_data)
-        
-        # STEP 2: Fix common affiliation problems
-        print("\nSTEP 2: Fixing common affiliation problems...")
-        conference_data = fix_common_affiliation_problems(conference_data)
-        
-        # STEP 3: Add manual country fixes
-        print("\nSTEP 3: Adding manual country fixes...")
-        conference_data = add_manual_country_fixes(conference_data)
-        
-        # STEP 4: Specifically fix unknown institutes
-        print("\nSTEP 4: Specifically fixing unknown institutes...")
-        conference_data = fix_unknown_institutes(conference_data)
-        
-        # Display final conference summary
-        print("\nFinal conference summary:")
-        display_conference_summary(conference_data)
-        
-        # STEP 5: Filter to only include relevant talk types
-        print("\nSTEP 5: Filtering to include only relevant talk types...")
-        filtered_data = filter_relevant_talk_types(conference_data)
-        if not filtered_data:
-            print("Error: Filtering failed, using original data")
-            filtered_data = conference_data
-        
-        # Create QM talk statistics figure with the filtered data
-        print("\nCreating QM talk statistics figure...")
-        try:
-            create_talk_statistics_figure(filtered_data)
-            print("QM talk statistics figure created successfully!")
-        except Exception as e:
-            print(f"Error creating QM talk statistics figure: {e}")
-            traceback.print_exc()
-            
-        # STEP 6: Generate all visualizations for the paper
-        print("\nSTEP 6: Generating visualizations for the paper...")
-        
-        # Add gender diversity analysis and visualization
-        try:
-            print("Analyzing gender diversity...")
-            gender_by_year, gender_by_talk_type = analyze_gender_diversity(filtered_data)
-            create_gender_diversity_plot(gender_by_year, gender_by_talk_type)
-            print("Gender diversity visualization created successfully!")
-        except Exception as e:
-            print(f"Error analyzing gender diversity: {e}")
-            traceback.print_exc()
-        
-        # Figure: Keywords visualization 
-        try:
-            print("Creating keywords visualization...")
-            create_keywords_plot(filtered_data)
-        except Exception as e:
-            print(f"Error creating keywords visualization: {e}")
-            traceback.print_exc()
-            
-        # Figures: Country analysis
-        try:
-            print("Analyzing country distribution...")
-            country_counts = analyze_country_distribution(filtered_data)
-        except Exception as e:
-            print(f"Error analyzing country distribution: {e}")
-            traceback.print_exc()
-            
-        # Figures: Plenary vs parallel talks
-        try:
-            print("Analyzing plenary vs parallel talks...")
-            plenary_country, parallel_country = analyze_plenary_vs_parallel(filtered_data)
-            
-            # Create plenary country visualization
-            try:
-                print("Creating plenary country visualization...")
-                create_plenary_country_plot(plenary_country)
-            except Exception as e:
-                print(f"Error creating plenary country visualization: {e}")
-                traceback.print_exc()
-            
-            # Create parallel country visualization
-            try:
-                print("Creating parallel country visualization...")
-                create_parallel_country_plot(parallel_country)
-            except Exception as e:
-                print(f"Error creating parallel country visualization: {e}")
-                traceback.print_exc()
-            
-            # Create representation ratio visualization
-            try:
-                print("Creating representation ratio visualization...")
-                create_representation_ratio_plot(plenary_country, parallel_country)
-            except Exception as e:
-                print(f"Error creating representation ratio: {e}")
-                traceback.print_exc()
-                
-        except Exception as e:
-            print(f"Error analyzing plenary vs parallel talks: {e}")
-            traceback.print_exc()
-            
-        # Create regional diversity visualization
-        try:
-            print("Creating regional diversity visualization...")
-            create_regional_diversity_plot(country_counts, filtered_data)
-        except Exception as e:
-            print(f"Error creating regional diversity visualization: {e}")
-            traceback.print_exc()
-            
-        # Create institute visualizations
-        try:
-            print("Creating institute visualizations...")
-            analyze_institute_diversity(filtered_data)
-        except Exception as e:
-            print(f"Error creating institute visualizations: {e}")
-            traceback.print_exc()
-            
-        # Create institute bubble chart
-        try:
-            print("Creating institute bubble chart...")
-            create_institute_bubble_chart(filtered_data)
-        except Exception as e:
-            print(f"Error creating institute bubble chart: {e}")
-            traceback.print_exc()
-        
-        print("\n===== ANALYSIS COMPLETE =====")
-        print("All visualizations have been saved to the 'figures' directory")
-        
-        return conference_data
+def analyze_conference_data(conference_data=None, output_dir='figures'):
+    """Main function to analyze conference data and generate visualizations"""
+    print("Analyzing conference data...")
     
+    # First load the processed data if not provided
+    if conference_data is None:
+        try:
+            print("\nLoading processed data...")
+            conference_data = load_processed_data()
+            if not conference_data:
+                print("Error: Could not load processed data")
+                return
+        except Exception as e:
+            print(f"Error loading processed data: {e}")
+            traceback.print_exc()
+            return
+    
+    # Create output directory if it doesn't exist
+    os.makedirs(output_dir, exist_ok=True)
+    
+    # Fix unknown countries for known institutes
+    try:
+        print("\nFixing unknown countries for known institutes...")
+        conference_data = fix_unknown_countries_for_known_institutes(conference_data)
     except Exception as e:
-        print(f"Error in analyze_conference_data: {e}")
+        print(f"Error fixing unknown countries: {e}")
         traceback.print_exc()
-        return None
+    
+    # Pre-process the data
+    print("\nPre-processing data...")
+    try:
+        filtered_data = preprocess_conference_data(conference_data)
+    except Exception as e:
+        print(f"Error pre-processing data: {e}")
+        traceback.print_exc()
+        filtered_data = conference_data
+
+    print("\n===== BEGINNING ANALYSIS =====")
+    
+    # Create output directories
+    os.makedirs('figures', exist_ok=True)
+    os.makedirs('data/analysis', exist_ok=True)
+    
+    # Display initial conference summary
+    print("\nConference summary from processed data:")
+    display_conference_summary(conference_data)
+    
+    # STEP 1: Fix inconsistencies in institute and country data
+    print("\nSTEP 1: Fixing inconsistencies in institute and country data...")
+    conference_data = fix_unknown_institute_country_data(conference_data)
+    
+    # STEP 2: Fix common affiliation problems
+    print("\nSTEP 2: Fixing common affiliation problems...")
+    conference_data = fix_common_affiliation_problems(conference_data)
+    
+    # STEP 3: Add manual country fixes
+    print("\nSTEP 3: Adding manual country fixes...")
+    conference_data = add_manual_country_fixes(conference_data)
+    
+    # STEP 4: Specifically fix unknown institutes
+    print("\nSTEP 4: Specifically fixing unknown institutes...")
+    conference_data = fix_unknown_institutes(conference_data)
+    
+    # Display final conference summary
+    print("\nFinal conference summary:")
+    display_conference_summary(conference_data)
+    
+    # STEP 5: Filter to only include relevant talk types
+    print("\nSTEP 5: Filtering to include only relevant talk types...")
+    filtered_data = filter_relevant_talk_types(conference_data)
+    if not filtered_data:
+        print("Error: Filtering failed, using original data")
+        filtered_data = conference_data
+    
+    # Create QM talk statistics figure with the filtered data
+    print("\nCreating QM talk statistics figure...")
+    try:
+        create_talk_statistics_figure(filtered_data)
+        print("QM talk statistics figure created successfully!")
+    except Exception as e:
+        print(f"Error creating QM talk statistics figure: {e}")
+        traceback.print_exc()
+        
+    # STEP 6: Generate all visualizations for the paper
+    print("\nSTEP 6: Generating visualizations for the paper...")
+    
+    # Add gender diversity analysis and visualization
+    try:
+        print("Analyzing gender diversity...")
+        gender_by_year, gender_by_talk_type = analyze_gender_diversity(filtered_data)
+        create_gender_diversity_plot(gender_by_year, gender_by_talk_type)
+        print("Gender diversity visualization created successfully!")
+    except Exception as e:
+        print(f"Error analyzing gender diversity: {e}")
+        traceback.print_exc()
+    
+    # Figure: Keywords visualization 
+    try:
+        print("Creating keywords visualization...")
+        create_keywords_plot(filtered_data)
+    except Exception as e:
+        print(f"Error creating keywords visualization: {e}")
+        traceback.print_exc()
+        
+    # Figures: Country analysis
+    try:
+        print("Analyzing country distribution...")
+        country_counts = analyze_country_distribution(filtered_data)
+    except Exception as e:
+        print(f"Error analyzing country distribution: {e}")
+        traceback.print_exc()
+        
+    # Figures: Plenary vs parallel talks
+    try:
+        print("Analyzing plenary vs parallel talks...")
+        plenary_country, parallel_country = analyze_plenary_vs_parallel(filtered_data)
+        
+        # Create plenary country visualization
+        try:
+            print("Creating plenary country visualization...")
+            create_plenary_country_plot(plenary_country)
+        except Exception as e:
+            print(f"Error creating plenary country visualization: {e}")
+            traceback.print_exc()
+        
+        # Create parallel country visualization
+        try:
+            print("Creating parallel country visualization...")
+            create_parallel_country_plot(parallel_country)
+        except Exception as e:
+            print(f"Error creating parallel country visualization: {e}")
+            traceback.print_exc()
+        
+        # Create representation ratio visualization
+        try:
+            print("Creating representation ratio visualization...")
+            create_representation_ratio_plot(plenary_country, parallel_country)
+        except Exception as e:
+            print(f"Error creating representation ratio: {e}")
+            traceback.print_exc()
+            
+    except Exception as e:
+        print(f"Error analyzing plenary vs parallel talks: {e}")
+        traceback.print_exc()
+        
+    # Create regional diversity visualization
+    try:
+        print("Creating regional diversity visualization...")
+        create_regional_diversity_plot(country_counts, filtered_data)
+    except Exception as e:
+        print(f"Error creating regional diversity visualization: {e}")
+        traceback.print_exc()
+        
+    # Create institute visualizations
+    try:
+        print("Creating institute visualizations...")
+        analyze_institute_diversity(filtered_data)
+    except Exception as e:
+        print(f"Error creating institute visualizations: {e}")
+        traceback.print_exc()
+        
+    # Create institute bubble chart
+    try:
+        print("Creating institute bubble chart...")
+        create_institute_bubble_chart(filtered_data)
+    except Exception as e:
+        print(f"Error creating institute bubble chart: {e}")
+        traceback.print_exc()
+    
+    print("\n===== ANALYSIS COMPLETE =====")
+    print("All visualizations have been saved to the 'figures' directory")
+    
+    return conference_data
 
 def create_talk_statistics_figure(conference_data):
     """
@@ -3206,6 +3229,63 @@ def create_gender_diversity_plot(gender_by_year, gender_by_talk_type):
         f.write("4. Non-binary and other gender identities are not represented\n\n")
         f.write("These results should be interpreted as approximate patterns only and not definitive analyses.\n")
         f.write("A more accurate approach would require self-reported gender information which is not available in the dataset.\n")
+
+def fix_unknown_countries_for_known_institutes(conference_data):
+    """Fix unknown country values for known institutes only"""
+    print("Fixing unknown countries for known institutes...")
+    
+    # Create a mapping of known institute names to their countries
+    institute_country_map = {}
+    
+    # First pass: build mapping from known institute-country pairs
+    for year, data in conference_data.items():
+        if year == '2025':  # Skip placeholder
+            continue
+            
+        for talk_type in ['plenary_talks', 'parallel_talks', 'poster_talks']:
+            if talk_type in data:
+                for talk in data[talk_type]:
+                    institute = talk.get('Institute', '')
+                    country = talk.get('Country', '')
+                    
+                    # Only add to mapping if both institute and country are known
+                    if (institute and institute != 'Unknown' and 
+                        country and country != 'Unknown'):
+                        # Standardize USA variants
+                        if country.lower() in ['united states', 'united states of america', 'u.s.', 'u.s.a.', 'us']:
+                            country = 'USA'
+                        institute_country_map[institute] = country
+    
+    # Second pass: fix unknown countries where institute is known
+    fixed_count = 0
+    usa_standardized = 0
+    
+    for year, data in conference_data.items():
+        if year == '2025':
+            continue
+            
+        for talk_type in ['plenary_talks', 'parallel_talks', 'poster_talks']:
+            if talk_type in data:
+                for talk in data[talk_type]:
+                    institute = talk.get('Institute', '')
+                    country = talk.get('Country', '')
+                    
+                    # Standardize USA variants even if country is known
+                    if country and country != 'Unknown':
+                        if country.lower() in ['united states', 'united states of america', 'u.s.', 'u.s.a.', 'us']:
+                            talk['Country'] = 'USA'
+                            usa_standardized += 1
+                    
+                    # Fix unknown countries where institute is known
+                    if (institute and institute != 'Unknown' and 
+                        (not country or country == 'Unknown') and 
+                        institute in institute_country_map):
+                        talk['Country'] = institute_country_map[institute]
+                        fixed_count += 1
+    
+    print(f"Fixed {fixed_count} unknown countries for known institutes")
+    print(f"Standardized {usa_standardized} United States variants to USA")
+    return conference_data
 
 # Add proper entry point at the end of the file
 if __name__ == "__main__":

@@ -179,22 +179,57 @@ Emerging contributors such as Brazil, South Africa, and Poland are now visible i
 
 The data reveals potential geographical imbalances in high-visibility speaking opportunities. While some variation is expected due to differences in community size and research output, the persistence of these patterns may warrant attention from conference organizers interested in ensuring equitable international representation.
 
+\subsection{Parallel Talk Distribution and Data Quality}
+
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{figures/parallel_talks_by_country.pdf}
-\caption{Distribution of parallel talks by country across Quark Matter conferences from 2011 to 2025. The horizontal bars show the number of parallel session presentations given by speakers from each of the top 15 countries, with percentage labels indicating their share of the total presentations. This expanded visualization reveals broader participation patterns compared to plenary talks and illustrates how research contributions are distributed globally, including both established and emerging contributors.}
-\label{fig:country_parallel}
+\caption{Distribution of parallel talks by country across Quark Matter conferences from 2011 to 2025. The horizontal bars show the total number of parallel presentations from each country, with percentage labels indicating relative contribution. Countries are sorted by number of talks in descending order. Note that all United States variants have been standardized to "USA" to ensure accurate counting and comparison.}
+\label{fig:parallel_talks}
 \end{figure}
 
-Figure~\ref{fig:country_parallel} shows the distribution of parallel talks by country, providing insight into the broader participation patterns beyond the highly selective plenary sessions. Parallel talks represent the majority of oral presentations at Quark Matter conferences and offer a more comprehensive view of active research in the field:
+Figure~\ref{fig:parallel_talks} presents the distribution of parallel talks across countries, providing insight into the broader participation patterns beyond plenary presentations. Several key observations emerge:
 
-The country distribution for parallel talks shows greater diversity compared to plenary talks, with more countries represented and somewhat more balanced proportions. This suggests that while plenary selections may favor established research groups from certain countries, the parallel sessions incorporate a wider geographical range of contributions.
+\begin{itemize}
+    \item The distribution shows a clear hierarchy in participation levels, with a few countries contributing a large proportion of parallel talks
+    \item The USA (combining all United States variants) shows the highest participation rate, followed by other major research centers
+    \item There is a long tail of countries with smaller but significant contributions, indicating broad international participation
+    \item The distribution pattern differs somewhat from that seen in plenary talks, suggesting different selection dynamics between presentation types
+\end{itemize}
 
-We observe interesting temporal trends, with some countries showing increasing representation over time (e.g., China), while others maintain relatively stable participation. These trends likely reflect both changes in research output and evolving selection processes by conference organizers.
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figures/data_quality.pdf}
+\caption{Evolution of data quality metrics across conference years. The plot shows the percentage of presentations with successfully resolved country and institute information after standardization processes. The improvement over time reflects both better initial data collection and enhanced resolution methods, particularly the standardization of country names (e.g., combining all United States variants into "USA") and the matching of known institutes to countries.}
+\label{fig:data_quality}
+\end{figure}
 
-The correlation between conference location and country representation is somewhat visible in the parallel session data, with host countries typically showing increased representation in their conference years. This may reflect both practical considerations (travel funding) and deliberate efforts to showcase local research.
+Figure~\ref{fig:data_quality} provides a critical assessment of our data quality and completeness. This visualization serves multiple purposes:
 
-Despite the greater diversity, there remains a clear stratification, with a few countries consistently accounting for the majority of parallel talks. This pattern raises questions about structural factors affecting international participation, including funding disparities, language barriers, and access to research infrastructure.
+\begin{itemize}
+    \item Tracks the success rate of country and institute resolution across conference years
+    \item Demonstrates the effectiveness of our standardization approach, particularly in handling country name variants
+    \item Identifies any systematic gaps or weaknesses in the data collection process
+    \item Provides context for interpreting the confidence level of other analyses
+\end{itemize}
+
+The data quality metrics show:
+\begin{itemize}
+    \item A general improvement in data completeness over time
+    \item High success rates in country resolution after standardization (particularly the unification of USA variants)
+    \item Consistent institute identification across conference years
+    \item Areas where data collection or resolution methods might be further improved
+\end{itemize}
+
+These quality metrics are particularly important for:
+\begin{itemize}
+    \item Validating the robustness of our diversity and representation analyses
+    \item Identifying potential biases in the data collection process
+    \item Ensuring accurate counting and comparison across different regions
+    \item Guiding future improvements in conference data collection and processing
+\end{itemize}
+
+The combination of parallel talk distribution and data quality analysis provides important context for interpreting the broader patterns of participation and representation observed in our study. The standardization of country names, particularly the consistent treatment of USA variants, has helped ensure more accurate comparisons across different regions and institutions.
 
 \begin{figure}[H]
 \centering
