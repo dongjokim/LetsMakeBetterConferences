@@ -2262,9 +2262,19 @@ def analyze_country_distribution(conference_data):
     top_countries = [country for country, count in country_counts.most_common(15)]
     top_counts = [country_counts[country] for country in top_countries]
     
-    # Create horizontal bar chart
+    # Create horizontal bar chart with different styles for each bar
     y_pos = range(len(top_countries))
-    plt.barh(y_pos, top_counts, align='center')
+    colors = plt.cm.viridis(np.linspace(0, 0.9, len(top_countries)))
+    
+    # Use different patterns for each bar
+    patterns = ['/', '\\', 'x', '+', 'o', 'O', '.', '*', '-', '|']
+    
+    # Create bars with different colors and patterns
+    for i, (country, count) in enumerate(zip(top_countries, top_counts)):
+        pattern = patterns[i % len(patterns)]
+        plt.barh(y_pos[i], count, align='center', color=colors[i], 
+                 hatch=pattern, alpha=0.8, edgecolor='black')
+    
     plt.yticks(y_pos, top_countries)
     plt.xlabel('Number of Talks')
     plt.title('Top Countries by Number of Talks')
@@ -2283,8 +2293,15 @@ def analyze_country_distribution(conference_data):
     # Get top countries to track
     top_countries_to_track = [country for country, _ in country_counts.most_common(8)]
     
-    # Track countries over time
-    for country in top_countries_to_track:
+    # Define markers and colors for each country
+    markers = ['o', 's', '^', 'D', 'p', '*', 'X', 'h']
+    colors = [plt.cm.tab10(i % 10) for i in range(len(top_countries_to_track))]
+    
+    # Create custom legend elements
+    legend_elements = []
+    
+    # For each country, use consistent marker style
+    for i, country in enumerate(top_countries_to_track):
         country_by_year = []
         for year in years:
             year_count = 0
@@ -2294,12 +2311,22 @@ def analyze_country_distribution(conference_data):
                                     if talk.get('Country', 'Unknown') == country)
             country_by_year.append(year_count)
         
-        plt.plot(years, country_by_year, 'o-', linewidth=2, label=country)
+        # Assign marker and color for this country
+        marker = markers[i % len(markers)]
+        color = colors[i]
+        
+        # Plot with consistent marker for each country
+        plt.plot(years, country_by_year, marker=marker, color=color, 
+                 markersize=8, linewidth=2, label=country)
+        
+        # Add to custom legend elements
+        legend_elements.append(plt.Line2D([0], [0], marker=marker, color=color, 
+                                         linewidth=2, markersize=8, label=country))
     
     plt.title('Country Trends Over Time')
     plt.xlabel('Conference Year')
     plt.ylabel('Number of Talks')
-    plt.legend()
+    plt.legend(handles=legend_elements, loc='best', frameon=True, fancybox=True, shadow=True)
     plt.grid(True, linestyle='--', alpha=0.7)
     
     plt.tight_layout()
@@ -2803,12 +2830,28 @@ def analyze_conference_data(conference_data=None, output_dir='figures'):
             print(f"Error creating parallel country visualization: {e}")
             traceback.print_exc()
         
+        # Create diversity metrics visualization
+        try:
+            print("Creating diversity metrics visualization...")
+            analyze_diversity_metrics(filtered_data)
+        except Exception as e:
+            print(f"Error creating diversity metrics visualization: {e}")
+            traceback.print_exc()
+        
         # Create representation ratio visualization
         try:
             print("Creating representation ratio visualization...")
             create_representation_ratio_plot(plenary_country, parallel_country)
         except Exception as e:
             print(f"Error creating representation ratio: {e}")
+            traceback.print_exc()
+
+        # Create theory/experiment balance visualization
+        try:
+            print("Creating theory/experiment balance visualization...")
+            create_theory_experiment_balance_plot(filtered_data)
+        except Exception as e:
+            print(f"Error creating theory/experiment balance visualization: {e}")
             traceback.print_exc()
             
     except Exception as e:
@@ -3286,6 +3329,550 @@ def fix_unknown_countries_for_known_institutes(conference_data):
     print(f"Fixed {fixed_count} unknown countries for known institutes")
     print(f"Standardized {usa_standardized} United States variants to USA")
     return conference_data
+
+def analyze_institute_trends(conference_data):
+    """Analyze institute trends over time"""
+    print("Analyzing institute trends...")
+    
+    # Get all institutes across all years
+    institute_counts = Counter()
+    
+    for year, data in conference_data.items():
+        if year == '2025':  # Skip placeholder
+            continue
+            
+        year_institute_counts = Counter()
+        
+        # Count institutes for each talk type
+        for talk_type in ['plenary_talks', 'parallel_talks', 'poster_talks']:
+            if talk_type in data:
+                for talk in data[talk_type]:
+                    institute = talk.get('Institute', 'Unknown')
+                    if institute != 'Unknown':
+                        year_institute_counts[institute] += 1
+        
+        # Update overall counts
+        institute_counts.update(year_institute_counts)
+    
+    # Create plot for top institutes over time
+    plt.figure(figsize=(14, 8))
+    
+    # Get sorted years
+    years = sorted([year for year in conference_data.keys() if year != '2025'])
+    
+    # Get top institutes to track
+    top_institutes_to_track = [institute for institute, _ in institute_counts.most_common(8)]
+    
+    # Define marker styles and colors for each institute
+    markers = ['o', 's', '^', 'D', 'p', 'h', '*', 'X']
+    colors = ['blue', 'red', 'green', 'purple', 'orange', 'brown', 'teal', 'magenta']
+    linestyles = ['-', '--', '-.', ':', '-', '--', '-.', ':']
+    
+    # Track institutes over time
+    for i, institute in enumerate(top_institutes_to_track):
+        institute_by_year = []
+        for year in years:
+            year_count = 0
+            for talk_type in ['plenary_talks', 'parallel_talks', 'poster_talks']:
+                if talk_type in conference_data[year]:
+                    year_count += sum(1 for talk in conference_data[year][talk_type] 
+                                    if talk.get('Institute', 'Unknown') == institute)
+            institute_by_year.append(year_count)
+        
+        # Use different marker styles, colors, and line styles for each institute
+        marker = markers[i % len(markers)]
+        color = colors[i % len(colors)]
+        linestyle = linestyles[i % len(linestyles)]
+        
+        plt.plot(years, institute_by_year, marker=marker, color=color, linestyle=linestyle, 
+                 linewidth=2, markersize=8, label=institute)
+    
+    plt.title('Top Institute Trends Over Time')
+    plt.xlabel('Conference Year')
+    plt.ylabel('Number of Talks')
+    plt.legend(loc='best', frameon=True, fancybox=True, shadow=True)
+    plt.grid(True, linestyle='--', alpha=0.7)
+    
+    plt.tight_layout()
+    plt.savefig('figures/institute_trends_over_time.pdf')
+    plt.close()
+    
+    return institute_counts
+
+def analyze_diversity_metrics(conference_data):
+    """Analyze diversity metrics over time"""
+    print("Analyzing diversity metrics...")
+    
+    # Get sorted years
+    years = sorted([year for year in conference_data.keys() if year != '2025'])
+    
+    # Calculate diversity metrics for each year
+    unique_countries = []
+    hhi_values = []  # Herfindahl-Hirschman Index
+    
+    for year in years:
+        # Count countries
+        country_counts = Counter()
+        total_talks = 0
+        
+        for talk_type in ['plenary_talks', 'parallel_talks', 'poster_talks']:
+            if talk_type in conference_data[year]:
+                for talk in conference_data[year][talk_type]:
+                    country = talk.get('Country', 'Unknown')
+                    if country != 'Unknown':
+                        country_counts[country] += 1
+                        total_talks += 1
+        
+        # Calculate metrics
+        unique_countries.append(len(country_counts))
+        
+        # Calculate HHI
+        if total_talks > 0:
+            hhi = sum((count/total_talks)**2 for count in country_counts.values())
+            hhi_values.append(hhi * 10000)  # Scale for better visualization
+        else:
+            hhi_values.append(0)
+    
+    # Create plot
+    fig, ax1 = plt.subplots(figsize=(12, 7))
+    
+    # Plot unique countries
+    ax1.set_xlabel('Conference Year')
+    ax1.set_ylabel('Number of Unique Countries', color='blue')
+    line1 = ax1.plot(years, unique_countries, marker='o', linestyle='-', linewidth=2, 
+             color='blue', markersize=8, label='Unique Countries')
+    ax1.tick_params(axis='y', labelcolor='blue')
+    
+    # Create second y-axis for HHI
+    ax2 = ax1.twinx()
+    ax2.set_ylabel('HHI (lower = more diverse)', color='red')
+    line2 = ax2.plot(years, hhi_values, marker='s', linestyle='--', linewidth=2, 
+             color='red', markersize=8, label='HHI')
+    ax2.tick_params(axis='y', labelcolor='red')
+    
+    # Add legend
+    lines = line1 + line2
+    labels = [l.get_label() for l in lines]
+    ax1.legend(lines, labels, loc='upper center', frameon=True, fancybox=True, shadow=True)
+    
+    plt.title('Diversity Metrics Over Time')
+    plt.grid(True, linestyle='--', alpha=0.7)
+    
+    plt.tight_layout()
+    plt.savefig('figures/diversity_metrics.pdf')
+    plt.close()
+
+def analyze_talk_type_distribution(conference_data):
+    """Analyze distribution of talk types over time"""
+    print("Analyzing talk type distribution...")
+    
+    # Get sorted years
+    years = sorted([year for year in conference_data.keys() if year != '2025'])
+    
+    # Count talk types for each year
+    plenary_counts = []
+    parallel_counts = []
+    poster_counts = []
+    
+    for year in years:
+        plenary_count = len(conference_data[year].get('plenary_talks', []))
+        parallel_count = len(conference_data[year].get('parallel_talks', []))
+        poster_count = len(conference_data[year].get('poster_talks', []))
+        
+        plenary_counts.append(plenary_count)
+        parallel_counts.append(parallel_count)
+        poster_counts.append(poster_count)
+    
+    # Create plot
+    plt.figure(figsize=(14, 8))
+    
+    # Plot with different markers and line styles
+    plt.plot(years, plenary_counts, marker='o', linestyle='-', linewidth=2, 
+             color='red', markersize=8)
+    plt.plot(years, parallel_counts, marker='s', linestyle='--', linewidth=2, 
+             color='blue', markersize=8)
+    plt.plot(years, poster_counts, marker='^', linestyle='-.', linewidth=2, 
+             color='green', markersize=8)
+    
+    # Create custom legend elements
+    legend_elements = [
+        plt.Line2D([0], [0], marker='o', color='red', linestyle='-', 
+                  linewidth=2, markersize=8, label='Plenary Talks'),
+        plt.Line2D([0], [0], marker='s', color='blue', linestyle='--', 
+                  linewidth=2, markersize=8, label='Parallel Talks'),
+        plt.Line2D([0], [0], marker='^', color='green', linestyle='-.', 
+                  linewidth=2, markersize=8, label='Poster Talks')
+    ]
+    
+    plt.title('Talk Type Distribution Over Time')
+    plt.xlabel('Conference Year')
+    plt.ylabel('Number of Talks')
+    plt.legend(handles=legend_elements, loc='best', frameon=True, fancybox=True, shadow=True)
+    plt.grid(True, linestyle='--', alpha=0.7)
+    
+    plt.tight_layout()
+    plt.savefig('figures/talk_type_distribution.pdf')
+    plt.close()
+
+def analyze_keywords(conference_data):
+    """Analyze keywords from talk titles"""
+    print("Analyzing keywords...")
+    
+    # Get sorted years
+    years = sorted([year for year in conference_data.keys() if year != '2025'])
+    
+    # Define keywords to track
+    keyword_groups = {
+        'QGP Properties': ['qgp', 'temperature', 'viscosity', 'eos', 'equation of state', 'phase', 'transition'],
+        'Heavy Flavor': ['charm', 'bottom', 'quarkonia', 'quarkonium', 'charmonium', 'bottomonium', 'j/psi', 'upsilon'],
+        'Jets & High-pT': ['jet', 'high-pt', 'high pt', 'energy loss', 'quenching'],
+        'Small Systems': ['small system', 'pp', 'p-p', 'p-pb', 'p-a', 'small-x', 'small x'],
+        'Flow & Correlations': ['flow', 'harmonic', 'correlation', 'ridge', 'azimuthal'],
+        'EM Probes': ['photon', 'dilepton', 'electromagnetic', 'em probe']
+    }
+    
+    # Define markers, colors, and linestyles for data points within each panel
+    all_markers = ['o', 's', '^', 'D', 'p', '*', 'X', 'h']
+    all_colors = ['blue', 'red', 'green', 'purple', 'orange', 'brown', 'teal', 'magenta']
+    all_linestyles = ['-', '--', '-.', ':', '-', '--', '-.', ':']
+    
+    # Create plot
+    fig, axs = plt.subplots(2, 3, figsize=(18, 10), sharex=True)
+    axs = axs.flatten()
+    
+    # Track keyword frequencies over time
+    for i, (group, keywords) in enumerate(keyword_groups.items()):
+        ax = axs[i]
+        
+        # For each keyword in the group, track separately
+        for j, keyword in enumerate(keywords[:5]):  # Limit to first 5 keywords to avoid overcrowding
+            keyword_trend = []
+            
+            for year in years:
+                # Get all talk titles for this year
+                titles = []
+                for talk_type in ['plenary_talks', 'parallel_talks', 'poster_talks']:
+                    if talk_type in conference_data[year]:
+                        titles.extend([talk.get('Title', '') for talk in conference_data[year][talk_type]])
+                
+                # Convert to lowercase for case-insensitive matching
+                titles = [title.lower() for title in titles if title]
+                total_talks = len(titles)
+                
+                # Count keyword occurrences
+                keyword_count = sum(1 for title in titles if keyword in title)
+                
+                # Store as percentage
+                if total_talks > 0:
+                    keyword_trend.append(keyword_count / total_talks * 100)
+                else:
+                    keyword_trend.append(0)
+            
+            # Use different marker, color, and linestyle for each keyword
+            marker = all_markers[j % len(all_markers)]
+            color = all_colors[j % len(all_colors)]
+            linestyle = all_linestyles[j % len(all_linestyles)]
+            
+            # Plot this keyword's trend
+            ax.plot(years, keyword_trend, marker=marker, linestyle=linestyle, 
+                    linewidth=2, color=color, markersize=8, label=keyword)
+        
+        # Add legend inside each panel
+        ax.legend(loc='upper left', frameon=True, fancybox=True, shadow=True, fontsize=8)
+        
+        # Set title and labels
+        ax.set_title(group)
+        ax.set_ylabel('% of Talks')
+        ax.grid(True, linestyle='--', alpha=0.7)
+    
+    # Set common x-label
+    fig.text(0.5, 0.04, 'Conference Year', ha='center', fontsize=14)
+    
+    plt.tight_layout(rect=[0, 0.05, 1, 0.98])
+    plt.savefig('figures/QM_keyword_analysis.pdf')
+    plt.close()
+
+def analyze_regional_diversity(conference_data):
+    """Analyze regional diversity over time"""
+    print("Analyzing regional diversity...")
+    
+    # Define regions
+    regions = {
+        'North America': ['USA', 'Canada', 'Mexico'],
+        'Europe': ['Germany', 'France', 'UK', 'Italy', 'Spain', 'Switzerland', 'Netherlands', 
+                  'Belgium', 'Sweden', 'Norway', 'Finland', 'Denmark', 'Poland', 'Czech Republic', 
+                  'Austria', 'Hungary', 'Romania', 'Bulgaria', 'Greece', 'Portugal', 'Ireland',
+                  'Croatia', 'Serbia', 'Slovenia', 'Slovakia', 'Ukraine', 'Russia'],
+        'Asia': ['China', 'Japan', 'South Korea', 'India', 'Taiwan', 'Singapore', 'Malaysia', 
+                'Thailand', 'Vietnam', 'Indonesia', 'Philippines', 'Pakistan', 'Bangladesh',
+                'Israel', 'Turkey', 'Iran', 'Iraq', 'Saudi Arabia', 'UAE'],
+        'Oceania': ['Australia', 'New Zealand'],
+        'South America': ['Brazil', 'Argentina', 'Chile', 'Colombia', 'Peru', 'Venezuela', 'Uruguay'],
+        'Africa': ['South Africa', 'Egypt', 'Morocco', 'Algeria', 'Tunisia', 'Nigeria', 'Kenya']
+    }
+    
+    # Get sorted years
+    years = sorted([year for year in conference_data.keys() if year != '2025'])
+    
+    # Track regional percentages over time
+    regional_percentages = {region: [] for region in regions}
+    
+    for year in years:
+        # Count countries for each talk
+        country_counts = Counter()
+        total_talks = 0
+        
+        for talk_type in ['plenary_talks', 'parallel_talks', 'poster_talks']:
+            if talk_type in conference_data[year]:
+                for talk in conference_data[year][talk_type]:
+                    country = talk.get('Country', 'Unknown')
+                    if country != 'Unknown':
+                        country_counts[country] += 1
+                        total_talks += 1
+        
+        # Calculate regional percentages
+        for region, countries in regions.items():
+            region_count = sum(country_counts[country] for country in countries if country in country_counts)
+            if total_talks > 0:
+                regional_percentages[region].append(region_count / total_talks * 100)
+            else:
+                regional_percentages[region].append(0)
+    
+    # Create plot
+    plt.figure(figsize=(14, 8))
+    
+    # Define marker styles and colors for each region
+    markers = ['o', 's', '^', 'D', 'p', '*']
+    colors = ['blue', 'red', 'green', 'purple', 'orange', 'brown']
+    
+    # Plot each region
+    for i, (region, percentages) in enumerate(regional_percentages.items()):
+        color = colors[i % len(colors)]
+        
+        # Plot each data point with different markers for the same region
+        for j, (x, y) in enumerate(zip(years, percentages)):
+            marker = markers[j % len(markers)]
+            plt.plot(x, y, marker=marker, color=color, markersize=8)
+        
+        # Add a line connecting all points
+        plt.plot(years, percentages, color=color, alpha=0.7, label=region)
+    
+    plt.title('Regional Diversity Over Time')
+    plt.xlabel('Conference Year')
+    plt.ylabel('Percentage of Talks')
+    plt.legend(loc='best', frameon=True, fancybox=True, shadow=True)
+    plt.grid(True, linestyle='--', alpha=0.7)
+    
+    # Add conference location annotations
+    for i, year in enumerate(years):
+        if year in CONFERENCE_LOCATIONS:
+            location = CONFERENCE_LOCATIONS[year].split(',')[-1].strip()
+            plt.annotate(location, (year, -5), rotation=45, ha='center', fontsize=10)
+    
+    plt.tight_layout()
+    plt.savefig('figures/regional_diversity_by_year.pdf')
+    plt.close()
+
+def create_theory_experiment_balance_plot(conference_data):
+    """Create visualization showing the balance between theory and experiment presentations"""
+    print("Creating theory-experiment balance visualization...")
+    
+    # Define keywords that indicate theoretical or experimental work
+    theory_keywords = [
+        'theory', 'theoretical', 'model', 'models', 'simulation', 'simulations', 
+        'calculation', 'calculations', 'lattice', 'qcd', 'effective field theory',
+        'eft', 'hydrodynamic', 'hydro', 'transport', 'monte carlo', 'perturbative',
+        'non-perturbative', 'framework', 'approach', 'formalism', 'equation of state',
+        'eos', 'viscosity', 'predict', 'prediction', 'predicted', 'microscopic'
+    ]
+    
+    experiment_keywords = [
+        'experiment', 'experimental', 'measurement', 'measurements', 'data',
+        'results', 'observed', 'observation', 'detector', 'detectors', 'measured',
+        'alice', 'atlas', 'cms', 'lhcb', 'star', 'phenix', 'brahms', 'phobos',
+        'reconstruction', 'trigger', 'calibration', 'analysis', 'beam', 'collision',
+        'luminosity', 'run', 'preliminary', 'calorimeter', 'spectrometer', 'tracking'
+    ]
+    
+    # Extract relevant data for each year
+    years = sorted([year for year in conference_data.keys() if year != '2025'])
+    theory_counts = []
+    experiment_counts = []
+    both_counts = []
+    other_counts = []
+    total_counts = []
+    
+    # Also track by presentation type
+    plenary_theory = []
+    plenary_experiment = []
+    plenary_both = []
+    parallel_theory = []
+    parallel_experiment = []
+    parallel_both = []
+    
+    for year in years:
+        if year in conference_data:
+            # For title-based classification
+            theory_count = 0
+            experiment_count = 0
+            both_count = 0
+            other_count = 0
+            total_count = 0
+            
+            # For presentation type tracking
+            plenary_theory_count = 0
+            plenary_experiment_count = 0
+            plenary_both_count = 0
+            parallel_theory_count = 0
+            parallel_experiment_count = 0
+            parallel_both_count = 0
+            
+            # Process plenary talks
+            if 'plenary_talks' in conference_data[year]:
+                for talk in conference_data[year]['plenary_talks']:
+                    if not talk.get('Title'):
+                        continue
+                        
+                    total_count += 1
+                    title_lower = talk.get('Title', '').lower()
+                    
+                    # Check for theory/experiment keywords in title
+                    is_theory = any(keyword in title_lower for keyword in theory_keywords)
+                    is_experiment = any(keyword in title_lower for keyword in experiment_keywords)
+                    
+                    if is_theory and is_experiment:
+                        both_count += 1
+                        plenary_both_count += 1
+                    elif is_theory:
+                        theory_count += 1
+                        plenary_theory_count += 1
+                    elif is_experiment:
+                        experiment_count += 1
+                        plenary_experiment_count += 1
+                    else:
+                        other_count += 1
+            
+            # Process parallel talks
+            if 'parallel_talks' in conference_data[year]:
+                for talk in conference_data[year]['parallel_talks']:
+                    if not talk.get('Title'):
+                        continue
+                        
+                    total_count += 1
+                    title_lower = talk.get('Title', '').lower()
+                    
+                    # Check for theory/experiment keywords in title
+                    is_theory = any(keyword in title_lower for keyword in theory_keywords)
+                    is_experiment = any(keyword in title_lower for keyword in experiment_keywords)
+                    
+                    if is_theory and is_experiment:
+                        both_count += 1
+                        parallel_both_count += 1
+                    elif is_theory:
+                        theory_count += 1
+                        parallel_theory_count += 1
+                    elif is_experiment:
+                        experiment_count += 1
+                        parallel_experiment_count += 1
+                    else:
+                        other_count += 1
+            
+            # Store counts
+            theory_counts.append(theory_count)
+            experiment_counts.append(experiment_count)
+            both_counts.append(both_count)
+            other_counts.append(other_count)
+            total_counts.append(total_count)
+            
+            plenary_theory.append(plenary_theory_count)
+            plenary_experiment.append(plenary_experiment_count)
+            plenary_both.append(plenary_both_count)
+            parallel_theory.append(parallel_theory_count)
+            parallel_experiment.append(parallel_experiment_count)
+            parallel_both.append(parallel_both_count)
+    
+    # Create the figure
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 8))
+    
+    # Plot 1: Raw counts as stacked bars
+    width = 0.8
+    
+    # Convert counts to percentages
+    theory_pct = [100 * theory_counts[i] / total_counts[i] if total_counts[i] > 0 else 0 for i in range(len(years))]
+    experiment_pct = [100 * experiment_counts[i] / total_counts[i] if total_counts[i] > 0 else 0 for i in range(len(years))]
+    both_pct = [100 * both_counts[i] / total_counts[i] if total_counts[i] > 0 else 0 for i in range(len(years))]
+    other_pct = [100 * other_counts[i] / total_counts[i] if total_counts[i] > 0 else 0 for i in range(len(years))]
+    
+    # Create the stacked bar chart
+    bottom_vals = np.zeros(len(years))
+    p1 = ax1.bar(years, theory_pct, width, label='Theory', color='#3498db', bottom=bottom_vals)
+    bottom_vals = theory_pct
+    p2 = ax1.bar(years, experiment_pct, width, label='Experiment', color='#e74c3c', bottom=bottom_vals)
+    bottom_vals = [bottom_vals[i] + experiment_pct[i] for i in range(len(years))]
+    p3 = ax1.bar(years, both_pct, width, label='Both', color='#9b59b6', bottom=bottom_vals)
+    bottom_vals = [bottom_vals[i] + both_pct[i] for i in range(len(years))]
+    p4 = ax1.bar(years, other_pct, width, label='Unclassified', color='#95a5a6', bottom=bottom_vals)
+    
+    # Add percentage labels on the bars
+    for i, year in enumerate(years):
+        if theory_pct[i] > 5:  # Only show label if segment is large enough
+            ax1.text(year, theory_pct[i]/2, f"{theory_pct[i]:.0f}%", ha='center', va='center', color='white')
+        if experiment_pct[i] > 5:
+            ax1.text(year, theory_pct[i] + experiment_pct[i]/2, f"{experiment_pct[i]:.0f}%", ha='center', va='center', color='white')
+    
+    ax1.set_xlabel('Conference Year', fontsize=12)
+    ax1.set_ylabel('Percentage of Presentations', fontsize=12)
+    ax1.set_title('Theory vs Experiment Balance by Year', fontsize=14)
+    ax1.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15), ncol=4)
+    ax1.grid(axis='y', linestyle='--', alpha=0.7)
+    
+    # Plot 2: Theory/Experiment balance by presentation type
+    width = 0.35
+    x = np.arange(len(years))
+    
+    # Calculate ratios (ensuring we don't divide by zero)
+    plenary_ratio = []
+    parallel_ratio = []
+    for i in range(len(years)):
+        if plenary_experiment[i] > 0:
+            plenary_ratio.append(plenary_theory[i] / plenary_experiment[i])
+        else:
+            plenary_ratio.append(0)
+            
+        if parallel_experiment[i] > 0:
+            parallel_ratio.append(parallel_theory[i] / parallel_experiment[i])
+        else:
+            parallel_ratio.append(0)
+    
+    ax2.plot(years, plenary_ratio, 'o-', linewidth=2, label='Plenary', color='#e67e22')
+    ax2.plot(years, parallel_ratio, 's-', linewidth=2, label='Parallel', color='#27ae60')
+    ax2.axhline(y=1, color='gray', linestyle='--', alpha=0.7, label='Equal balance')
+    
+    # Annotate the plot
+    ax2.set_xlabel('Conference Year', fontsize=12)
+    ax2.set_ylabel('Theory / Experiment Ratio', fontsize=12)
+    ax2.set_title('Theory/Experiment Ratio by Presentation Type', fontsize=14)
+    ax2.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15), ncol=3)
+    ax2.grid(True, linestyle='--', alpha=0.7)
+    
+    # Add text annotations to explain
+    ax2.text(0.05, 0.95, "Above 1: More theory presentations\nBelow 1: More experimental presentations", 
+             transform=ax2.transAxes, fontsize=10, verticalalignment='top',
+             bbox=dict(boxstyle='round', facecolor='white', alpha=0.7))
+    
+    plt.tight_layout(rect=[0, 0.05, 1, 1])  # Adjust for legend at bottom
+    plt.savefig('figures/theory_experiment_balance.pdf', bbox_inches='tight')
+    plt.savefig('figures/theory_experiment_balance.png', dpi=300, bbox_inches='tight')
+    plt.close()
+    
+    return {
+        'years': years,
+        'theory_counts': theory_counts,
+        'experiment_counts': experiment_counts,
+        'both_counts': both_counts,
+        'other_counts': other_counts,
+        'total_counts': total_counts
+    }
 
 # Add proper entry point at the end of the file
 if __name__ == "__main__":

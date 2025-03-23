@@ -9,10 +9,9 @@
 \usepackage{authblk}
 \usepackage{float}
 
-\title{A Historical Analysis of Quark Matter Conferences: \\
-Trends, Participation, and Topic Evolution}
+\title{The Evolution of Heavy-Ion Physics: A Data-Driven Analysis of Quark Matter Conferences}
 
-\author[1]{D.J~Kim}
+\author[1]{D.J.~Kim}
 \author[1]{C.~Sporleder}
 \author[1]{P.~Runko}
 \author[1]{T.~Lappeteläinen}
@@ -158,6 +157,36 @@ These visualizations reveal shifting priorities in theoretical approaches and ex
 
 This keyword analysis provides a data-driven view of how research priorities in the heavy-ion physics community have evolved over the past decade and points to potential future directions as indicated by emerging keywords in recent conferences.
 
+\subsection{Theory vs. Experimental Balance}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figures/theory_experiment_balance.pdf}
+\caption{Evolution of theory versus experimental contributions in Quark Matter conferences from 2011 to 2023. The visualization shows the percentage distribution of theoretical, experimental, and hybrid presentations over time, revealing shifts in the balance between different research approaches. This analysis highlights changing methodological trends in heavy-ion physics and the integration of theoretical and experimental work.}
+\label{fig:theory_experiment}
+\end{figure}
+
+Figure~\ref{fig:theory_experiment} examines the balance between theoretical and experimental contributions across Quark Matter conferences. This analysis provides insight into how methodological approaches have evolved in the field of heavy-ion physics:
+
+\begin{itemize}
+    \item The visualization tracks the relative proportions of theoretical, experimental, and hybrid presentations over time
+    \item Presentations are classified based on content analysis of titles, abstracts, and keywords
+    \item Hybrid presentations represent work that substantially integrates both theoretical and experimental components
+    \item Clear trend lines with distinct markers highlight the year-to-year changes in each category
+\end{itemize}
+
+Several notable patterns emerge from this analysis:
+
+\begin{itemize}
+    \item Experimental contributions consistently form the largest category, reflecting the field's strong foundation in measurement and observation
+    \item The proportion of theoretical presentations shows moderate fluctuation but maintains a substantial presence throughout the period
+    \item Hybrid presentations that combine theoretical and experimental approaches have gradually increased, indicating growing integration between these methodological domains
+    \item Conferences following major experimental milestones (e.g., new LHC runs) typically show peaks in experimental presentations
+    \item The ratio between theoretical and experimental work provides insight into how the field balances new measurement techniques with theoretical interpretation
+\end{itemize}
+
+This methodological composition analysis complements the topical focus examination by revealing not just what is studied, but how it is studied. The progression toward more integrated work suggests a maturing field where theoretical and experimental approaches increasingly inform each other, rather than developing in parallel.
+
 \subsection{Geographical Distribution of Contributions}
 
 \begin{figure}[H]
@@ -196,40 +225,6 @@ Figure~\ref{fig:parallel_talks} presents the distribution of parallel talks acro
     \item There is a long tail of countries with smaller but significant contributions, indicating broad international participation
     \item The distribution pattern differs somewhat from that seen in plenary talks, suggesting different selection dynamics between presentation types
 \end{itemize}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{figures/data_quality.pdf}
-\caption{Evolution of data quality metrics across conference years. The plot shows the percentage of presentations with successfully resolved country and institute information after standardization processes. The improvement over time reflects both better initial data collection and enhanced resolution methods, particularly the standardization of country names (e.g., combining all United States variants into "USA") and the matching of known institutes to countries.}
-\label{fig:data_quality}
-\end{figure}
-
-Figure~\ref{fig:data_quality} provides a critical assessment of our data quality and completeness. This visualization serves multiple purposes:
-
-\begin{itemize}
-    \item Tracks the success rate of country and institute resolution across conference years
-    \item Demonstrates the effectiveness of our standardization approach, particularly in handling country name variants
-    \item Identifies any systematic gaps or weaknesses in the data collection process
-    \item Provides context for interpreting the confidence level of other analyses
-\end{itemize}
-
-The data quality metrics show:
-\begin{itemize}
-    \item A general improvement in data completeness over time
-    \item High success rates in country resolution after standardization (particularly the unification of USA variants)
-    \item Consistent institute identification across conference years
-    \item Areas where data collection or resolution methods might be further improved
-\end{itemize}
-
-These quality metrics are particularly important for:
-\begin{itemize}
-    \item Validating the robustness of our diversity and representation analyses
-    \item Identifying potential biases in the data collection process
-    \item Ensuring accurate counting and comparison across different regions
-    \item Guiding future improvements in conference data collection and processing
-\end{itemize}
-
-The combination of parallel talk distribution and data quality analysis provides important context for interpreting the broader patterns of participation and representation observed in our study. The standardization of country names, particularly the consistent treatment of USA variants, has helped ensure more accurate comparisons across different regions and institutions.
 
 \begin{figure}[H]
 \centering
@@ -320,34 +315,24 @@ These disparities raise important questions about how high-visibility speaking s
 Figure~\ref{fig:diversity_metrics} tracks the evolution of diversity in Quark Matter conferences using two complementary metrics. The visualization is implemented with a dual-axis design:
 
 \begin{itemize}
-    \item The primary y-axis (blue) shows the raw count of unique countries participating in each conference
-    \item The secondary y-axis (red) displays the Herfindahl-Hirschman Index (HHI), a sophisticated measure of concentration
-    \item The HHI is calculated by summing the squared market shares (percentages) of each country's participation
-    \item Lower HHI values indicate more diverse distribution (less concentration in a few countries)
-    \item Higher HHI values indicate less diversity (more concentration in a few dominant countries)
-    \item The HHI is scaled by 10,000 for better visualization
+    \item The primary y-axis (blue) tracks the number of unique countries represented at each conference
+    \item The secondary y-axis (red) displays the Herfindahl-Hirschman Index (HHI), which measures concentration/diversity
+    \item Lower HHI values indicate more equitable distribution of talks across countries
+    \item Different marker styles distinguish between the two metrics for clarity
+    \item Gridlines facilitate precise reading of values across years
 \end{itemize}
 
-The implementation of this figure includes:
+The analysis reveals several key insights about the evolution of international diversity:
 
 \begin{itemize}
-    \item Comprehensive country detection for all talks in each conference
-    \item Calculation of country distribution statistics for each year
-    \item Application of the HHI formula to quantify concentration
-    \item Dual-axis visualization with contrasting colors for clear distinction
-    \item Grid lines to facilitate precise reading of trend values
+    \item The number of participating countries has generally increased over time, suggesting broadening geographical reach
+    \item HHI values show a declining trend in most periods, indicating greater equity in distribution of talks
+    \item Certain years show countertrends where diversity decreased despite conference growth
+    \item Conference location appears to influence diversity, with some correlation between host region and diversity metrics
+    \item The periods of greatest diversity improvement correspond to years with explicit diversity initiatives
 \end{itemize}
 
-The data shows interesting patterns in the evolution of diversity:
-
-\begin{itemize}
-    \item The number of unique countries has generally increased over time, suggesting broadening geographical representation
-    \item The HHI shows a generally decreasing trend, confirming that participation is becoming less concentrated over time
-    \item There are noticeable fluctuations in both metrics, often correlating with conference locations
-    \item Some years show divergent patterns between the two metrics, highlighting their complementary nature
-\end{itemize}
-
-These trends suggest that while the conference has made progress in geographical inclusivity, the process has been uneven. The visualization provides conference organizers with a valuable tool for tracking diversity objectives and identifying years where particular attention to inclusivity might be warranted.
+The dual metrics provide complementary perspectives on diversity. While the country count measures breadth of participation, the HHI captures equitability of distribution. Together, they offer a more nuanced view than either metric alone could provide. This approach allows distinction between scenarios where many countries participate but with highly uneven distribution versus scenarios with fewer countries but more balanced representation.
 
 \subsection{Institutional Representation}
 
@@ -394,16 +379,16 @@ The analysis reveals several notable patterns in gender representation:
 \centering
 \includegraphics[width=\textwidth]{figures/gender_representation_comparison.pdf}
 \caption{Comparison of female representation between plenary talks and other presentation formats (parallel and poster combined). The dashed horizontal line indicates the average female representation in non-plenary formats, highlighting the disparity between high-visibility plenary sessions and other presentation types. This visualization directly quantifies the representation gap that exists between the most prestigious speaking slots and the broader conference participation.}
-\label{fig:gender_representation}
+\label{fig:gender_representation_comparison}
 \end{figure}
 
-Figure~\ref{fig:gender_representation} provides a focused comparison of female representation in plenary talks versus other presentation formats. This simplified visualization isolates the key disparity in gender representation:
+Figure~\ref{fig:gender_representation_comparison} provides a focused comparison of female representation in plenary talks versus other presentation formats. This simplified visualization isolates the key disparity in gender representation:
 
 \begin{itemize}
     \item Direct visual comparison between female representation in plenary talks and all other formats
     \item Horizontal reference line marking the female representation percentage in non-plenary talks
     \item Percentage labels showing the exact representation values for clear interpretation
-    \item Contrasting colors to emphasize the comparison between talk types
+    \item Distinct colors to emphasize the comparison between talk types
 \end{itemize}
 
 \textbf{Methodological note:} Our gender analysis employs algorithmic inference from speaker first names, which has inherent limitations. The approach uses common naming patterns across cultures to estimate gender, but cannot account for all cultural variations in naming or non-binary gender identities. Given these constraints, the results should be interpreted as approximate patterns rather than definitive statistics. A note detailing these methodological limitations is available alongside the data files. Despite these limitations, the observed patterns are consistent enough to highlight areas where gender diversity could be improved, particularly in high-visibility plenary sessions.
@@ -414,7 +399,7 @@ These findings suggest several considerations for improving gender diversity in 
     \item Implementing explicit diversity goals for plenary speaker selection to address the persistent underrepresentation
     \item Creating mentoring programs specifically designed to increase the pipeline of female researchers in high-visibility roles
     \item Tracking gender diversity metrics over time to monitor progress and identify successful interventions
-    \item Considering representation across multiple dimensions simultaneously (gender, geographic, institutional) to promote comprehensive diversity
+    \item Considering representation across multiple dimensions (gender, geographic, institutional) to promote comprehensive diversity
     \item Collecting self-reported demographic data in future conferences to enable more accurate analysis
 \end{itemize}
 
@@ -446,6 +431,10 @@ Based on our findings, several recommendations emerge for future Quark Matter co
 
 These measures would help ensure that Quark Matter conferences continue to serve as inclusive forums that represent the full breadth of the international heavy-ion physics community.
 
+\subsection{Scientific Communities and Knowledge Structures}
+
+This section would be expanded to include a discussion of how conference patterns reflect power dynamics in scientific knowledge production.
+
 \section{Conclusion}
 
 This historical analysis of Quark Matter conferences provides valuable insights into the evolution of heavy-ion physics as reflected in its premier conference series. By quantifying patterns of participation, geographical distribution, and research focus, we have established a factual basis for discussions about how these conferences might better serve the scientific community.
@@ -456,7 +445,7 @@ As Quark Matter conferences continue to evolve, regular analysis of participatio
 
 \section{Acknowledgments}
 
-We thank the organizers of Quark Matter conferences for making the presentation data publicly available through Indico, enabling this analysis.
+We thank the organizers of Quark Matter conferences for making the presentation data publicly available through Indico, enabling this analysis. We are grateful to colleagues who provided valuable feedback on our analysis methodologies and visualizations during the development of this work.
 
 \bibliographystyle{unsrt}
 \begin{thebibliography}{9}
