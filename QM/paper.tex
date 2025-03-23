@@ -144,30 +144,19 @@ These structural patterns in conference organization and participation have impo
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{figures/QM_keyword_analysis.pdf}
-\caption{Comprehensive analysis of research topics in Quark Matter conferences from 2011 to 2023. The top panels show the evolution of key physics concepts (left) and experimental facilities (right) as percentages of total presentations. The bottom panels display word clouds for each conference year, highlighting the most prominent terms in presentation titles after removing common stopwords. This multi-faceted visualization reveals both quantitative trends and qualitative shifts in research focus over time.}
+\caption{Analysis of research topics in Quark Matter conferences from 2011 to 2023. The left panel shows the evolution of key physics concepts as percentages of total presentations, while the right panel displays trends in experimental facilities mentions. This visualization reveals quantitative trends in research focus over time, tracking the rise and fall of specific physics topics and the changing emphasis on different experimental facilities.}
 \label{fig:keywords}
 \end{figure}
 
-Figure~\ref{fig:keywords} presents a comprehensive analysis of research topics across Quark Matter conferences from 2011 to 2023. This enhanced visualization combines quantitative trend analysis with qualitative word clouds to provide deeper insights into the field's evolution:
+Figure~\ref{fig:keywords} presents an analysis of research topics across Quark Matter conferences from 2011 to 2023. This visualization provides quantitative trend analysis to offer insights into the field's evolution:
 
-The upper-left panel tracks specific physics concepts over time, revealing clear temporal patterns in research focus. "QGP \& Plasma" terms maintain a consistent presence throughout the period, confirming the central role of quark-gluon plasma studies in the field. However, we observe distinct phases in other research areas: "Flow \& Collectivity" shows peak interest in the middle years (2014-2018), while "Small Systems" and "Fluctuations" gain prominence in later conferences, reflecting the community's expanding research horizons.
+The left panel tracks specific physics concepts over time, revealing clear temporal patterns in research focus. "QGP" terms maintain a consistent presence throughout the period, confirming the central role of quark-gluon plasma studies in the field. "Flow" shows peak interest in the middle years (2014-2018), while "Small Systems" and "UPC" gain prominence in later conferences, reflecting the community's expanding research horizons. The tracking of "HF" (Heavy Flavor) shows the evolution of charm and beauty physics throughout the period. The emergence of "soft & hard" comparisons indicates growing interest in understanding the interplay between these complementary approaches to heavy-ion phenomena.
 
-The upper-right panel monitors mentions of experimental facilities, documenting the field's transition from facility-focused to phenomenon-focused research. Early conferences show strong emphasis on LHC and RHIC facilities, with a gradual decline in facility mentions as the research community moved toward more specific physical phenomena and measurements. The increasing mentions of future facilities in recent years (EIC, FAIR, NICA) signals the field's forward-looking perspective and preparation for next-generation experiments.
+The right panel monitors mentions of experimental facilities, documenting the field's transition from facility-focused to phenomenon-focused research. Early conferences show strong emphasis on LHC and RHIC facilities, with a gradual decline in facility mentions as the research community moved toward more specific physical phenomena and measurements. The increasing mentions of future facilities in recent years (FAIR, NICA) signals the field's forward-looking perspective and preparation for next-generation experiments.
 
-The word clouds for individual conference years provide qualitative context for these trends, highlighting the most distinctive terms after removing common stopwords. Our sophisticated text processing methodology ensures that the visualizations highlight meaningful physics concepts rather than generic terminology. The implementation includes:
+These visualizations reveal shifting priorities in theoretical approaches and experimental techniques. For instance, we can observe the emergence of topics like Chiral Magnetic Effect (CME) and the changing emphasis on hydrodynamic models over time, reflecting the field's adoption of new analytical frameworks.
 
-\begin{itemize}
-    \item Removal of common physics stopwords that would otherwise dominate the visualization
-    \item Custom text normalization to handle hyphenation and special characters
-    \item Frequency analysis with importance weighting to highlight distinctive terms
-    \item Color mapping based on term frequency to enhance visual interpretation
-\end{itemize}
-
-These visualizations reveal subtle shifts in terminology and emphasis that complement the quantitative analysis. For instance, we can observe the emergence of terms related to machine learning and computational approaches in more recent conferences, reflecting the field's adoption of new analytical techniques.
-
-Theoretical evolution is also evident in the changing prominence of terms across years. Early conferences feature more general theoretical frameworks, while later years show increasing specificity in theoretical approaches, suggesting growing theoretical sophistication and specialization as the field matures.
-
-This multi-faceted keyword analysis provides a data-driven view of how research priorities in the heavy-ion physics community have evolved over the past decade and points to potential future directions as indicated by emerging keywords in recent conferences.
+This keyword analysis provides a data-driven view of how research priorities in the heavy-ion physics community have evolved over the past decade and points to potential future directions as indicated by emerging keywords in recent conferences.
 
 \subsection{Geographical Distribution of Contributions}
 
@@ -329,51 +318,6 @@ These trends suggest that while the conference has made progress in geographical
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{figures/plenary_talks_by_institute.pdf}
-\caption{Distribution of plenary talks by institute across Quark Matter conferences from 2011 to 2025. The horizontal bars show the number of plenary presentations given by speakers from each of the top 20 institutes, with percentage labels indicating their relative contribution. Institutes are categorized by type (National Laboratory, University, Research Center) and sorted by total contribution. This expanded visualization reveals which research institutions have the most prominent representation in high-visibility speaking slots, highlighting potential concentration of influence in the field.}
-\label{fig:institute_plenary}
-\end{figure}
-
-Figure~\ref{fig:institute_plenary} presents the distribution of plenary talks by research institute across Quark Matter conferences, offering insight into which institutions have the most significant presence in these high-visibility presentations. The visualization is implemented through:
-
-\begin{itemize}
-    \item Aggregation of institutional affiliation data across all conferences
-    \item Normalization of institute names to handle variations and abbreviations
-    \item Calculation of plenary talk counts and percentages for each institute
-    \item Categorization of institutes by type (National Laboratory, University, Research Center)
-    \item Sorting by total contribution for clear identification of leading institutions
-    \item Color-coding by institute type to highlight structural patterns
-    \item Percentage labels to quantify relative representation
-\end{itemize}
-
-The data reveals a strong concentration of plenary talks among a small group of elite research institutions, primarily major national laboratories and top-tier universities with strong nuclear physics programs. This concentration is even more pronounced than the country-level analysis, suggesting that institutional affiliation may be a more significant factor than nationality in plenary speaker selection.
-
-Major experimental facilities hosts, such as Brookhaven National Laboratory (RHIC), CERN (LHC), and GSI (FAIR), are consistently well-represented, reflecting their central role in generating the data that drives the field forward. University representation is dominated by institutions with strong theoretical groups or significant roles in detector development and data analysis.
-
-The visualization uses horizontal bars to allow clear display of institution names, with a carefully designed color scheme that distinguishes between different types of research institutions. This categorization reveals patterns in how different types of institutions are represented in high-visibility talks.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{figures/parallel_talks_by_institute.pdf}
-\caption{Distribution of parallel talks by institute across Quark Matter conferences from 2011 to 2025. The horizontal bars show the number of parallel session presentations given by speakers from each of the top 20 institutes, with percentage labels indicating their share of total presentations. Institutes are categorized by type and color-coded accordingly. This comprehensive visualization reveals broader institutional participation patterns compared to plenary talks and illustrates how research contributions are distributed across a wider range of research centers.}
-\label{fig:institute_parallel}
-\end{figure}
-
-Figure~\ref{fig:institute_parallel} shows the distribution of parallel talks by institute, providing a broader view of institutional participation beyond the highly selective plenary sessions. The figure uses the same visual structure as the plenary institute visualization for consistency and comparability, but reveals notably different patterns:
-
-\begin{itemize}
-    \item Similar to the country-level analysis, we observe greater institutional diversity in parallel sessions compared to plenary talks
-    \item While the leading institutions maintain strong representation, many more institutions participate at this level
-    \item The percentage values for top institutions are lower, indicating a less concentrated distribution
-    \item Different institution types show varying patterns of representation between parallel and plenary talks
-\end{itemize}
-
-The implementation of this visualization includes the same data processing steps as the plenary institute figure, including institute name normalization, categorization, and percentage calculation. The consistent visual style allows for direct comparison between the two distributions, highlighting differences in concentration and representation.
-
-\clearpage % Force a page break here to help with layout
-
-\begin{figure}[H]
-\centering
 \includegraphics[width=\textwidth]{figures/institute_bubble_chart.pdf}
 \caption{Institute contributions across Quark Matter conferences from 2011 to 2025. This bubble chart displays the presence and contribution volume of the top 30 institutes across conference years, with bubble size proportional to the number of presentations. This visualization reveals both consistently active institutions and those with intermittent but significant contributions, providing insight into how institutional participation patterns have evolved over time.}
 \label{fig:institute_bubble}
@@ -451,45 +395,19 @@ While some degree of concentration is expected given differences in community si
 
 Our improved data resolution methodology offers greater confidence in these findings by substantially reducing missing or unknown affiliations. The enhanced completeness of country and institution data ensures that our observations about geographical representation are based on more robust evidence rather than potentially skewed by systematic gaps in the dataset. This is particularly important for accurately assessing the representation of smaller countries and institutions, where even a small number of misclassified or missing entries could significantly impact the apparent level of participation.
 
-The data suggests several potential approaches for conference organizers interested in enhancing diversity of representation:
-
-\begin{itemize}
-    \item Implementing transparent selection criteria that explicitly value geographical and institutional diversity alongside scientific excellence
-    \item Developing mentoring programs or speaking opportunities specifically designed to highlight researchers from underrepresented institutions and countries
-    \item Rotating conference locations more systematically to encourage broader participation and reduce travel barriers
-    \item Collecting and monitoring demographic data on conference participation to track progress over time
-    \item Implementing regional quotas or targets that ensure representation from a broader range of countries while maintaining scientific excellence
-    \item Creating mentoring or speaking opportunity programs specifically for researchers from emerging countries in the field
-\end{itemize}
+The data suggests several potential approaches for conference organizers interested in enhancing diversity of representation. Implementing transparent selection criteria that explicitly value geographical and institutional diversity alongside scientific excellence would be beneficial. Developing mentoring programs or speaking opportunities specifically designed to highlight researchers from underrepresented institutions and countries could help address imbalances. Rotating conference locations more systematically would encourage broader participation and reduce travel barriers. Collecting and monitoring demographic data on conference participation would help track progress over time. Regional quotas or targets could ensure representation from a broader range of countries while maintaining scientific excellence. Creating mentoring or speaking opportunity programs specifically for researchers from emerging countries in the field would also support greater diversity.
 
 Importantly, our findings suggest that addressing these imbalances may require attention not just to country-level representation but to institutional diversity within countries, as the institutional concentration appears even stronger than geographical concentration.
 
 \subsection{Evolution of Research Focus}
 
-The keyword analysis provides a fascinating window into how the scientific focus of the heavy-ion physics community has evolved over the past decade. Several key patterns emerge:
-
-\begin{itemize}
-    \item A shift from facility-focused research (emphasized by accelerator and detector keywords) toward more phenomenon-focused investigations
-    \item The rise and fall of certain research themes, reflecting the community's response to new discoveries and theoretical developments
-    \item Increasing specialization and technical sophistication, as indicated by the growing specificity of keywords in later conferences
-    \item The emergence of new research directions, particularly investigations of collectivity in small systems and the application of machine learning techniques
-\end{itemize}
+The keyword analysis provides a fascinating window into how the scientific focus of the heavy-ion physics community has evolved over the past decade. Several key patterns emerge from our analysis. We observe a shift from facility-focused research (emphasized by accelerator and detector keywords) toward more phenomenon-focused investigations. The rise and fall of certain research themes reflects the community's response to new discoveries and theoretical developments. Increasing specialization and technical sophistication is indicated by the growing specificity of keywords in later conferences. The emergence of new research directions, particularly investigations of collectivity in small systems and the application of machine learning techniques, demonstrates how the field continues to evolve.
 
 These trends reflect a field in transition, moving from an early phase focused on establishing the basic properties of the quark-gluon plasma toward more detailed investigations of specific phenomena and increasingly precise measurements. The keyword dynamics also highlight the responsiveness of the field to surprising experimental results, such as the observation of collective behavior in small collision systems.
 
 \subsection{Implications for Conference Organization}
 
-Based on our findings, several recommendations emerge for future Quark Matter conference planning:
-
-\begin{itemize}
-    \item Implementation of more transparent and explicitly diversity-conscious selection processes for talks, particularly plenary presentations
-    \item Consideration of mechanisms to provide speaking opportunities for researchers from underrepresented countries and institutions
-    \item Balancing representation of established research directions with emerging topics to ensure the conference remains at the cutting edge
-    \item Improving data collection on speaker demographics to better track progress on diversity goals
-    \item Developing structures to highlight work from smaller or newer research groups, potentially through dedicated sessions or presentation formats
-    \item Implementing regional quotas or targets that ensure representation from a broader range of countries while maintaining scientific excellence
-    \item Creating mentoring or speaking opportunity programs specifically for researchers from emerging countries in the field
-\end{itemize}
+Based on our findings, several recommendations emerge for future Quark Matter conference planning. Implementation of more transparent and explicitly diversity-conscious selection processes for talks, particularly plenary presentations, would improve representation. Conference organizers should consider mechanisms to provide speaking opportunities for researchers from underrepresented countries and institutions. Balancing representation of established research directions with emerging topics would ensure the conference remains at the cutting edge. Improving data collection on speaker demographics would better track progress on diversity goals. Developing structures to highlight work from smaller or newer research groups, potentially through dedicated sessions or presentation formats, would broaden participation. Regional quotas or targets could ensure representation from a broader range of countries while maintaining scientific excellence. Creating mentoring or speaking opportunity programs specifically for researchers from emerging countries would help develop the global research community.
 
 These measures would help ensure that Quark Matter conferences continue to serve as inclusive forums that represent the full breadth of the international heavy-ion physics community.
 

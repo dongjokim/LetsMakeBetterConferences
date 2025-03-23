@@ -1546,10 +1546,19 @@ def create_keywords_plot(conference_data):
         'flow': ['flow', 'flows', 'flowing'],
         'QGP': ['qgp', 'quark gluon plasma', 'quark-gluon'],
         'jet': ['jet', 'jets', 'dijets', 'b-jet'],
-        'charm': ['charm', 'charmed', 'j/psi', 'jpsi', 'j/ψ'],
+        'HF': ['heavy flavor', 'heavy flavour', 'charm', 'beauty', 'bottom', 
+              'j/psi', 'jpsi', 'j/ψ', 'upsilon', 'ϒ', 'd meson', 'b meson', 
+              'c-quark', 'b-quark', 'charmonium', 'bottomonium', 'open charm', 
+              'open beauty', 'quarkonium', 'hf', 'charmed', 'b quark', 'c quark'],
         'photon': ['photon', 'photons', 'photonic', 'gamma'],
         'hydro': ['hydro', 'hydrodynamic', 'hydrodynamics'],
-        'CME': ['cme', 'chiral magnetic', 'magnetic effect']
+        'CME': ['cme', 'chiral magnetic', 'magnetic effect'],
+        'small system': ['small system', 'small systems', 'pp collision', 'pA collision', 'p-pb', 'p+pb', 'p+a', 'p-a', 
+                        'small collision', 'peripheral', 'pp collisions', 'p-p'],
+        'UPC': ['upc', 'ultra-peripheral', 'ultra peripheral', 'ultraperipheral', 'photoproduction', 'coherent', 'photo-nuclear',
+               'photo nuclear', 'photonuclear'],
+        'soft & hard': ['soft and hard', 'hard and soft', 'soft vs hard', 'hard vs soft', 'soft versus hard', 
+                       'hard versus soft', 'soft/hard', 'hard/soft']
     }
     
     facilities = {
@@ -1559,6 +1568,27 @@ def create_keywords_plot(conference_data):
         'FAIR': ['fair', 'gsi', 'darmstadt'],
         'NICA': ['nica', 'dubna']
     }
+    
+    # Custom counter for "soft & hard" to catch both words in same title
+    def count_concepts_with_special_cases(titles, concept_dict):
+        counts = Counter()
+        
+        for title in titles:
+            title_lower = title.lower()
+            
+            # Regular concept counting
+            for concept, keywords in concept_dict.items():
+                if concept != 'soft & hard':  # Handle regular concepts normally
+                    for keyword in keywords:
+                        if keyword in title_lower:
+                            counts[concept] += 1
+                            break  # Count each concept only once per title
+            
+            # Special case for "soft & hard" - both words must appear in the title
+            if ('soft' in title_lower and 'hard' in title_lower):
+                counts['soft & hard'] += 1
+        
+        return counts
     
     # Extract all years
     years = sorted([year for year in conference_data.keys() if year != '2025'])
@@ -1581,39 +1611,50 @@ def create_keywords_plot(conference_data):
             
             # Only count if we have titles for this year
             if titles:
-                # Count physics concepts
-                concept_counts = count_concepts(titles, physics_concepts)
+                # Count physics concepts with special case handling
+                concept_counts = count_concepts_with_special_cases(titles, physics_concepts)
                 for concept, count in concept_counts.items():
                     concept_trends[concept][i] = count / len(titles) * 100
                     
-                # Count facility mentions
+                # Count facility mentions (using standard function)
                 facility_counts = count_concepts(titles, facilities)
                 for facility, count in facility_counts.items():
                     facility_trends[facility][i] = count / len(titles) * 100
     
-    # Create a figure with two subplots
+    # Create a figure with two subplots (only the top row now)
     try:
-        # Combine both visualizations into one comprehensive figure
-        fig = plt.figure(figsize=(20, 15))
-        gs = gridspec.GridSpec(2, 2)
+        # Create main visualization with only the top two panels 
+        fig = plt.figure(figsize=(20, 10))
+        gs = gridspec.GridSpec(1, 2)
         
-        # Top row: Trend lines for physics concepts and facilities
+        # Physics concepts panel
         ax_concepts = plt.subplot(gs[0, 0])
         for concept, percentages in concept_trends.items():
             ax_concepts.plot(years, percentages, marker='o', linewidth=2, label=concept)
         ax_concepts.set_title('Evolution of Physics Concepts', fontsize=14)
+        ax_concepts.set_xlabel('Conference Year', fontsize=12)
         ax_concepts.set_ylabel('Percentage of Presentations (%)', fontsize=12)
         ax_concepts.grid(True, linestyle='--', alpha=0.7)
         ax_concepts.legend(loc='upper left', bbox_to_anchor=(1, 1))
         
+        # Facilities panel
         ax_facilities = plt.subplot(gs[0, 1])
         for facility, percentages in facility_trends.items():
             ax_facilities.plot(years, percentages, marker='s', linewidth=2, label=facility)
         ax_facilities.set_title('Experimental Facilities', fontsize=14)
+        ax_facilities.set_xlabel('Conference Year', fontsize=12)
+        ax_facilities.set_ylabel('Percentage of Presentations (%)', fontsize=12)
         ax_facilities.grid(True, linestyle='--', alpha=0.7)
         ax_facilities.legend()
         
-        # Now create keyword analysis based on extracted keywords
+        plt.tight_layout()
+        plt.savefig('figures/keywords_analysis.pdf', bbox_inches='tight')
+        plt.savefig('figures/QM_keyword_analysis.pdf', bbox_inches='tight')  # Match existing filename
+        plt.savefig('figures/keyword_trends.pdf', bbox_inches='tight')
+        plt.savefig('figures/keyword_trends.png', dpi=300, bbox_inches='tight')
+        plt.close()
+        
+        # Still process the keyword data for QA plots
         all_keywords = Counter()
         keyword_by_year = {}
         
@@ -1638,6 +1679,7 @@ def create_keywords_plot(conference_data):
         
         print(f"Found {len(all_keywords)} unique keywords across all years")
         
+        # Save keyword analysis as separate QA plots
         if all_keywords:
             print(f"Top 10 keywords (to be excluded): {all_keywords.most_common(10)}")
             
@@ -1650,10 +1692,12 @@ def create_keywords_plot(conference_data):
             print(f"After removing top 10, using {len(filtered_keywords)} keywords")
             print(f"New top keywords: {filtered_keywords.most_common(10)}")
             
-            # Create keyword visualization
-            ax_keywords = plt.subplot(gs[1, 0])
+            # Create QA plots for keyword analysis (saved separately)
+            fig_qa = plt.figure(figsize=(20, 10))
+            gs_qa = gridspec.GridSpec(1, 2)
             
-            # Get top keywords (excluding the top 10)
+            # Bar chart of top keywords
+            ax_keywords = plt.subplot(gs_qa[0, 0])
             top_keywords = [kw for kw, _ in filtered_keywords.most_common(15)]
             counts = [filtered_keywords[kw] for kw in top_keywords]
             
@@ -1664,13 +1708,10 @@ def create_keywords_plot(conference_data):
             ax_keywords.set_xlabel('Frequency')
             ax_keywords.set_title('Top Keywords (excluding 10 most common)')
             
-            # Create trend visualization for keywords
-            ax_keyword_trends = plt.subplot(gs[1, 1])
-            
-            # Get top keywords for trends (limit to 6 for readability)
+            # Keyword trends
+            ax_keyword_trends = plt.subplot(gs_qa[0, 1])
             top_trend_keywords = top_keywords[:6]
             
-            # Ensure all trend lists are the same length
             for keyword in top_trend_keywords:
                 trend = []
                 for year in years:
@@ -1682,19 +1723,17 @@ def create_keywords_plot(conference_data):
             ax_keyword_trends.set_ylabel('Frequency')
             ax_keyword_trends.legend()
             ax_keyword_trends.grid(True, linestyle='--', alpha=0.7)
+            
+            plt.tight_layout()
+            plt.savefig('figures/keyword_QA_plots.pdf', bbox_inches='tight')
+            plt.savefig('figures/keyword_QA_plots.png', dpi=300, bbox_inches='tight')
+            plt.close()
         
-        plt.tight_layout()
-        plt.savefig('figures/keywords_analysis.pdf', bbox_inches='tight')
-        plt.savefig('figures/QM_keyword_analysis.pdf', bbox_inches='tight')  # Match existing filename
-        plt.savefig('figures/keyword_trends.pdf', bbox_inches='tight')
-        plt.savefig('figures/keyword_trends.png', dpi=300, bbox_inches='tight')
-        plt.close()
-        
-        # Filter the keyword_by_year data too
+        # Filter the keyword_by_year data 
         filtered_keyword_by_year = {}
         for year in keyword_by_year:
             filtered_keyword_by_year[year] = Counter({k: v for k, v in keyword_by_year[year].items() 
-                                                        if k not in top_10_keywords})
+                                                      if k not in top_10_keywords})
         
         return filtered_keywords, filtered_keyword_by_year
     
