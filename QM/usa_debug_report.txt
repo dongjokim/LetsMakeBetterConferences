@@ -1,0 +1,63 @@
+Starting country assignment debug analysis...
+
+Overall USA Statistics:
+Total Talks: 5956
+USA Talks: 1365 (22.92%)
+
+USA Percentage by Year:
+  2011: 24.22% (124 of 512)
+  2012: 29.70% (150 of 505)
+  2014: 21.75% (124 of 570)
+  2015: 22.89% (133 of 581)
+  2017: 33.95% (165 of 486)
+  2018: 22.32% (146 of 654)
+  2019: 21.20% (120 of 566)
+  2022: 19.32% (143 of 740)
+  2023: 25.73% (141 of 548)
+  2025: 14.99% (119 of 794)
+
+Outlier Years (>20% deviation from average):
+  2012: 29.70% (average: 23.61%)
+  2017: 33.95% (average: 23.61%)
+
+Analyzing affiliation patterns in USA contributions...
+
+Common Patterns in USA Affiliations:
+  University without country: 803 (58.83%)
+  Contains comma: 66 (4.84%)
+  Contains USA keyword: 39 (2.86%)
+  Contains Collaboration: 2 (0.15%)
+
+Sample of Suspicious USA Assignments:
+  2011 | plenary_talks | Rajagopal, Krishna | MIT
+  2011 | plenary_talks | Masui, Hiroshi | LBNL
+  2011 | plenary_talks | Koch, Volker | Lawrence Berkeley National Laboratory
+  2011 | plenary_talks | Sorensen, Paul | BNL
+  2011 | plenary_talks | Steinberg, Peter | Brookhaven National Laboratory
+  2011 | plenary_talks | Schenke, Björn | Brookhaven National Laboratory
+  2011 | plenary_talks | Jacobs, Peter | Lawrence Berkeley National Laboratory
+  2011 | plenary_talks | Gyulassy, Miklos | Columbia University
+  2011 | plenary_talks | Purschke, Martin | BROOKHAVEN NATIONAL LABORATORY
+  2011 | plenary_talks | Cole, Brian | Physics Dept., Pupin Physics Lab.-Columbia University-Unknown
+  2011 | plenary_talks | Heinz, Ulrich | Ohio State University
+  2011 | plenary_talks | Bathe, Stefan | RIKEN-BNL Research Center
+  2011 | plenary_talks | Roland, Christof | Massachusetts Institute of Technology
+  2011 | plenary_talks | Lee, Yen-Jie | Massachusetts Inst. of Technology (MIT)
+  2011 | plenary_talks | Velkovska, Julia | Vanderbilt University
+  2011 | plenary_talks | Wyslouch, Bolek | MIT
+  2011 | plenary_talks | Jia, Jiangyong | Brookhaven National Laboratory (BNL)- Stony Brook University
+  2011 | plenary_talks | daSilva, Cesar luiz | Los Alamos National Lab
+  2011 | plenary_talks | Silvestre, Catherine | Los Alamos National Laboratory (LANL)-Laboratoire de Physique Subatomique  et Cosmologie (LPSC, Grenoble)
+  2011 | plenary_talks | Mukherjee, Swagato | Brookhaven National Laboratory
+Error checking institute database: Error tokenizing data. C error: Expected 2 fields in line 21, saw 3
+
+
+USA Institutes in Database: 0
+Sample of institutes mapped to USA:
+
+Recommendations:
+1. Review suspicious USA assignments manually
+2. Improve handling of collaborations in country assignment logic
+3. Add more university-to-country mappings in institute_country_database.csv
+4. Review extract_country() function for potential USA bias
+5. Consider enhancing the institute normalization to handle more variants
