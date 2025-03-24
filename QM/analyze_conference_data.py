@@ -94,183 +94,61 @@ def load_processed_data(base_dir='data/processed'):
         return None
 
 def load_participant_data():
-    """Load participant data from text files in data/html directory"""
-    participant_data = {}
+    """
+    Load participant data created by fetch_participants.py
     
-    # Check if the data/html directory exists
-    html_dir = 'data/html'
-    if not os.path.exists(html_dir):
-        print(f"Directory {html_dir} not found")
-        return participant_data
+    Returns:
+    - Dictionary mapping years to participant counts
+    """
+    participants_by_year = {}
     
-    # Look for man_YYYY.data files
-    for filename in os.listdir(html_dir):
-        if filename.startswith('man_') and filename.endswith('.data'):
-            try:
-                # Extract year from filename
-                year_match = re.search(r'man_(\d{4})\.data', filename)
-                if year_match:
-                    year = year_match.group(1)
-                    file_path = os.path.join(html_dir, filename)
+    # First try to load from JSON file
+    json_path = "data/participants/all_participants.json"
+    if os.path.exists(json_path):
+        try:
+            with open(json_path, 'r', encoding='utf-8') as f:
+                all_participants = json.load(f)
+                
+                for event_key, participants in all_participants.items():
+                    if '-' in event_key:
+                        year = event_key.split('-', 1)[0]
+                    else:
+                        year = event_key
                     
-                    # Read the text file
-                    participants = []
-                    with open(file_path, 'r', encoding='utf-8') as f:
-                        lines = f.readlines()
-                        
-                        # Skip header line
-                        if len(lines) > 0:
-                            header = lines[0].strip().lower()
-                            data_lines = lines[1:]
-                            
-                            # Determine format based on header
-                            has_id = 'id' in header
-                            first_name_first = 'first name' in header and header.find('first name') < header.find('last name')
-                            has_country_column = 'country' in header
-                            
-                            print(f"File {filename} format: ID={has_id}, FirstNameFirst={first_name_first}, CountryColumn={has_country_column}")
-                            
-                            # Process each data line
-                            for line in data_lines:
-                                line = line.strip()
-                                if not line:
-                                    continue
-                                    
-                                parts = line.split('\t')
-                                parts = [p.strip() for p in parts if p.strip()]
-                                
-                                if len(parts) < 2:  # Need at least name and affiliation
-                                    continue
-                                
-                                # Extract data based on format
-                                if has_id:
-                                    # Format: ID, First Name, Last Name, Affiliation
-                                    if len(parts) >= 4:
-                                        first_name = parts[1]
-                                        last_name = parts[2]
-                                        affiliation = parts[3]
-                                        country = ''
-                                    else:
-                                        continue
-                                elif has_country_column:
-                                    # Format: Last Name, First Name, Affiliation, Country
-                                    if len(parts) >= 4:
-                                        last_name = parts[0]
-                                        first_name = parts[1]
-                                        affiliation = parts[2]
-                                        country = parts[3]
-                                    else:
-                                        continue
-                                elif first_name_first:
-                                    # Format: First Name, Last Name, Affiliation
-                                    if len(parts) >= 3:
-                                        first_name = parts[0]
-                                        last_name = parts[1]
-                                        affiliation = parts[2]
-                                        country = ''
-                                    else:
-                                        continue
-                                else:
-                                    # Format: Last Name, First Name, Affiliation
-                                    if len(parts) >= 3:
-                                        last_name = parts[0]
-                                        first_name = parts[1]
-                                        affiliation = parts[2]
-                                        country = ''
-                                    else:
-                                        continue
-                                
-                                # Extract country from affiliation if not provided
-                                if not country and '(' in affiliation and ')' in affiliation:
-                                    country_match = re.search(r'\(([A-Z]{2})\)', affiliation)
-                                    if country_match:
-                                        country = country_match.group(1)
-                                        
-                                        # Convert country codes to full names
-                                        country_codes = {
-                                            'US': 'United States',
-                                            'UK': 'United Kingdom',
-                                            'DE': 'Germany',
-                                            'FR': 'France',
-                                            'IT': 'Italy',
-                                            'JP': 'Japan',
-                                            'CN': 'China',
-                                            'RU': 'Russia',
-                                            'IN': 'India',
-                                            'BR': 'Brazil',
-                                            'CA': 'Canada',
-                                            'AU': 'Australia',
-                                            'CH': 'Switzerland',
-                                            'NL': 'Netherlands',
-                                            'ES': 'Spain',
-                                            'SE': 'Sweden',
-                                            'PL': 'Poland',
-                                            'AT': 'Austria',
-                                            'BE': 'Belgium',
-                                            'DK': 'Denmark',
-                                            'FI': 'Finland',
-                                            'NO': 'Norway',
-                                            'PT': 'Portugal',
-                                            'GR': 'Greece',
-                                            'IE': 'Ireland',
-                                            'CZ': 'Czech Republic',
-                                            'HU': 'Hungary',
-                                            'TR': 'Turkey',
-                                            'IL': 'Israel',
-                                            'ZA': 'South Africa',
-                                            'MX': 'Mexico',
-                                            'KR': 'South Korea',
-                                            'SG': 'Singapore',
-                                            'MY': 'Malaysia',
-                                            'TH': 'Thailand',
-                                            'ID': 'Indonesia',
-                                            'PH': 'Philippines',
-                                            'VN': 'Vietnam',
-                                            'AR': 'Argentina',
-                                            'CL': 'Chile',
-                                            'CO': 'Colombia',
-                                            'PE': 'Peru',
-                                            'VE': 'Venezuela',
-                                            'UA': 'Ukraine',
-                                            'BY': 'Belarus',
-                                            'RO': 'Romania',
-                                            'BG': 'Bulgaria',
-                                            'RS': 'Serbia',
-                                            'HR': 'Croatia',
-                                            'SI': 'Slovenia',
-                                            'SK': 'Slovakia',
-                                            'EE': 'Estonia',
-                                            'LV': 'Latvia',
-                                            'LT': 'Lithuania'
-                                        }
-                                        
-                                        if country in country_codes:
-                                            country = country_codes[country]
-                                
-                                # Combine first and last name
-                                name = f"{first_name} {last_name}".strip()
-                                
-                                participants.append({
-                                    'name': name,
-                                    'affiliation': affiliation,
-                                    'country': country
-                                })
+                    participants_by_year[year] = len(participants)
+                
+                return participants_by_year
+        except Exception as e:
+            print(f"Error loading participant data from JSON: {e}")
+    
+    # If JSON doesn't work, try the CSV file
+    csv_path = "data/participants/all_participants.csv"
+    if os.path.exists(csv_path):
+        try:
+            unique_participants_by_year = {}
+            
+            with open(csv_path, 'r', encoding='utf-8') as f:
+                reader = csv.DictReader(f)
+                for row in reader:
+                    year = row.get('year', '')
+                    name = row.get('name', '')
                     
-                    participant_data[year] = participants
-                    print(f"Loaded {len(participants)} participants from {filename}")
-            except Exception as e:
-                print(f"Error loading {filename}: {e}")
-                import traceback
-                traceback.print_exc()
+                    if year not in unique_participants_by_year:
+                        unique_participants_by_year[year] = set()
+                    
+                    if name:
+                        unique_participants_by_year[year].add(name)
+            
+            # Convert sets to counts
+            for year, participants in unique_participants_by_year.items():
+                participants_by_year[year] = len(participants)
+            
+            return participants_by_year
+        except Exception as e:
+            print(f"Error loading participant data from CSV: {e}")
     
-    # If no data was loaded, create empty data for each year
-    years = ['2011', '2012', '2014', '2015', '2017', '2018', '2019', '2022', '2023', '2025']
-    for year in years:
-        if year not in participant_data:
-            participant_data[year] = []
-            print(f"No participant data available for {year}")
-    
-    return participant_data
+    print("Warning: No participant data found. Will use estimates.")
+    return {}
 
 def update_speaker_info_from_participant_data(conference_data, participant_data):
     """Update speaker information from participant data"""
@@ -1553,7 +1431,7 @@ def create_keywords_plot(conference_data):
         'photon': ['photon', 'photons', 'photonic', 'gamma'],
         'hydro': ['hydro', 'hydrodynamic', 'hydrodynamics'],
         'CME': ['cme', 'chiral magnetic', 'magnetic effect'],
-        'small system': ['small system', 'small systems', 'pp collision', 'pA collision', 'p-pb', 'p+pb', 'p+a', 'p-a', 
+        'small system': ['small system', 'small systems', 'pp collision', 'pA collision', 'p+pb', 'p+a', 'p-a', 
                         'small collision', 'peripheral', 'pp collisions', 'p-p'],
         'UPC': ['upc', 'ultra-peripheral', 'ultra peripheral', 'ultraperipheral', 'photoproduction', 'coherent', 'photo-nuclear',
                'photo nuclear', 'photonuclear'],
@@ -2897,6 +2775,9 @@ def create_talk_statistics_figure(conference_data):
     """
     print("Creating QM talk statistics figure...")
     
+    # Load participant data from files created by fetch_participants.py
+    participants_by_year = load_participant_data()
+    
     # Extract all years 
     years = sorted([int(year) for year in conference_data.keys() if year != '2025' and year.isdigit()])
     x = np.array(years)
@@ -2912,6 +2793,7 @@ def create_talk_statistics_figure(conference_data):
     plenary_counts = []
     parallel_counts = []
     poster_counts = []
+    participant_counts = []
     
     for year in years:
         year_str = str(year)
@@ -2919,35 +2801,102 @@ def create_talk_statistics_figure(conference_data):
             plenary_counts.append(len(conference_data[year_str].get('plenary_talks', [])))
             parallel_counts.append(len(conference_data[year_str].get('parallel_talks', [])))
             poster_counts.append(len(conference_data[year_str].get('poster_talks', [])))
+            
+            # Get participant count for this year
+            if year_str in participants_by_year:
+                # Use actual participant count from data
+                participant_counts.append(participants_by_year[year_str])
+            else:
+                # Estimate participants as sum of unique authors if actual data not available
+                unique_authors = set()
+                for talk_type in ['plenary_talks', 'parallel_talks', 'poster_talks']:
+                    if talk_type in conference_data[year_str]:
+                        for talk in conference_data[year_str][talk_type]:
+                            if 'Authors' in talk and talk['Authors']:
+                                for author in talk['Authors']:
+                                    unique_authors.add(author)
+                            elif 'Speaker' in talk and talk['Speaker']:
+                                unique_authors.add(talk['Speaker'])
+                
+                # Add 20% to account for non-presenting attendees
+                estimated_participants = int(len(unique_authors) * 1.2)
+                participant_counts.append(estimated_participants)
     
-    # Create the stacked bar chart for talk counts
-    width = 0.8
-    bars1 = ax1.bar(x, plenary_counts, width, label='Plenary Talks', color='#1f77b4')
-    bars2 = ax1.bar(x, parallel_counts, width, label='Parallel Talks', bottom=plenary_counts, color='#ff7f0e')
+    # Calculate total talk counts
+    total_talks = []
+    for i in range(len(x)):
+        total = plenary_counts[i] + parallel_counts[i] + poster_counts[i]
+        total_talks.append(total)
     
-    # Calculate cumulative heights for stacking
-    bottom = np.array(plenary_counts) + np.array(parallel_counts)
-    bars3 = ax1.bar(x, poster_counts, width, label='Posters', bottom=bottom, color='#2ca02c')
+    # Plot all talk types with lines and markers
+    ax1.plot(x, plenary_counts, color='#1f77b4', marker='o', linestyle='-', linewidth=2, label='Plenary Talks')
+    ax1.plot(x, parallel_counts, color='#ff7f0e', marker='s', linestyle='-', linewidth=2, label='Parallel Talks')
+    ax1.plot(x, poster_counts, color='#2ca02c', marker='^', linestyle='-', linewidth=2, label='Poster Talks')
+    ax1.plot(x, total_talks, color='blue', marker='d', linestyle='-', linewidth=2, alpha=0.7, label='Total Talks')
+    ax1.plot(x, participant_counts, color='red', marker='o', linestyle='-', linewidth=2, label='Participants')
+    
+    # Add annotations for all data points
+    for i in range(len(x)):
+        # Plenary talks
+        ax1.annotate(f"{plenary_counts[i]}", 
+                    xy=(x[i], plenary_counts[i]),
+                    xytext=(0, 10),  # Place above the marker
+                    textcoords='offset points',
+                    ha='center', va='bottom',
+                    color='#1f77b4', fontsize=10)
+        
+        # Parallel talks
+        ax1.annotate(f"{parallel_counts[i]}", 
+                    xy=(x[i], parallel_counts[i]),
+                    xytext=(0, 10),
+                    textcoords='offset points',
+                    ha='center', va='bottom',
+                    color='#ff7f0e', fontsize=10)
+        
+        # Poster talks
+        ax1.annotate(f"{poster_counts[i]}", 
+                    xy=(x[i], poster_counts[i]),
+                    xytext=(0, 10),
+                    textcoords='offset points',
+                    ha='center', va='bottom',
+                    color='#2ca02c', fontsize=10)
+        
+        # Total talks
+        ax1.annotate(f"{total_talks[i]}", 
+                    xy=(x[i], total_talks[i]),
+                    xytext=(0, 10),
+                    textcoords='offset points',
+                    ha='center', va='bottom',
+                    color='blue', fontsize=10, fontweight='bold')
+        
+        # Participants
+        ax1.annotate(f"{participant_counts[i]}", 
+                    xy=(x[i], participant_counts[i]),
+                    xytext=(0, 10),
+                    textcoords='offset points',
+                    ha='center', va='bottom',
+                    color='red', fontsize=10, fontweight='bold')
+    
+    ax1.set_xticks(x)
+    ax1.set_xticklabels(years)
+    ax1.set_ylabel('Number of Talks / Participants')
+    ax1.set_title('QM Conference Statistics by Year', fontsize=16)
+    
+    # Set y-axis range with just 10% extra space
+    max_value = max(max(total_talks), max(participant_counts))
+    ax1.set_ylim(0, max_value * 1.1)  # Add 10% extra space
     
     # Add legend
     ax1.legend(loc='upper left')
     
-    ax1.set_xticks(x)
-    ax1.set_xticklabels(years)
-    ax1.set_ylabel('Number of Talks')
-    ax1.set_title('QM Conference Statistics by Year', fontsize=16)
-    
-    # Add annotations for total talk counts
-    for i in range(len(x)):
-        total = plenary_counts[i] + parallel_counts[i] + poster_counts[i]
-        ax1.text(x[i], total + 5, f"{total}", ha='center', va='bottom')
-    
-    # Calculate unique countries and institutes per year
-    countries_by_year = []
-    institutes_by_year = []
+    # Add grid for better readability
+    ax1.grid(True, linestyle='--', alpha=0.3)
     
     # Plot 2: Country diversity
     ax2 = plt.subplot(gs[1])
+    
+    countries_by_year = []
+    institutes_by_year = []
     
     for year in years:
         year_str = str(year)
@@ -2997,9 +2946,9 @@ def create_talk_statistics_figure(conference_data):
     parallel_pct = np.array(parallel_counts) / total_talks * 100
     poster_pct = np.array(poster_counts) / total_talks * 100
     
-    ax3.plot(x, plenary_pct, 'o-', color='#1f77b4', linewidth=2, label='Plenary %')
-    ax3.plot(x, parallel_pct, 's-', color='#ff7f0e', linewidth=2, label='Parallel %')
-    ax3.plot(x, poster_pct, '^-', color='#2ca02c', linewidth=2, label='Poster %')
+    ax3.plot(x, plenary_pct, marker='o', color='#1f77b4', linewidth=2, label='Plenary %')
+    ax3.plot(x, parallel_pct, marker='s', color='#ff7f0e', linewidth=2, label='Parallel %')
+    ax3.plot(x, poster_pct, marker='^', color='#2ca02c', linewidth=2, label='Poster %')
     
     ax3.set_xlabel('Conference Year')
     ax3.set_ylabel('Percentage of Talks')
