@@ -8,6 +8,8 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{authblk}
 \usepackage{float}
+\usepackage[comma,square,numbers,sort&compress]{natbib}
+\bibliographystyle{utphys}  % Changed from ursrt to unsrtnat (a standard natbib style)
 
 \title{The Evolution of Heavy-Ion Physics: A Data-Driven Analysis of Quark Matter Conferences}
 
@@ -28,6 +30,11 @@ This paper presents a comprehensive analysis of Quark Matter conferences from 20
 \section{Introduction}
 
 The Quark Matter conference series represents the premier international meeting dedicated to ultra-relativistic heavy-ion collisions and the study of nuclear matter under extreme conditions. Since its inception, these conferences have served as crucial platforms for presenting breakthrough research, fostering collaborations, and shaping the direction of the field. 
+% Intro of heavy-ion physics
+Heavy-ion physics investigates the behavior of nuclear matter at extreme temperatures and densities where protons and neutrons dissolve into their constituent quarks and gluons, forming a state of matter known as the Quark-Gluon Plasma (QGP)~\cite{Shuryak:2008eq, Kovtun:2004de}. This deconfined state of matter is believed to have existed microseconds after the Big Bang and may currently exist in the cores of neutron stars. Using particle accelerators like RHIC at Brookhaven and the LHC at CERN, physicists recreate these extreme conditions through high-energy collisions of heavy nuclei, allowing for laboratory study of QGP properties~\cite{Adams:2005dq, Adcox:2004mh, Arsene:2004fa, Back:2004je, ALICE:2022wpn}. The field bridges particle physics, nuclear physics, and astrophysics, addressing fundamental questions about quantum chromodynamics (QCD), phase transitions in nuclear matter, and collective phenomena in strongly interacting systems. These investigations enhance our understanding of the early universe, the strong nuclear force, and the fundamental structure of matter under extreme conditions~\cite{Akiba:2015jwa}.
+
+% As short summary of the goal of the heavy-ion physics
+In recent years, the field has achieved remarkable progress in quantitatively characterizing QGP properties. The transport coefficients of QGP, including shear viscosity, bulk viscosity, and specific heat, have been determined with unprecedented precision through global Bayesian analysis of experimental data from RHIC and the LHC integrated with state-of-the-art theoretical models~\cite{Bernhard:2016tnd, JETSCAPE:2020mzn, Nijs:2020roc}. Current research frontiers include understanding how energetic probes like jets interact with the medium, elucidating the behavior of heavy flavor quarks (charm and beauty) as they propagate through QGP, and exploring the transition between normal nuclear matter and QGP through beam energy scan programs. These investigations aim to establish a comprehensive framework describing the time evolution, thermodynamic properties, and microscopic dynamics of strongly interacting QCD matter~\cite{Parkkila:2021tqq, Parkkila:2021yha, Virta:2024avu}.
 
 Understanding the historical patterns and evolution of these conferences provides valuable insights into:
 \begin{itemize}
@@ -149,7 +156,7 @@ These structural patterns in conference organization and participation have impo
 
 Figure~\ref{fig:keywords} presents an analysis of research topics across Quark Matter conferences from 2011 to 2023. This visualization provides quantitative trend analysis to offer insights into the field's evolution:
 
-The left panel tracks specific physics concepts over time, revealing clear temporal patterns in research focus. "QGP" terms maintain a consistent presence throughout the period, confirming the central role of quark-gluon plasma studies in the field. "Flow" shows peak interest in the middle years (2014-2018), while "Small Systems" and "UPC" gain prominence in later conferences, reflecting the community's expanding research horizons. The tracking of "HF" (Heavy Flavor) shows the evolution of charm and beauty physics throughout the period. The emergence of "soft & hard" comparisons indicates growing interest in understanding the interplay between these complementary approaches to heavy-ion phenomena.
+The left panel tracks specific physics concepts over time, revealing clear temporal patterns in research focus. "QGP" terms maintain a consistent presence throughout the period, confirming the central role of quark-gluon plasma studies in the field. "Flow" shows peak interest in the middle years (2014-2018), while "Small Systems" and "UPC" gain prominence in later conferences, reflecting the community's expanding research horizons. The tracking of "HF" (Heavy Flavor) shows the evolution of charm and beauty physics throughout the period. The emergence of "soft \& hard" comparisons indicates growing interest in understanding the interplay between these complementary approaches to heavy-ion phenomena.
 
 The right panel monitors mentions of experimental facilities, documenting the field's transition from facility-focused to phenomenon-focused research. Early conferences show strong emphasis on LHC and RHIC facilities, with a gradual decline in facility mentions as the research community moved toward more specific physical phenomena and measurements. The increasing mentions of future facilities in recent years (FAIR, NICA) signals the field's forward-looking perspective and preparation for next-generation experiments.
 
@@ -447,17 +454,7 @@ As Quark Matter conferences continue to evolve, regular analysis of participatio
 
 We thank the organizers of Quark Matter conferences for making the presentation data publicly available through Indico, enabling this analysis. We are grateful to colleagues who provided valuable feedback on our analysis methodologies and visualizations during the development of this work.
 
-\bibliographystyle{unsrt}
-\begin{thebibliography}{9}
-\bibitem{indico} 
-CERN. ``Indico - Event Management System.'' 
-\texttt{https://indico.cern.ch/}
 
-\bibitem{QM2011}
-Quark Matter 2011 Conference Proceedings,
-\texttt{https://indico.cern.ch/event/30248/}
-
-% Additional references would be added here
-\end{thebibliography}
+\bibliography{ref}% Produces the bibliography via BibTeX.
 
 \end{document}
