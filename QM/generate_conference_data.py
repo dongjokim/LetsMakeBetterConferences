@@ -782,6 +782,15 @@ def fetch_and_process_contributions(indico_id, year):
                 else:
                     session_type = 'unknown_parallel'
                 
+                # Extract abstract information
+                abstract = ""
+                if 'description' in contribution and contribution['description']:
+                    abstract = contribution['description']
+                elif 'content' in contribution and contribution['content']:
+                    abstract = contribution['content']
+                elif 'summary' in contribution and contribution['summary']:
+                    abstract = contribution['summary']
+                
                 talk_data = {
                     'Session': track,
                     'Type': session_type,
@@ -789,6 +798,7 @@ def fetch_and_process_contributions(indico_id, year):
                     'Speaker': name,
                     'Institute': affiliation,
                     'Country': country,
+                    'Abstract': abstract,  # Add the abstract field
                     'Raw_Speaker_Data': speakers[0] if speakers else None
                 }
                 
@@ -836,6 +846,15 @@ def fetch_and_process_contributions(indico_id, year):
                 
                 name, affiliation, country = extract_speaker_info(speakers)
                 
+                # Extract abstract information
+                abstract = ""
+                if 'description' in contribution and contribution['description']:
+                    abstract = contribution['description']
+                elif 'content' in contribution and contribution['content']:
+                    abstract = contribution['content']
+                elif 'summary' in contribution and contribution['summary']:
+                    abstract = contribution['summary']
+                
                 talk_data = {
                     'Session': session,
                     'Type': session_type,
@@ -843,6 +862,7 @@ def fetch_and_process_contributions(indico_id, year):
                     'Speaker': name,
                     'Institute': affiliation,
                     'Country': country,
+                    'Abstract': abstract,  # Add the abstract field
                     'Raw_Speaker_Data': speakers[0] if speakers else None
                 }
                 
@@ -876,6 +896,15 @@ def fetch_and_process_contributions(indico_id, year):
                 
                 name, affiliation, country = extract_speaker_info(speakers)
                 
+                # Extract abstract information
+                abstract = ""
+                if 'description' in contribution and contribution['description']:
+                    abstract = contribution['description']
+                elif 'content' in contribution and contribution['content']:
+                    abstract = contribution['content']
+                elif 'summary' in contribution and contribution['summary']:
+                    abstract = contribution['summary']
+                
                 talk_data = {
                     'Session': session,
                     'Type': session_type,
@@ -883,6 +912,7 @@ def fetch_and_process_contributions(indico_id, year):
                     'Speaker': name,
                     'Institute': affiliation,
                     'Country': country,
+                    'Abstract': abstract,  # Add the abstract field
                     'Raw_Speaker_Data': speakers[0] if speakers else None
                 }
                 
