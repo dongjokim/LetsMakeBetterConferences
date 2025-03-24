@@ -1098,8 +1098,10 @@ def analyze_country_diversity(conference_data):
     print("\nAnalyzing country diversity...")
     
     # Get years in sorted order
-    years = sorted([year for year in conference_data.keys() if year != '2025'])
-    
+
+    years = [int(year) for year in conference_data.keys() if year.isdigit()]
+    years = sorted(years)
+    years = [str(year) for year in years]  # Convert back to strings
     # Track country counts by year and overall
     country_by_year = {}
     unique_countries_by_year = {}
@@ -1407,248 +1409,79 @@ def extract_keywords_from_talk(talk):
     return []
 
 def create_keywords_plot(conference_data):
-    """Create visualization of keywords across conferences based on fetch_and_analyze_conferences.py"""
+    """Create visualization of keyword trends over conference years"""
     print("Creating keywords visualization...")
     
-    # Common stopwords to remove
-    stopwords = set(['and', 'the', 'in', 'of', 'for', 'on', 'with', 'at', 'from', 'by', 
-                    'to', 'a', 'an', 'is', 'are', 'was', 'were', 'be', 'been', 'being',
-                    'have', 'has', 'had', 'do', 'does', 'did', 'but', 'or', 'as', 'if',
-                    'then', 'else', 'when', 'up', 'down', 'conference', 'study', 'analysis',
-                    'measurement', 'results', 'data', 'using', 'via', 'new', 'recent',
-                    'quark', 'matter', 'qm', 'physics', 'collision', 'collisions', 'ion', 'ions',
-                    'heavy', 'experiment', 'experimental', 'theory', 'theoretical', 'model', 'models'])
+    # IMPORTANT: Get all years including 2025, using string conversion to ensure consistent handling
+    years = []
+    for year in conference_data.keys():
+        if str(year).isdigit():
+            years.append(str(year))
+    years.sort(key=int)  # Sort numerically
     
-    # Define physics concepts and facilities to track
-    physics_concepts = {
-        'flow': ['flow', 'flows', 'flowing'],
-        'QGP': ['qgp', 'quark gluon plasma', 'quark-gluon'],
-        'jet': ['jet', 'jets', 'dijets', 'b-jet'],
-        'HF': ['heavy flavor', 'heavy flavour', 'charm', 'beauty', 'bottom', 
-              'j/psi', 'jpsi', 'j/ψ', 'upsilon', 'ϒ', 'd meson', 'b meson', 
-              'c-quark', 'b-quark', 'charmonium', 'bottomonium', 'open charm', 
-              'open beauty', 'quarkonium', 'hf', 'charmed', 'b quark', 'c quark'],
-        'photon': ['photon', 'photons', 'photonic', 'gamma'],
-        'hydro': ['hydro', 'hydrodynamic', 'hydrodynamics'],
-        'CME': ['cme', 'chiral magnetic', 'magnetic effect'],
-        'small system': ['small system', 'small systems', 'pp collision', 'pA collision', 'p+pb', 'p+a', 'p-a', 
-                        'small collision', 'peripheral', 'pp collisions', 'p-p'],
-        'UPC': ['upc', 'ultra-peripheral', 'ultra peripheral', 'ultraperipheral', 'photoproduction', 'coherent', 'photo-nuclear',
-               'photo nuclear', 'photonuclear'],
-        'soft & hard': ['soft and hard', 'hard and soft', 'soft vs hard', 'hard vs soft', 'soft versus hard', 
-                       'hard versus soft', 'soft/hard', 'hard/soft']
-    }
+    # Extract keywords from talk titles for each year
+    keywords_by_year = {}
     
-    facilities = {
-        'RHIC': ['rhic', 'brookhaven', 'bnl'],
-        'LHC': ['lhc', 'large hadron'],
-        'CERN': ['cern'],
-        'FAIR': ['fair', 'gsi', 'darmstadt'],
-        'NICA': ['nica', 'dubna']
-    }
+    for year in years:
+        # Get all talk titles for this year
+        titles = []
+        
+        for talk_type in ['plenary_talks', 'parallel_talks', 'poster_talks']:
+            if talk_type in conference_data[year]:
+                titles.extend([talk.get('Title', '') for talk in conference_data[year][talk_type]])
+        
+        # Analyze keywords in titles
+        text = ' '.join([t.lower() for t in titles if t])
+        
+        # Define common keywords to track
+        keywords = [
+            'qgp', 'flow', 'jet', 'heavy flavor', 'quarkonia', 'photon', 
+            'dilepton', 'small system', 'high-pt', 'lhc', 'rhic', 'alice', 
+            'cms', 'atlas', 'star', 'phenix'
+        ]
+        
+        # Count keywords
+        year_counts = {}
+        for keyword in keywords:
+            year_counts[keyword] = text.count(keyword)
+        
+        keywords_by_year[year] = year_counts
     
-    # Custom counter for "soft & hard" to catch both words in same title
-    def count_concepts_with_special_cases(titles, concept_dict):
-        counts = Counter()
-        
-        for title in titles:
-            title_lower = title.lower()
-            
-            # Regular concept counting
-            for concept, keywords in concept_dict.items():
-                if concept != 'soft & hard':  # Handle regular concepts normally
-                    for keyword in keywords:
-                        if keyword in title_lower:
-                            counts[concept] += 1
-                            break  # Count each concept only once per title
-            
-            # Special case for "soft & hard" - both words must appear in the title
-            if ('soft' in title_lower and 'hard' in title_lower):
-                counts['soft & hard'] += 1
-        
-        return counts
+    # Create visualization
+    plt.figure(figsize=(14, 10))
     
-    # Extract all years
-    years = sorted([year for year in conference_data.keys() if year != '2025'])
+    # Use a different color and marker for each keyword
+    colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'orange', 'purple', 'brown', 'pink', 'gray', 'olive', 'cyan', 'lime', 'teal']
+    markers = ['o', 's', '^', 'D', 'p', '*', 'X', 'h', '+', 'x', '|', '_', '1', '2', '3', '4']
     
-    # Prepare containers for data
-    all_titles_by_year = {}
-    concept_trends = {concept: [0] * len(years) for concept in physics_concepts}
-    facility_trends = {facility: [0] * len(years) for facility in facilities}
+    # Sort keywords by total frequency
+    keyword_totals = {}
+    for keyword in keywords:
+        keyword_totals[keyword] = sum(keywords_by_year[year][keyword] for year in years)
     
-    # Extract and analyze titles by year
-    for i, year in enumerate(years):
-        if year in conference_data:
-            all_talks = []
-            for talk_type in ['plenary_talks', 'parallel_talks', 'poster_talks']:
-                if talk_type in conference_data[year]:
-                    all_talks.extend(conference_data[year][talk_type])
-            
-            titles = [talk.get('Title', '') for talk in all_talks if talk.get('Title')]
-            all_titles_by_year[year] = titles
-            
-            # Only count if we have titles for this year
-            if titles:
-                # Count physics concepts with special case handling
-                concept_counts = count_concepts_with_special_cases(titles, physics_concepts)
-                for concept, count in concept_counts.items():
-                    concept_trends[concept][i] = count / len(titles) * 100
-                    
-                # Count facility mentions (using standard function)
-                facility_counts = count_concepts(titles, facilities)
-                for facility, count in facility_counts.items():
-                    facility_trends[facility][i] = count / len(titles) * 100
+    sorted_keywords = sorted(keyword_totals.items(), key=lambda x: x[1], reverse=True)
     
-    # Create a figure with two subplots (only the top row now)
-    try:
-        # Create main visualization with only the top two panels 
-        fig = plt.figure(figsize=(20, 10))
-        gs = gridspec.GridSpec(1, 2)
-        
-        # Physics concepts panel
-        ax_concepts = plt.subplot(gs[0, 0])
-        for concept, percentages in concept_trends.items():
-            ax_concepts.plot(years, percentages, marker='o', linewidth=2, label=concept)
-        ax_concepts.set_title('Evolution of Physics Concepts', fontsize=14)
-        ax_concepts.set_xlabel('Conference Year', fontsize=12)
-        ax_concepts.set_ylabel('Percentage of Presentations (%)', fontsize=12)
-        ax_concepts.grid(True, linestyle='--', alpha=0.7)
-        ax_concepts.legend(loc='upper left', bbox_to_anchor=(1, 1))
-        
-        # Facilities panel
-        ax_facilities = plt.subplot(gs[0, 1])
-        for facility, percentages in facility_trends.items():
-            ax_facilities.plot(years, percentages, marker='s', linewidth=2, label=facility)
-        ax_facilities.set_title('Experimental Facilities', fontsize=14)
-        ax_facilities.set_xlabel('Conference Year', fontsize=12)
-        ax_facilities.set_ylabel('Percentage of Presentations (%)', fontsize=12)
-        ax_facilities.grid(True, linestyle='--', alpha=0.7)
-        ax_facilities.legend()
-        
-        plt.tight_layout()
-        plt.savefig('figures/keywords_analysis.pdf', bbox_inches='tight')
-        plt.savefig('figures/QM_keyword_analysis.pdf', bbox_inches='tight')  # Match existing filename
-        plt.savefig('figures/keyword_trends.pdf', bbox_inches='tight')
-        plt.savefig('figures/keyword_trends.png', dpi=300, bbox_inches='tight')
-        plt.close()
-        
-        # Still process the keyword data for QA plots
-        all_keywords = Counter()
-        keyword_by_year = {}
-        
-        for year in years:
-            year_keywords = Counter()
-            
-            for talk_type in ['plenary_talks', 'parallel_talks', 'poster_talks']:
-                if talk_type in conference_data[year]:
-                    for talk in conference_data[year][talk_type]:
-                        # Use the improved keyword extraction function
-                        keywords = extract_keywords_from_talk(talk)
-                        if keywords:
-                            # Make sure keywords is a list
-                            if isinstance(keywords, str):
-                                keywords = [keywords]
-                            
-                            # Update counters
-                            all_keywords.update(keywords)
-                            year_keywords.update(keywords)
-            
-            keyword_by_year[year] = year_keywords
-        
-        print(f"Found {len(all_keywords)} unique keywords across all years")
-        
-        # Save keyword analysis as separate QA plots
-        if all_keywords:
-            print(f"Top 10 keywords (to be excluded): {all_keywords.most_common(10)}")
-            
-            # Get the top 10 keywords to exclude
-            top_10_keywords = set(kw for kw, _ in all_keywords.most_common(10))
-            
-            # Filter out top 10 keywords
-            filtered_keywords = Counter({k: v for k, v in all_keywords.items() if k not in top_10_keywords})
-            
-            print(f"After removing top 10, using {len(filtered_keywords)} keywords")
-            print(f"New top keywords: {filtered_keywords.most_common(10)}")
-            
-            # Create QA plots for keyword analysis (saved separately)
-            fig_qa = plt.figure(figsize=(20, 10))
-            gs_qa = gridspec.GridSpec(1, 2)
-            
-            # Bar chart of top keywords
-            ax_keywords = plt.subplot(gs_qa[0, 0])
-            top_keywords = [kw for kw, _ in filtered_keywords.most_common(15)]
-            counts = [filtered_keywords[kw] for kw in top_keywords]
-            
-            y_pos = range(len(top_keywords))
-            ax_keywords.barh(y_pos, counts)
-            ax_keywords.set_yticks(y_pos)
-            ax_keywords.set_yticklabels([kw if len(kw) < 30 else kw[:27]+'...' for kw in top_keywords])
-            ax_keywords.set_xlabel('Frequency')
-            ax_keywords.set_title('Top Keywords (excluding 10 most common)')
-            
-            # Keyword trends
-            ax_keyword_trends = plt.subplot(gs_qa[0, 1])
-            top_trend_keywords = top_keywords[:6]
-            
-            for keyword in top_trend_keywords:
-                trend = []
-                for year in years:
-                    trend.append(keyword_by_year.get(year, Counter()).get(keyword, 0))
-                ax_keyword_trends.plot(years, trend, 'o-', linewidth=2, label=keyword)
-            
-            ax_keyword_trends.set_title('Keyword Trends Over Time')
-            ax_keyword_trends.set_xlabel('Conference Year')
-            ax_keyword_trends.set_ylabel('Frequency')
-            ax_keyword_trends.legend()
-            ax_keyword_trends.grid(True, linestyle='--', alpha=0.7)
-            
-            plt.tight_layout()
-            plt.savefig('figures/keyword_QA_plots.pdf', bbox_inches='tight')
-            plt.savefig('figures/keyword_QA_plots.png', dpi=300, bbox_inches='tight')
-            plt.close()
-        
-        # Filter the keyword_by_year data 
-        filtered_keyword_by_year = {}
-        for year in keyword_by_year:
-            filtered_keyword_by_year[year] = Counter({k: v for k, v in keyword_by_year[year].items() 
-                                                      if k not in top_10_keywords})
-        
-        return filtered_keywords, filtered_keyword_by_year
+    # Only plot top keywords to avoid overcrowding
+    top_keywords = [k for k, v in sorted_keywords[:12]]
     
-    except Exception as e:
-        print(f"Error creating keywords visualization: {e}")
-        traceback.print_exc()
-        
-        # Create simple fallback visualizations in case of error
-        plt.figure(figsize=(10, 6))
-        plt.text(0.5, 0.5, f"Error creating keyword visualization:\n{str(e)}", 
-                ha='center', va='center', fontsize=12)
-        plt.savefig('figures/keywords_analysis.pdf')
-        plt.savefig('figures/QM_keyword_analysis.pdf')
-        plt.savefig('figures/keyword_trends.pdf')
-        plt.close()
-        
-        plt.figure(figsize=(10, 6))
-        plt.text(0.5, 0.5, f"Error creating keyword visualization:\n{str(e)}", 
-                ha='center', va='center', fontsize=12)
-        plt.savefig('figures/keyword_trends.png')
-        plt.close()
-        
-        return None, None
-
-def count_concepts(titles, concept_dict):
-    """Count occurrences of concepts in talk titles"""
-    counts = Counter()
+    # Plot each keyword
+    for i, keyword in enumerate(top_keywords):
+        counts = [keywords_by_year[year][keyword] for year in years]
+        plt.plot(years, counts, marker=markers[i], color=colors[i], label=keyword, linewidth=2, markersize=8)
     
-    for title in titles:
-        title_lower = title.lower()
-        for concept, keywords in concept_dict.items():
-            for keyword in keywords:
-                if keyword in title_lower:
-                    counts[concept] += 1
-                    break  # Count each concept only once per title
+    plt.legend(loc='best', fontsize=12)
+    plt.title('Keyword Trends Across QM Conferences', fontsize=16)
+    plt.xlabel('Conference Year', fontsize=14)
+    plt.ylabel('Frequency', fontsize=14)
+    plt.grid(True, linestyle='--', alpha=0.7)
+    plt.tight_layout()
     
-    return counts
+    # Save visualization
+    plt.savefig('figures/keywords_analysis.pdf')
+    plt.savefig('figures/keyword_trends.pdf')  # For backward compatibility
+    plt.close()
+    
+    return keywords_by_year
 
 def create_plenary_country_plot(plenary_country):
     """Create a visualization of countries in plenary talks"""
@@ -1748,7 +1581,7 @@ def create_regional_diversity_plot(country_counts, conference_data):
     """Create visualization showing regional diversity over time"""
     print("Creating regional diversity visualization...")
     
-    # Define regions (same as in analyze_regional_diversity)
+    # Define regions
     regions = {
         'North America': ['USA', 'Canada', 'Mexico'],
         'Europe': ['Germany', 'France', 'UK', 'Italy', 'Spain', 'Switzerland', 'Netherlands', 
@@ -1763,14 +1596,73 @@ def create_regional_diversity_plot(country_counts, conference_data):
         'Africa': ['South Africa', 'Egypt', 'Morocco', 'Algeria', 'Tunisia', 'Nigeria', 'Kenya']
     }
     
-    # Get all years - explicitly convert and sort to ensure 2025 is included
-    years = [int(year) for year in conference_data.keys() if year.isdigit()]
-    years = sorted(years)
-    years = [str(year) for year in years]  # Convert back to strings
+    # IMPORTANT: Get all years including 2025, using string conversion to ensure consistent handling
+    years = []
+    for year in conference_data.keys():
+        if str(year).isdigit():
+            years.append(str(year))
+    years.sort(key=int)  # Sort numerically
     
-    print(f"Regional diversity visualization years: {years}")  # Debug output
+    # Calculate regional percentages by year
+    regional_percentages = {region: [] for region in regions}
+    other_percentages = []
     
-    # Continue with the rest of the function...
+    for year in years:
+        data = conference_data[year]
+        year_country_counts = Counter()
+        
+        # Count countries for all talk types
+        for talk_type in ['plenary_talks', 'parallel_talks', 'poster_talks']:
+            if talk_type in data:
+                for talk in data[talk_type]:
+                    country = talk.get('Country', 'Unknown')
+                    if country != 'Unknown':
+                        year_country_counts[country] += 1
+        
+        # Skip years with no data
+        if sum(year_country_counts.values()) == 0:
+            for region in regions:
+                regional_percentages[region].append(0)
+            other_percentages.append(0)
+            continue
+        
+        # Calculate percentages for each region
+        total_talks = sum(year_country_counts.values())
+        other_count = 0
+        
+        for region, countries in regions.items():
+            region_count = sum(year_country_counts[country] for country in countries if country in year_country_counts)
+            regional_percentages[region].append(region_count / total_talks * 100)
+            other_count += region_count
+        
+        # Calculate percentage for "Other" countries
+        other_percentages.append((total_talks - other_count) / total_talks * 100)
+    
+    # Create the plot
+    plt.figure(figsize=(12, 8))
+    
+    # Define colors and hatches for each region
+    colors = ['#3498db', '#2ecc71', '#e74c3c', '#9b59b6', '#f39c12', '#1abc9c', '#95a5a6']
+    
+    # Create a stacked bar chart
+    bottom = np.zeros(len(years))
+    
+    for i, (region, percentages) in enumerate(regional_percentages.items()):
+        plt.bar(years, percentages, bottom=bottom, label=region, color=colors[i % len(colors)])
+        bottom += np.array(percentages)
+    
+    # Add "Other" category
+    plt.bar(years, other_percentages, bottom=bottom, label='Other', color=colors[-1])
+    
+    plt.xlabel('Conference Year')
+    plt.ylabel('Percentage of Talks')
+    plt.title('Regional Diversity by Year')
+    plt.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15), ncol=4)
+    plt.grid(True, linestyle='--', alpha=0.3, axis='y')
+    
+    plt.tight_layout()
+    plt.savefig('figures/regional_diversity_by_year.pdf')
+    plt.close()
 
 def create_regional_diversity_by_year(years, conference_data, regions):
     """Create plot showing regional diversity by year"""
@@ -3270,7 +3162,7 @@ def analyze_institute_trends(conference_data):
     plt.figure(figsize=(14, 8))
     
     # Get sorted years
-    years = sorted([year for year in conference_data.keys() if year != '2025'])
+    years = sorted([year for year in conference_data.keys()])
     
     # Get top institutes to track
     top_institutes_to_track = [institute for institute, _ in institute_counts.most_common(8)]
@@ -3378,8 +3270,8 @@ def analyze_talk_type_distribution(conference_data):
     """Analyze distribution of talk types over time"""
     print("Analyzing talk type distribution...")
     
-    # Get sorted years
-    years = sorted([year for year in conference_data.keys() if year != '2025'])
+    # Get sorted years, including 2025
+    years = sorted([year for year in conference_data.keys() if year.isdigit()])
     
     # Count talk types for each year
     plenary_counts = []
@@ -3430,12 +3322,12 @@ def analyze_keywords(conference_data):
     """Analyze keywords from talk titles"""
     print("Analyzing keywords...")
     
-    # Get sorted years - explicitly include 2025
-    years = [int(year) for year in conference_data.keys() if year.isdigit()]
-    years = sorted(years)
-    years = [str(year) for year in years]  # Convert back to strings
-    
-    print(f"Keyword analysis years: {years}")  # Debug output
+    # Get all years, including 2025
+    years = []
+    for year in conference_data.keys():
+        if str(year).isdigit():
+            years.append(str(year))
+    years.sort(key=int)  # Sort numerically
     
     # Define keywords to track
     keyword_groups = {
@@ -3507,6 +3399,8 @@ def analyze_keywords(conference_data):
     plt.tight_layout(rect=[0, 0.05, 1, 0.98])
     plt.savefig('figures/QM_keyword_analysis.pdf')
     plt.close()
+    
+    return keyword_groups
 
 def analyze_regional_diversity(conference_data):
     """Analyze regional diversity over time"""
@@ -3849,6 +3743,140 @@ def create_detector_focus_plot(conference_data):
     
     plt.tight_layout()
     plt.savefig('figures/detector_focus.pdf')
+    plt.close()
+
+def create_keyword_QA_plots(conference_data):
+    """Create quality assurance plots for keywords analysis"""
+    print("Creating keyword QA visualization...")
+    
+    # Get all years, including 2025
+    years = []
+    for year in conference_data.keys():
+        if str(year).isdigit():
+            years.append(str(year))
+    years.sort(key=int)  # Sort numerically
+    
+    # Create figure with multiple panels
+    fig, axs = plt.subplots(2, 2, figsize=(16, 12))
+    axs = axs.flatten()
+    
+    # Panel 1: Number of talks with keywords over time
+    ax = axs[0]
+    talks_with_keywords = []
+    total_talks = []
+    
+    for year in years:
+        # Get all talks for this year
+        year_talks = []
+        for talk_type in ['plenary_talks', 'parallel_talks', 'poster_talks']:
+            if talk_type in conference_data[year]:
+                year_talks.extend(conference_data[year][talk_type])
+        
+        total_talks.append(len(year_talks))
+        
+        # Count talks with keywords
+        talks_with_kw = 0
+        for talk in year_talks:
+            keywords = extract_keywords_from_talk(talk)
+            if keywords:
+                talks_with_kw += 1
+        
+        talks_with_keywords.append(talks_with_kw)
+    
+    # Calculate percentage
+    keyword_percentages = [100 * kw / total if total > 0 else 0 
+                          for kw, total in zip(talks_with_keywords, total_talks)]
+    
+    # Plot
+    ax.bar(years, keyword_percentages, color='skyblue')
+    ax.set_title('% of Talks with Keywords')
+    ax.set_ylabel('Percentage')
+    ax.set_xlabel('Conference Year')
+    ax.grid(True, linestyle='--', alpha=0.7)
+    
+    # Add value labels
+    for i, v in enumerate(keyword_percentages):
+        ax.text(i, v + 1, f"{v:.1f}%", ha='center')
+    
+    # Panel 2: Average number of keywords per talk
+    ax = axs[1]
+    avg_keywords = []
+    
+    for year in years:
+        # Get all talks for this year
+        year_talks = []
+        for talk_type in ['plenary_talks', 'parallel_talks', 'poster_talks']:
+            if talk_type in conference_data[year]:
+                year_talks.extend(conference_data[year][talk_type])
+        
+        # Calculate average number of keywords
+        if year_talks:
+            total_keywords = sum(len(extract_keywords_from_talk(talk)) for talk in year_talks)
+            avg = total_keywords / len(year_talks)
+        else:
+            avg = 0
+        
+        avg_keywords.append(avg)
+    
+    # Plot
+    ax.bar(years, avg_keywords, color='lightgreen')
+    ax.set_title('Average Keywords per Talk')
+    ax.set_ylabel('Number of Keywords')
+    ax.set_xlabel('Conference Year')
+    ax.grid(True, linestyle='--', alpha=0.7)
+    
+    # Add value labels
+    for i, v in enumerate(avg_keywords):
+        ax.text(i, v + 0.1, f"{v:.1f}", ha='center')
+    
+    # Panel 3: Top keywords overall
+    ax = axs[2]
+    all_keywords = Counter()
+    
+    for year in years:
+        for talk_type in ['plenary_talks', 'parallel_talks', 'poster_talks']:
+            if talk_type in conference_data[year]:
+                for talk in conference_data[year][talk_type]:
+                    keywords = extract_keywords_from_talk(talk)
+                    all_keywords.update(keywords)
+    
+    # Get top keywords
+    top_kw = all_keywords.most_common(10)
+    top_kw.reverse()  # For horizontal bar chart
+    
+    # Plot
+    y_pos = range(len(top_kw))
+    ax.barh(y_pos, [count for _, count in top_kw], color='salmon')
+    ax.set_yticks(y_pos)
+    ax.set_yticklabels([kw for kw, _ in top_kw])
+    ax.set_title('Top 10 Keywords Overall')
+    ax.set_xlabel('Frequency')
+    
+    # Panel 4: Keyword diversity by year
+    ax = axs[3]
+    unique_keywords = []
+    
+    for year in years:
+        # Get all keywords for this year
+        year_keywords = Counter()
+        for talk_type in ['plenary_talks', 'parallel_talks', 'poster_talks']:
+            if talk_type in conference_data[year]:
+                for talk in conference_data[year][talk_type]:
+                    keywords = extract_keywords_from_talk(talk)
+                    year_keywords.update(keywords)
+        
+        unique_keywords.append(len(year_keywords))
+    
+    # Plot
+    ax.plot(years, unique_keywords, marker='o', linestyle='-', 
+            linewidth=2, color='purple', markersize=8)
+    ax.set_title('Number of Unique Keywords by Year')
+    ax.set_ylabel('Count')
+    ax.set_xlabel('Conference Year')
+    ax.grid(True, linestyle='--', alpha=0.7)
+    
+    plt.tight_layout()
+    plt.savefig('figures/keyword_QA_plots.pdf')
     plt.close()
 
 # Add proper entry point at the end of the file
